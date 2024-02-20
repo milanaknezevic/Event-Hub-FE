@@ -1,0 +1,58 @@
+.login-container {
+    /*background-color: var(--gray-color);*/
+    overflow: hidden;
+    border-radius: 10px;
+    border: 2px solid var(--gray-color);
+}
+.input-error{
+    border: 1px solid red;
+}
+
+.login-container h1 {
+    color: black;
+    font-size: 2.3em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/*.login-container .title {*/
+/*    background-color: var(--blue-color);*/
+
+/*}*/
+.login-container .ant-input-password,
+.login-container input {
+    border-radius: 5px;
+    background-color: var(--gray-color)
+}
+
+/*.login-container input:hover{*/
+/*    border-radius: 5px;*/
+/*   !* background-color: green;*!*/
+/*}*/
+
+.login-container .register-link {
+    color: var(--blue-color);
+}
+
+.login-container .register-link:hover {
+    color: black;
+}
+
+
+
+.login-container .login-btn {
+    background-color: var(--blue-color);
+    color: var(--white-color);
+    font-weight: bold;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+}
+
+.login-container .login-btn:hover {
+    color: var(--white-color);
+    background-color: var(--blue2-color);
+}

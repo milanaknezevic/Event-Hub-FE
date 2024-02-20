@@ -1,0 +1,72 @@
+@import url('./components/Login/Login.css');
+
+:root {
+    --dark-color: #8B735B;
+    --lighter-color: #917c69;
+    --gray-color: #F2F2F2;
+    --gray2-color: #D2D2D2;
+    --white-color: #ffffff;
+    --blue-color: #000080;
+    --blue2-color: #1c1c85
+}
+body .navbar-toggler{
+    background-color: white;
+}
+.error {
+    color: red;
+}
+
+.welcome-background {
+    background-image: url('../src/assets/homeImg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.welcome-background h1 {
+    color: var(--white-color);
+}
+
+.welcome-background .welcome-description {
+    color: var(--white-color);
+    font-size: 1.5rem;
+}
+
+.welcome-background .login-btn {
+    font-weight: bold;
+    color: var(--white-color);
+    background-color: var(--dark-color);
+
+}
+
+.welcome-background .login-btn:hover {
+    color: var(--gray2-color);
+    background-color: var(--lighter-color);
+}
+
+.footer-container,
+.nav-container {
+    background-color: var(--dark-color);
+}
+
+.footer-container .text,
+.footer-container .text a {
+    color: var(--white-color);
+}
+
+.footer-container .text a:hover {
+    color: black;
+}
+
+.nav-container .nav-link {
+    color: var(--white-color);
+}
+
+.nav-container .nav-link:hover {
+    color: black;
+}
+
+.nav-container .navbar-nav .nav-link.active {
+    /*color: var(--carob-color);*/
+}
+
