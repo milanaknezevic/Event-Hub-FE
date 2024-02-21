@@ -3,11 +3,17 @@ import { loginSchema } from "../../schemas/index.jsx";
 import { NavLink } from "react-router-dom";
 import { Button } from "antd";
 import CustomInput from "../FormComponents/CustomInput.jsx";
+import {useDispatch} from "react-redux";
+import {userLogin} from "../../redux/auth.jsx";
 
 const Login = () => {
-    const onSubmit = async (values, actions) => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        actions.resetForm();
+
+    const dispatch=useDispatch()
+    const onSubmit = async (values) => {
+        const response = await dispatch(userLogin(values));
+        console.log(response)
+        // await new Promise((resolve) => setTimeout(resolve, 1000));
+        // actions.resetForm();
     };
 
     return (
@@ -19,7 +25,7 @@ const Login = () => {
                             <h1>Login</h1>
                         </div>
                         <Formik
-                            initialValues={{ username: "", password: "", confirmPassword: "" }}
+                            initialValues={{ username: "", password: ""}}
                             validationSchema={loginSchema}
                             onSubmit={onSubmit}
                         >
@@ -47,7 +53,7 @@ const Login = () => {
                                     <div className={"col-12 d-flex justify-content-center pb-3"}>
                                         <div>
                                             No account?
-                                            <NavLink className={"register-link"} to="/login">
+                                            <NavLink className={"register-link"} to="/register">
                                                 {" "}
                                                 Register here.
                                             </NavLink>

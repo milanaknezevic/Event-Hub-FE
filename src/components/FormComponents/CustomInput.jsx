@@ -1,6 +1,6 @@
 import { ErrorMessage, Field } from "formik";
 import { Input } from "antd";
-import '../../App.css'
+
 
 const CustomInput = ({ label, name, errors, touched, type = "text", ...rest }) => {
     const isPasswordField = type === "password";

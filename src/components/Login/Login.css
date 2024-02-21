@@ -19,6 +19,7 @@
 /*    background-color: var(--blue-color);*/
 
 /*}*/
+.login-container .ant-select .ant-select-selector,
 .login-container .ant-input-password,
 .login-container input {
     border-radius: 5px;
