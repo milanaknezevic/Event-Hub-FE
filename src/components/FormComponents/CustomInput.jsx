@@ -1,15 +1,15 @@
-import { ErrorMessage, Field } from "formik";
-import { Input } from "antd";
+import {ErrorMessage, Field} from "formik";
+import {Input} from "antd";
 
 
-const CustomInput = ({ label, name, errors, touched, type = "text", ...rest }) => {
+const CustomInput = ({label, name, errors, touched, type = "text", ...rest}) => {
     const isPasswordField = type === "password";
+
     return (
         <div className={"row p-2 d-flex justify-content-center"}>
             <label htmlFor={name}>{label}:</label>
-            <Field
-                name={name}
-                render={({ field }) => (
+            <Field name={name}>
+                {({field}) => (
                     <>
                         {isPasswordField ? (
                             <Input.Password
@@ -26,8 +26,9 @@ const CustomInput = ({ label, name, errors, touched, type = "text", ...rest }) =
                         )}
                     </>
                 )}
-            />
-            <ErrorMessage name={name} component="div" className="error" />
+            </Field>
+            <ErrorMessage name={name} component="div" className="error"/>
+
         </div>
     );
 };

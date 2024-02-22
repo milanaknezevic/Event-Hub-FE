@@ -15,16 +15,15 @@ export const initialState = {
 
 
 export const userLogin = createAsyncThunk(
-    'auth/login',
-    async ({ username, password }) => {
-        console.log("AAAAAAA")
-        axios.post('/api/users/login', { username: username, password: password })
-            .then((results) => {
-                const { token } = results.data;
-                localStorage.setItem('token', token);
-                return results.data;
-            })
-            .catch((err) => Promise.reject(err.response.status));
+    'auth/login', async ({ username, password }, { rejectWithValue}) => {
+        try {
+            const response = await axios.post('/api/users/login', { username, password });
+            const {accessToken} = response.data;
+            localStorage.setItem('token', accessToken);
+            return response.data; // Make sure to return the data
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
     }
 );
 
@@ -48,12 +47,15 @@ export const authSlice = createSlice({
                 state.loading = true;
             })
             .addCase(userLogin.rejected, (state, action) => {
-                state.loading = false;
+                console.log("rejected ",  action.payload); // Log entire error object
                 state.backendErrors = action.payload
+                state.authenticatedFailed = true;
+                state.loading = false;
             })
-            .addCase(userLogin.fulfilled, (state) => {
+            .addCase(userLogin.fulfilled, (state,action) => {
                 state.loading = false;
                 state.isAuthenticated = true;
+                console.log("fulfilled ",action.payload)
             })
     }
 })

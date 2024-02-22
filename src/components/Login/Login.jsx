@@ -1,21 +1,37 @@
-import { Form, Formik } from "formik";
-import { loginSchema } from "../../schemas/index.jsx";
-import { NavLink } from "react-router-dom";
-import { Button } from "antd";
+import {Form, Formik} from "formik";
+import {loginSchema} from "../../schemas/index.jsx";
+import {NavLink} from "react-router-dom";
+import {Button} from "antd";
 import CustomInput from "../FormComponents/CustomInput.jsx";
 import {useDispatch} from "react-redux";
 import {userLogin} from "../../redux/auth.jsx";
-
+import { useSelector } from "react-redux";
 const Login = () => {
 
-    const dispatch=useDispatch()
-    const onSubmit = async (values) => {
-        const response = await dispatch(userLogin(values));
-        console.log(response)
-        // await new Promise((resolve) => setTimeout(resolve, 1000));
-        // actions.resetForm();
-    };
+    const dispatch = useDispatch()
+    const backendErrors = useSelector(state => state.auth.backendErrors);
+    console.log("backendErrors ",backendErrors)
 
+    const onSubmit = async (values, { setErrors }) => {
+        try {
+            const response = await dispatch(userLogin(values));
+            console.log("Response", response);
+
+            // Clear existing errors
+            setErrors({});
+
+            // Handle backend errors
+            if (backendErrors.errors.length > 0) {
+                const formattedErrors = {};
+                backendErrors.errors.forEach(error => {
+                    formattedErrors[error.field] = error.message;
+                });
+                setErrors(formattedErrors);
+            }
+        } catch (error) {
+            console.error("Error during login", error);
+        }
+    };
     return (
         <div className="container-fluid flex-grow-1 d-flex align-items-center justify-content-center">
             <div className={"row justify-content-center w-100"}>
@@ -25,11 +41,11 @@ const Login = () => {
                             <h1>Login</h1>
                         </div>
                         <Formik
-                            initialValues={{ username: "", password: ""}}
+                            initialValues={{username: "", password: ""}}
                             validationSchema={loginSchema}
                             onSubmit={onSubmit}
                         >
-                            {({ errors, touched, handleBlur }) => (
+                            {({errors, touched, handleBlur}) => (
                                 <Form>
                                     <CustomInput
                                         label="Username"

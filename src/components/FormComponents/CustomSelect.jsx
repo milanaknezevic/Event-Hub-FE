@@ -14,9 +14,9 @@ const CustomSelect = ({label, name, options, errors, touched, ...rest}) => {
         <div className={"row p-2 d-flex justify-content-center"}>
             <label htmlFor={name}>{label}:</label>
             <Field
-                name={name}
-                render={({field, form}) => (
-                    <Select className={"p-0"}  onChange={handleCategoryChange}
+                name={name}>
+                {({field, form}) => (
+                    <Select className={"p-0"} onChange={handleCategoryChange}
                             defaultValue="Milana"
                     >
                         {options.map(option => (
@@ -26,7 +26,7 @@ const CustomSelect = ({label, name, options, errors, touched, ...rest}) => {
                         ))}
                     </Select>
                 )}
-            />
+            </Field>
             <ErrorMessage name={name} component="div" className="error"/>
         </div>
     );

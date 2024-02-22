@@ -4,11 +4,11 @@ import * as yup from "yup";
 export const loginSchema = yup.object().shape({
     username: yup
         .string()
-        .required("Required"),
+        .required("Username is required"),
     password: yup
         .string()
-        .min(2)
-        .required("Required"),
+        .min(2, "Password must be at least 2 characters")
+        .required("Password is required"),
 });
 export const registrationSchema = yup.object().shape({
     name: yup.string().required('Required'),
