@@ -1,37 +1,40 @@
-import {Form, Formik} from "formik";
+import {useFormik} from "formik";
 import {loginSchema} from "../../schemas/index.jsx";
-import {NavLink} from "react-router-dom";
-import {Button} from "antd";
 import CustomInput from "../FormComponents/CustomInput.jsx";
-import {useDispatch} from "react-redux";
+import {Button} from "antd";
+import {NavLink, useNavigate} from "react-router-dom";
 import {userLogin} from "../../redux/auth.jsx";
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErrors.jsx";
+import {useEffect} from "react";
+
 const Login = () => {
-
     const dispatch = useDispatch()
-    const backendErrors = useSelector(state => state.auth.backendErrors);
-    console.log("backendErrors ",backendErrors)
+    const navigate = useNavigate();
+    const {backendErrors, isAuthenticated} = useSelector(state => state.auth);
+    const onSubmit = async (values) => {
+        await dispatch(userLogin(values));
 
-    const onSubmit = async (values, { setErrors }) => {
-        try {
-            const response = await dispatch(userLogin(values));
-            console.log("Response", response);
-
-            // Clear existing errors
-            setErrors({});
-
-            // Handle backend errors
-            if (backendErrors.errors.length > 0) {
-                const formattedErrors = {};
-                backendErrors.errors.forEach(error => {
-                    formattedErrors[error.field] = error.message;
-                });
-                setErrors(formattedErrors);
-            }
-        } catch (error) {
-            console.error("Error during login", error);
-        }
     };
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/")
+        }
+        // formik.resetForm();
+
+    }, [isAuthenticated])
+
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            password: '',
+        },
+        validationSchema: loginSchema,
+        onSubmit: onSubmit,
+    });
+
+    useFormattedBackendErrors(backendErrors, formik.setErrors)
+
     return (
         <div className="container-fluid flex-grow-1 d-flex align-items-center justify-content-center">
             <div className={"row justify-content-center w-100"}>
@@ -40,44 +43,52 @@ const Login = () => {
                         <div className={"col-12 d-flex justify-content-center title"}>
                             <h1>Login</h1>
                         </div>
-                        <Formik
-                            initialValues={{username: "", password: ""}}
-                            validationSchema={loginSchema}
-                            onSubmit={onSubmit}
-                        >
-                            {({errors, touched, handleBlur}) => (
-                                <Form>
-                                    <CustomInput
-                                        label="Username"
-                                        name="username"
-                                        errors={errors}
-                                        touched={touched}
-                                        onBlur={handleBlur}
-                                    />
-                                    <CustomInput
-                                        label="Password"
-                                        name="password"
-                                        type="password"
-                                        errors={errors}
-                                        touched={touched}
-                                        onBlur={handleBlur}
-                                    />
-                                    <div className={"col-12 p-2 d-flex justify-content-center pb-3"}>
-                                        <Button className="login-btn btn col-6" htmlType="submit" type="submit">Login
-                                        </Button>
-                                    </div>
-                                    <div className={"col-12 d-flex justify-content-center pb-3"}>
-                                        <div>
-                                            No account?
-                                            <NavLink className={"register-link"} to="/register">
-                                                {" "}
-                                                Register here.
-                                            </NavLink>
-                                        </div>
-                                    </div>
-                                </Form>
-                            )}
-                        </Formik>
+                        <form onSubmit={formik.handleSubmit} className={"row justify-content-center login"}>
+
+                            <div className={"col-12"}>
+                                <CustomInput
+                                    label="Username"
+                                    name="username"
+                                    type="text"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.username}
+                                    errorMessage={
+                                        formik.errors.username && formik.touched.username
+                                            ? formik.errors.username
+                                            : ""
+                                    }
+                                />
+                            </div>
+                            <div className={"col-12"}>
+                                <CustomInput
+                                    label="Password"
+                                    name="password"
+                                    type="password"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.password}
+                                    errorMessage={
+                                        formik.errors.password && formik.touched.password
+                                            ? formik.errors.password
+                                            : ""
+                                    }
+                                />
+                            </div>
+
+
+                            <div className={"col-12 p-2 d-flex justify-content-center pb-3"}>
+                                <Button className="login-btn btn col-6" htmlType="submit" type="submit">Login
+                                </Button>
+                            </div>
+                            <div className={"col-12 d-flex justify-content-center pb-3"}>
+                                <div>
+                                    No account?
+                                    <NavLink className={"register-link"} to="/register">
+                                        {" "}
+                                        Register here.
+                                    </NavLink>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

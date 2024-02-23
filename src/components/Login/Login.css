@@ -1,5 +1,5 @@
+.register-container,
 .login-container {
-    /*background-color: var(--gray-color);*/
     overflow: hidden;
     border-radius: 10px;
     border: 2px solid var(--gray-color);
@@ -8,6 +8,7 @@
     border: 1px solid red;
 }
 
+.register-container h1,
 .login-container h1 {
     color: black;
     font-size: 2.3em;
@@ -15,32 +16,27 @@
     cursor: pointer;
 }
 
-/*.login-container .title {*/
-/*    background-color: var(--blue-color);*/
-
-/*}*/
+.register-container .ant-select .ant-select-selector,
+.register-container .ant-input-password,
+.register-container input,
 .login-container .ant-select .ant-select-selector,
 .login-container .ant-input-password,
 .login-container input {
     border-radius: 5px;
     background-color: var(--gray-color)
 }
-
-/*.login-container input:hover{*/
-/*    border-radius: 5px;*/
-/*   !* background-color: green;*!*/
-/*}*/
-
+.register-container .login-link,
 .login-container .register-link {
     color: var(--blue-color);
 }
 
+.register-container .login-link:hover,
 .login-container .register-link:hover {
     color: black;
 }
 
 
-
+.register-container .register-btn,
 .login-container .login-btn {
     background-color: var(--blue-color);
     color: var(--white-color);
@@ -52,8 +48,15 @@
     transition: background-color 0.3s;
 
 }
-
+.register-container .register-btn:hover,
 .login-container .login-btn:hover {
     color: var(--white-color);
     background-color: var(--blue2-color);
+}
+
+.login .ant-col,
+.register .ant-col {
+    display: flex;
+    justify-content: start;
+    width: 100%;
 }

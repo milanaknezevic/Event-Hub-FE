@@ -16,6 +16,7 @@ export const registrationSchema = yup.object().shape({
     email: yup.string().email('Enter a valid email address').required('Email is required'),
     username: yup.string().required('Required'),
     password: yup.string().required('Required').min(8, 'Password must be at least 8 characters'),
+    confirmPassword: yup.string().required('Required').min(8, 'Password must be at least 8 characters'),
     phoneNumber: yup.string().required('Required'),
     role: yup.string().required('Required'),
     status: yup.string().required('Required'),

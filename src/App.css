@@ -1,4 +1,5 @@
 @import url('./components/Login/Login.css');
+@import url('./components/Navbar/HorizontalNavbar.module.css');
 
 :root {
     --dark-color: #8B735B;
@@ -9,9 +10,7 @@
     --blue-color: #000080;
     --blue2-color: #1c1c85
 }
-body .navbar-toggler{
-    background-color: white;
-}
+
 .error {
     color: red;
 }
@@ -44,29 +43,4 @@ body .navbar-toggler{
     background-color: var(--lighter-color);
 }
 
-.footer-container,
-.nav-container {
-    background-color: var(--dark-color);
-}
-
-.footer-container .text,
-.footer-container .text a {
-    color: var(--white-color);
-}
-
-.footer-container .text a:hover {
-    color: black;
-}
-
-.nav-container .nav-link {
-    color: var(--white-color);
-}
-
-.nav-container .nav-link:hover {
-    color: black;
-}
-
-.nav-container .navbar-nav .nav-link.active {
-    /*color: var(--carob-color);*/
-}
 

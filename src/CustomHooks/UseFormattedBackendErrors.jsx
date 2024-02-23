@@ -1,15 +1,14 @@
 // useFormattedBackendErrors.js
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 
 const useFormattedBackendErrors = (backendErrors, setErrors) => {
     useEffect(() => {
-        if (backendErrors.errors && backendErrors.errors.length > 0) {
-            console.log("uslo")
+        setErrors({})
+        if (backendErrors.errors && backendErrors.errors?.length > 0) {
             const formattedErrors = {};
             backendErrors.errors.forEach(error => {
                 formattedErrors[error.field] = error.message;
             });
-            console.log("formattedErrors ",formattedErrors)
             setErrors(formattedErrors);
         }
     }, [backendErrors, setErrors]);

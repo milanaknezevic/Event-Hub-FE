@@ -15,9 +15,9 @@ export const initialState = {
 
 
 export const userLogin = createAsyncThunk(
-    'auth/login', async ({ username, password }, { rejectWithValue}) => {
+    'auth/login', async ({username, password}, {rejectWithValue}) => {
         try {
-            const response = await axios.post('/api/users/login', { username, password });
+            const response = await axios.post('/api/users/login', {username, password});
             const {accessToken} = response.data;
             localStorage.setItem('token', accessToken);
             return response.data; // Make sure to return the data
@@ -26,7 +26,6 @@ export const userLogin = createAsyncThunk(
         }
     }
 );
-
 
 
 export const authSlice = createSlice({
@@ -47,15 +46,13 @@ export const authSlice = createSlice({
                 state.loading = true;
             })
             .addCase(userLogin.rejected, (state, action) => {
-                console.log("rejected ",  action.payload); // Log entire error object
                 state.backendErrors = action.payload
-                state.authenticatedFailed = true;
+                state.isAuthenticated = false;
                 state.loading = false;
             })
-            .addCase(userLogin.fulfilled, (state,action) => {
+            .addCase(userLogin.fulfilled, (state) => {
                 state.loading = false;
                 state.isAuthenticated = true;
-                console.log("fulfilled ",action.payload)
             })
     }
 })

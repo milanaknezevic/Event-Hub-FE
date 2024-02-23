@@ -1,35 +1,31 @@
-import {ErrorMessage, Field} from "formik";
-import {Input} from "antd";
+import {Form, Input} from "antd";
 
-
-const CustomInput = ({label, name, errors, touched, type = "text", ...rest}) => {
-    const isPasswordField = type === "password";
+const CustomInput = ({label, name, type, onChange, value, errorMessage}) => {
+    const inputComponent = type === "password" ? (
+        <Input.Password
+            id={name}
+            name={name}
+            onChange={onChange}
+            value={value}
+        />
+    ) : (
+        <Input
+            id={name}
+            name={name}
+            type={type}
+            onChange={onChange}
+            value={value}
+        />
+    );
 
     return (
-        <div className={"row p-2 d-flex justify-content-center"}>
-            <label htmlFor={name}>{label}:</label>
-            <Field name={name}>
-                {({field}) => (
-                    <>
-                        {isPasswordField ? (
-                            <Input.Password
-                                {...field}
-                                {...rest}
-                                className={errors[name] && touched[name] ? "input-error" : "stil"}
-                            />
-                        ) : (
-                            <Input
-                                {...field}
-                                {...rest}
-                                className={errors[name] && touched[name] ? "input-error" : "stil"}
-                            />
-                        )}
-                    </>
-                )}
-            </Field>
-            <ErrorMessage name={name} component="div" className="error"/>
-
-        </div>
+        <Form.Item
+            label={label}
+            validateStatus={errorMessage ? "error" : ""}
+            help={errorMessage}
+        >
+            {inputComponent}
+        </Form.Item>
     );
 };
 
