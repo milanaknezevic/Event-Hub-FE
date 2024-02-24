@@ -39,7 +39,7 @@
 }
 
 .welcome-background .login-btn:hover {
-    color: var(--gray2-color);
+    color: var(--gray-color);
     background-color: var(--lighter-color);
 }
 

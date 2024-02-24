@@ -1,28 +1,21 @@
-import {Form, Select} from "antd";
+import { Form, Select } from "antd";
 
-
-const CustomSelect = ({label, name, type, onChange, value, errorMessage, options}) => {
-
+const CustomSelect = ({ label, name, options, onChange,errorMessage  }) => {
     return (
+        <Form.Item label={label} validateStatus={errorMessage ? 'error' : ''} help={errorMessage}>
 
-        <Form.Item
-            label={label}>
-
-            <Select
+        <Select
                 id={name}
                 name={name}
-                type={type}
-                defaultValue="Milana"
+                onChange={(value) => onChange(name, value)}
             >
-                {options.map(option => (
-                    <Select.Option key={option.id} value={option.id}>
-                        {option.name}
+                {options?.map((option) => (
+                    <Select.Option key={option.key} value={option.key}>
+                        {option.value}
                     </Select.Option>
                 ))}
             </Select>
         </Form.Item>
-
-
     );
 };
 

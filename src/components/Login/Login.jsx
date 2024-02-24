@@ -7,11 +7,13 @@ import {userLogin} from "../../redux/auth.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErrors.jsx";
 import {useEffect} from "react";
+import {auth} from "../../redux/selectors.jsx";
 
 const Login = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate();
-    const {backendErrors, isAuthenticated} = useSelector(state => state.auth);
+    const {backendErrors, isAuthenticated} = useSelector(auth);
+
     const onSubmit = async (values) => {
         await dispatch(userLogin(values));
 

@@ -1,20 +1,45 @@
 import {useFormik} from "formik";
-import {registrationSchema} from "../../schemas/index.jsx";
 import CustomInput from "../FormComponents/CustomInput.jsx";
 import {Button} from "antd";
 import {NavLink} from "react-router-dom";
 import CustomSelect from "../FormComponents/CustomSelect.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import {getUserRoles} from "../../redux/user.jsx";
+import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErrors.jsx";
+import {uploadAvatar, userRegister} from "../../redux/auth.jsx";
+import {registrationSchema} from "../../schemas/index.jsx";
+import {auth, user} from "../../redux/selectors.jsx";
 
 const Register = () => {
-    const onSubmit = async () => {
-        console.log("register")
+    const dispatch = useDispatch()
+    const {backendErrors} = useSelector(auth)
+    const {userRoles} = useSelector(user);
+    const [avatarValue, setAvatarValue] = useState("");
+
+    useEffect(() => {
+        dispatch(getUserRoles({}))
+    }, []);
+
+    const onSubmit = async (values) => {
+        let updatedValues = {...values}
+        if (avatarValue) {
+            const formData = new FormData();
+            formData.append("file", avatarValue)
+            const {payload} = await dispatch(uploadAvatar(formData));
+
+            if (payload && payload.imageName) {
+                updatedValues = {...values, avatar: payload.imageName};
+            }
+        }
+        await dispatch(userRegister(updatedValues));
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setAvatarValue(file)
 
     };
-    const roleOptions = [
-        {id: 'admin', name: 'Administrator'},
-        {id: 'user', name: 'Regular User'},
-    ];
-
 
     const formik = useFormik({
         initialValues: {
@@ -31,6 +56,8 @@ const Register = () => {
         validationSchema: registrationSchema,
         onSubmit: onSubmit,
     });
+
+    useFormattedBackendErrors(backendErrors, formik.setErrors)
 
     return (
         <div className="container-fluid flex-grow-1 d-flex align-items-center justify-content-center">
@@ -141,7 +168,18 @@ const Register = () => {
                                 />
                             </div>
                             <div className={"col-12 col-md-6"}>
-                                <CustomSelect label="Role" name="role" options={roleOptions}/>
+                                <CustomSelect
+                                    label="Role"
+                                    name="role"
+                                    options={userRoles}
+                                    onChange={(fieldName, value) => formik.setFieldValue(fieldName, value)}
+                                    errorMessage={formik.errors.role && formik.touched.role ? formik.errors.role : ""}
+                                />
+                            </div>
+                            <div className={"col-12 "}>
+                                <CustomInput label="Avatar" name="avatar" type="file" value={formik.values.avatar}
+                                             onChange={handleFileChange}/>
+
                             </div>
 
 

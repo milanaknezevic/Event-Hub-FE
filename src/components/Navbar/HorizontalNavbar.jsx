@@ -1,9 +1,13 @@
 import logoImage from '../../assets/logo.png';
-import {Link, Outlet} from "react-router-dom";
+import {Link, Outlet, useNavigate} from "react-router-dom";
 import Footer from "../Footer/Footer.jsx";
+export const history = {
+    navigate: null
+}
 
 
 const HorizontalNavbar = () => {
+    history.navigate = useNavigate()
     return (
         <div className={"d-flex flex-column min-vh-100"}>
             <div className="container-fluid nav-container">
