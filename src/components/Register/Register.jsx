@@ -28,8 +28,8 @@ const Register = () => {
             formData.append("file", avatarValue)
             const {payload} = await dispatch(uploadAvatar(formData));
 
-            if (payload && payload.imageName) {
-                updatedValues = {...values, avatar: payload.imageName};
+            if (payload && payload.imageName && payload.buffer) {
+                updatedValues = {...values, avatar: payload.imageName,buffer:payload.buffer};
             }
         }
         await dispatch(userRegister(updatedValues));
