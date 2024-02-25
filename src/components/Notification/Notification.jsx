@@ -1,10 +1,12 @@
 import {notification} from "antd";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {notificationObj} from "../../redux/selectors.jsx";
+import {resetNotification} from "../../redux/notification.jsx";
 
 const Notification = () => {
     const {showMessage, message, notificationType, title} = useSelector(notificationObj);
+    const dispatch = useDispatch();
     const getNotificationStyle = type => {
         return {
             success: {
@@ -21,17 +23,20 @@ const Notification = () => {
             },
         }[type]
     }
+    const openNotification = (type, messageText, title) => {
+        notification.open({
+            message: <span style={{color: getNotificationStyle(type).color}}>{title}</span>,
+            description: `${messageText}`,
+            placement: "bottomRight",
+            style: getNotificationStyle(type),
+            duration: 2,
+            onClose: () => {
+            dispatch(resetNotification());
+        },
+        });
+    };
 
     useEffect(() => {
-        const openNotification = (type, messageText, title) => {
-            notification.open({
-                message: <span style={{color: getNotificationStyle(type).color}}>{title}</span>,
-                description: `${messageText}`,
-                placement: "bottomRight",
-                style: getNotificationStyle(type),
-                duration: 2,
-            });
-        };
 
         if (showMessage) {
             openNotification(notificationType, message, title);

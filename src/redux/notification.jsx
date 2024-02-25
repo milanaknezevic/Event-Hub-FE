@@ -13,13 +13,15 @@ export const notificationSlice = createSlice({
     initialState,
     reducers: {
         displayNotification: (state, action) => {
+            console.log("redux notif")
             state.showMessage = true;
             state.notificationType = action.payload.notificationType;
             state.message = action.payload.message;
             state.title = action.payload.title;
         },
+        resetNotification: () => initialState,
     },
 
 })
-export const {displayNotification} = notificationSlice.actions;
+export const {displayNotification,resetNotification} = notificationSlice.actions;
 export const notificationReducer = notificationSlice.reducer;

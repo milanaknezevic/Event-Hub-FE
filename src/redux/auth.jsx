@@ -23,6 +23,11 @@ export const userLogin = createAsyncThunk(
             }))
             return response.data;
         } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Invalid credentials. Please try again.",
+                title: "Login"
+            }))
             return rejectWithValue(error.response.data);
         }
     }
@@ -41,13 +46,15 @@ export const uploadAvatar = createAsyncThunk(
 export const userRegister = createAsyncThunk(
     'auth/register', async (data, {dispatch, rejectWithValue}) => {
         try {
+            console.log("data ",data)
+            // console.log("form ", formData)
             const response = await axios.post('/api/users/', data);
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "Registration successful. Your account will be approved shortly.",
                 title: "Registration"
             }))
-            history.navigate("/login")
+            history.navigate("/")
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
