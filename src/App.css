@@ -1,5 +1,5 @@
 @import url('./components/Login/Login.css');
-@import url('./components/Navbar/HorizontalNavbar.module.css');
+@import url('./components/Navbar/HorizontalNavbar.css');
 
 :root {
     --dark-color: #8B735B;
