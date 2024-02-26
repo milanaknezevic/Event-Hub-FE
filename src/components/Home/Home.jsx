@@ -18,7 +18,7 @@ const Home = () => {
                             through the best events
                         </div>
                         <div className={"row justify-content-center justify-content-md-end"}>
-                            <div className={"col-4"}>
+                            <div className={"col-12 col-md-4"}>
                                 <Button className="login-btn btn col-12 d-flex justify-content-center align-items-center" type="submit" onClick={handleLogin}>Login
                                 </Button>
                             </div>

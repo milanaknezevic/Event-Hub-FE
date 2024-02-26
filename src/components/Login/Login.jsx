@@ -81,7 +81,7 @@ const Login = () => {
 
 
                             <div className={"col-12 p-2 d-flex justify-content-center pb-3"}>
-                                <Button className="login-btn btn col-6" htmlType="submit" type="submit">Login
+                                <Button className="login-btn btn col-12 col-md-6" htmlType="submit" type="submit">Login
                                 </Button>
                             </div>
                             <div className={"col-12 d-flex justify-content-center pb-3"}>

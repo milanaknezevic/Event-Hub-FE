@@ -185,7 +185,7 @@ const Register = () => {
 
 
                             <div className={"col-12 p-2 d-flex justify-content-center pb-3"}>
-                                <Button className="register-btn btn col-6" htmlType="submit" type="submit">Sign up
+                                <Button className="register-btn btn col-12 col-md-6" htmlType="submit" type="submit">Sign up
                                 </Button>
                             </div>
                             <div className={"col-12 d-flex justify-content-center pb-3"}>
