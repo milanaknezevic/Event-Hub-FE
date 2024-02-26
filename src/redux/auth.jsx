@@ -2,12 +2,14 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
 import {displayNotification} from "./notification.jsx";
 import {history} from "../components/Navbar/HorizontalNavbar.jsx";
+import base from '../api/baseService.jsx';
 
 export const initialState = {
     isAuthenticated: false,
-    user: null,
+    loggedUser: null,
     backendErrors: {},
 }
+const authenticatedInstance = base.service(true);
 
 
 export const userLogin = createAsyncThunk(
@@ -16,6 +18,7 @@ export const userLogin = createAsyncThunk(
             const response = await axios.post('/api/users/login', {username, password});
             const {accessToken} = response.data;
             localStorage.setItem('token', accessToken);
+            dispatch(getLoggedUser({}))
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "Login successful!",
@@ -32,6 +35,21 @@ export const userLogin = createAsyncThunk(
         }
     }
 );
+
+
+export const getLoggedUser = createAsyncThunk(
+    'user/logged', async ({rejectWithValue}) => {
+        try {
+            const response = await authenticatedInstance.get('/api/users/user/logged');
+            console.log("resp ", response)
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
 export const uploadAvatar = createAsyncThunk(
     'auth/avatar', async (data, {rejectWithValue}) => {
         try {
@@ -46,8 +64,6 @@ export const uploadAvatar = createAsyncThunk(
 export const userRegister = createAsyncThunk(
     'auth/register', async (data, {dispatch, rejectWithValue}) => {
         try {
-            console.log("data ",data)
-            // console.log("form ", formData)
             const response = await axios.post('/api/users/', data);
             dispatch(displayNotification({
                 notificationType: "success",
@@ -70,7 +86,7 @@ export const authSlice = createSlice({
         logout: (state) => {
             state.isAuthenticated = false;
             state.loading = false;
-            state.user = null;
+            state.loggedUser = null;
             localStorage.removeItem("token")
         },
         resetAuthState: () => initialState,
@@ -99,6 +115,19 @@ export const authSlice = createSlice({
             })
             .addCase(userRegister.fulfilled, (state) => {
                 state.loading = false;
+                state.backendErrors = {};
+            })
+            .addCase(getLoggedUser.pending, state => {
+                state.loading = true;
+            })
+            .addCase(getLoggedUser.rejected, (state, action) => {
+                state.backendErrors = action.payload
+                state.loading = false;
+            })
+            .addCase(getLoggedUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isAuthenticated = true;
+                state.loggedUser = action.payload
                 state.backendErrors = {};
             })
     }

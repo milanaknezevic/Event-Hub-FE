@@ -29,7 +29,7 @@ const Register = () => {
             const {payload} = await dispatch(uploadAvatar(formData));
 
             if (payload && payload.imageName && payload.buffer) {
-                updatedValues = {...values, avatar: payload.imageName,buffer:payload.buffer};
+                updatedValues = {...values, avatar: payload.imageName, buffer: payload.buffer};
             }
         }
         await dispatch(userRegister(updatedValues));
@@ -58,6 +58,7 @@ const Register = () => {
     });
 
     useFormattedBackendErrors(backendErrors, formik.setErrors)
+
 
     return (
         <div className="container-fluid flex-grow-1 d-flex align-items-center justify-content-center">

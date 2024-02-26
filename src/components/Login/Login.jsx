@@ -9,18 +9,21 @@ import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErro
 import {useEffect} from "react";
 import {auth} from "../../redux/selectors.jsx";
 
+
 const Login = () => {
+
     const dispatch = useDispatch()
     const navigate = useNavigate();
     const {backendErrors, isAuthenticated} = useSelector(auth);
 
     const onSubmit = async (values) => {
-        await dispatch(userLogin(values));
+       await dispatch(userLogin(values));
 
     };
     useEffect(() => {
         if (isAuthenticated) {
-            navigate("/")
+
+            navigate("/users")
         }
         // formik.resetForm();
 
