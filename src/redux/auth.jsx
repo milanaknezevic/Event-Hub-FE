@@ -41,7 +41,6 @@ export const getLoggedUser = createAsyncThunk(
     'user/logged', async ({rejectWithValue}) => {
         try {
             const response = await authenticatedInstance.get('/api/users/user/logged');
-            console.log("resp ", response)
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);

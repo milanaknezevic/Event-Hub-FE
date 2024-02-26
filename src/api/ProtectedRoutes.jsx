@@ -28,7 +28,7 @@ const ProtectedRoute = ({children, path}) => {
         return ["/users", "/events"];
         }
     };
-    console.log("loading ", loading)
+
     if( loading)
     {
         return <h1>Loading</h1>
