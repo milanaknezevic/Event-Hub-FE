@@ -4,12 +4,12 @@ import {displayNotification} from "./notification.jsx";
 import {history} from "../components/Navbar/HorizontalNavbar.jsx";
 import base from '../api/baseService.jsx';
 
+const api = base.service(true);
 export const initialState = {
     isAuthenticated: false,
     loggedUser: null,
     backendErrors: {},
 }
-const authenticatedInstance = base.service(true);
 
 
 export const userLogin = createAsyncThunk(
@@ -28,7 +28,7 @@ export const userLogin = createAsyncThunk(
         } catch (error) {
             dispatch(displayNotification({
                 notificationType: "error",
-                message: "Invalid credentials. Please try again.",
+                message: "Login failed. Please try again.",
                 title: "Login"
             }))
             return rejectWithValue(error.response.data);
@@ -40,7 +40,7 @@ export const userLogin = createAsyncThunk(
 export const getLoggedUser = createAsyncThunk(
     'user/logged', async ({rejectWithValue}) => {
         try {
-            const response = await authenticatedInstance.get('/api/users/user/logged');
+            const response = await api.get('/api/users/user/logged');
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);

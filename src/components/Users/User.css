@@ -1,0 +1,12 @@
+.users-container h1{
+    color: var(--blue-color);
+}
+.users-container .ant-table{
+    background-color: var(--gray-color);
+}
+.users-container .ant-table-wrapper .ant-table-thead >tr>th{
+    color:var(--blue-color)
+}
+/*.users-container .ant-table .ant-table-header .ant-table-thead{*/
+/*    background-color: red;*/
+/*}*/
