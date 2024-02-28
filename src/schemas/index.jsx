@@ -10,6 +10,15 @@ export const loginSchema = yup.object().shape({
         .min(2, "Password must be at least 2 characters")
         .required("Password is required"),
 });
+export const addUserSchema = yup.object().shape({
+    name: yup.string().required('Name is required'),
+    lastname: yup.string().required('Last name is required'),
+    email: yup.string().email('Enter a valid email address').required('Email is required'),
+    username: yup.string().required('Username is required'),
+    phoneNumber: yup.string().required('Phone number is required'),
+    role: yup.string().required('Role is required'),
+    status: yup.string().required('Status is required'),
+});
 export const registrationSchema = yup.object().shape({
     name: yup.string().required('Required'),
     lastname: yup.string().required('Required'),
@@ -21,4 +30,26 @@ export const registrationSchema = yup.object().shape({
     phoneNumber: yup.string().required('Required'),
     role: yup.string().required('Required'),
 });
+export const generateValidationSchema = (mode) => {
+    const baseSchema = yup.object().shape({
+        name: yup.string().required('Name is required'),
+        lastname: yup.string().required('Last name is required'),
+        email: yup.string().email('Enter a valid email address').required('Email is required'),
+        username: yup.string().required('Username is required'),
+        phoneNumber: yup.string().required('Phone number is required'),
+        role: yup.string().required('Role is required'),
+        status: yup.string().required('Status is required'),
+    });
 
+    if (mode === 'create') {
+        return baseSchema.concat(
+            yup.object().shape({
+                password: yup.string().required('Required').min(2, 'Password must be at least 2 characters'),
+                confirmPassword: yup.string().required('Required').min(2, 'Password must be at least 2 characters')
+                    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+            })
+        );
+    }
+
+    return baseSchema;
+};

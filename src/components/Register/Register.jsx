@@ -38,7 +38,6 @@ const Register = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setAvatarValue(file)
-
     };
 
     const formik = useFormik({
@@ -180,7 +179,6 @@ const Register = () => {
                             <div className={"col-12 "}>
                                 <CustomInput label="Avatar" name="avatar" type="file" value={formik.values.avatar}
                                              onChange={handleFileChange}/>
-
                             </div>
 
 
