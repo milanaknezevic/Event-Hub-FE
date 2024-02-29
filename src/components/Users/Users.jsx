@@ -119,7 +119,7 @@ const Users = () => {
                         </div>
                     </div>
                     <div className={"row justify-content-between p-2"}>
-                        <div className="col-12 col-md-3 d-flex justify-content-start">
+                        <div className="col-12 col-md-3 d-flex justify-content-start search-container">
                             <Search
                                 placeholder="input search text"
                                 allowClear

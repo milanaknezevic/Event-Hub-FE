@@ -1,33 +1,45 @@
-.users-container h1{
+.users-container h1 {
     color: var(--blue-color);
 }
-.users-container .ant-table{
+
+.users-container .ant-table {
     background-color: var(--gray-color);
 }
-.users-container .ant-table-wrapper .ant-table-thead >tr>th{
-    color:var(--blue-color)
+
+.users-container .ant-table-wrapper .ant-table-thead > tr > th {
+    color: var(--blue-color)
 }
-.user-modal .ant-modal-header .ant-modal-title{
-    color:var(--blue-color);
+
+.user-modal .ant-modal-header .ant-modal-title {
+    color: var(--blue-color);
     font-size: 1.5em;
 }
-.user-modal .ant-modal-footer .ant-btn-default{
+
+.user-modal .ant-modal-footer .ant-btn-default {
     color: var(--white-color);
     background-color: red;
 }
-.user-modal .ant-modal-footer .ant-btn-default:hover{
+
+.user-modal .ant-modal-footer .ant-btn-default:hover {
     color: var(--white-color);
     background-color: #ea1f1f;
 }
 
-.user-modal .ant-modal-footer .ant-btn-primary{
+.user-modal .ant-modal-footer .ant-btn-primary {
     color: var(--white-color);
     background-color: var(--blue-color);
 }
-.user-modal .ant-modal-footer .ant-btn-primary:hover{
+
+.user-modal .ant-modal-footer .ant-btn-primary:hover {
     color: var(--white-color);
     background-color: var(--blue2-color);
 }
+
+.users-container .search-container .ant-btn,
+.users-container .search-container .ant-input-affix-wrapper {
+    background-color: var(--gray-color);
+}
+
 
 /*.users-container .ant-table .ant-table-header .ant-table-thead{*/
 /*    background-color: red;*/

@@ -174,6 +174,7 @@ const Register = () => {
                                     options={userRoles}
                                     onChange={(fieldName, value) => formik.setFieldValue(fieldName, value)}
                                     errorMessage={formik.errors.role && formik.touched.role ? formik.errors.role : ""}
+                                    value={formik.values.role}
                                 />
                             </div>
                             <div className={"col-12 "}>

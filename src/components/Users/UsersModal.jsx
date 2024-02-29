@@ -1,34 +1,56 @@
 import {Modal} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {user} from "../../redux/selectors.jsx";
-import {getAdminUserRoles, setUserModalState} from "../../redux/user.jsx";
+import {addUser, editUser, getAdminUserRoles, getUserStatus, setUserModalState} from "../../redux/user.jsx";
 import CustomInput from "../FormComponents/CustomInput.jsx";
 import {useFormik} from "formik";
-import {generateValidationSchema} from "../../schemas/index.jsx";
+
 import CustomSelect from "../FormComponents/CustomSelect.jsx";
 import {useEffect, useState} from "react";
+import {uploadAvatar} from "../../redux/auth.jsx";
+import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErrors.jsx";
+import {editUserSchema, registrationSchema} from "../../schemas/index.jsx";
 
 const UsersModal = () => {
     const dispatch = useDispatch()
     const {form} = useSelector(user);
-    const {userAdminRoles} = useSelector(user);
+    const {userAdminRoles, userStatus} = useSelector(user);
     const [avatarValue, setAvatarValue] = useState("");
 
     useEffect(() => {
         dispatch(getAdminUserRoles({}))
+        dispatch(getUserStatus({}))
     }, []);
 
     const onSubmit = async (values) => {
-        console.log("on Submit ", values)
+        let updatedValues = {...values}
+        if (avatarValue) {
+            const formData = new FormData();
+            formData.append("file", avatarValue)
+            const {payload} = await dispatch(uploadAvatar(formData));
 
+            if (payload && payload.imageName && payload.buffer) {
+                updatedValues = {...values, avatar: payload.imageName, buffer: payload.buffer};
+            }
+        }
+
+        if (form.mode === 'edit') {
+            await dispatch(editUser(updatedValues));
+        } else if (form.mode === 'create') {
+            await dispatch(addUser(updatedValues));
+        }
+        formik.resetForm(formik.initialValues)
     };
     const handleCancel = () => {
-        dispatch(setUserModalState({ modalOpen: false, mode: '' }));
+        dispatch(setUserModalState({modalOpen: false, mode: ''}));
+        formik.resetForm(formik.initialValues)
     };
-
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setAvatarValue(file)
+    };
     const formik = useFormik({
         initialValues: {
-            id: '',
             name: '',
             lastname: '',
             email: '',
@@ -40,18 +62,25 @@ const UsersModal = () => {
             status: '',
             avatar: '',
         },
-        validationSchema: generateValidationSchema(form.mode),
+        validationSchema: form.mode === 'create' ? registrationSchema : editUserSchema,
         onSubmit: onSubmit,
     });
     useEffect(() => {
         if (form.mode === 'edit') {
-            formik.setValues(form.userObj);
+            const statusKey = userStatus.find(item => item.value === form.userObj.status)?.key;
+            const roleKey = userAdminRoles.find(item => item.value === form.userObj.role)?.key;
+
+            const updatedValues = {
+                ...form.userObj,
+                status: statusKey !== undefined ? statusKey : form.userObj.status,
+                role: roleKey !== undefined ? roleKey : form.userObj.role,
+            };
+
+            formik.setValues(updatedValues);
         }
     }, [form.mode, form.userObj]);
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setAvatarValue(file)
-    };
+    useFormattedBackendErrors(form.backendErrors, formik.setErrors)
+
     return (
         <>
             <Modal className={"user-modal"} size={"lg"} title={form.mode === "create" ? 'Create a user' : 'Edit user'}
@@ -164,21 +193,25 @@ const UsersModal = () => {
                             options={userAdminRoles}
                             onChange={(fieldName, value) => formik.setFieldValue(fieldName, value)}
                             errorMessage={formik.errors.role && formik.touched.role ? formik.errors.role : ""}
-                            value={form.mode === 'edit' ? formik.values.role || form.userObj.role : formik.values.role}
+                            value={formik.values.role}
                         />
                     </div>
-                    <div className={"col-12 "}>
+                    <div className={`col-12 ${form.mode === 'create' ? '' : 'col-md-6'}`}>
                         <CustomInput label="Avatar" name="avatar" type="file" value={formik.values.avatar}
                                      onChange={handleFileChange}/>
                     </div>
+                    {form.mode !== 'create' &&
+                        <div className={"col-12 col-md-6"}>
+                            <CustomSelect
+                                label="Status"
+                                name="status"
+                                options={userStatus}
+                                onChange={(fieldName, value) => formik.setFieldValue(fieldName, value)}
+                                errorMessage={formik.errors.status && formik.touched.status ? formik.errors.status : ""}
+                                value={formik.values.status}
+                            />
+                        </div>}
                 </form>
-                {/*<div className={"row d-flex justify-content-center justify-content-md-end modal-footer"}>*/}
-                {/*       <Button className="cancel-btn btn col-12 col-md-3 d-flex justify-content-center align-items-center" htmlType="submit" type="submit" onClick={handleCancel}>Cancel*/}
-                {/*       </Button>*/}
-                {/*       <Button className="submit-btn btn col-12 col-md-3 d-flex justify-content-center align-items-center" htmlType="submit" type="submit" onClick={formik.handleSubmit}>Submit*/}
-                {/*       </Button>*/}
-                {/*</div>*/}
-
             </Modal>
         </>
     );

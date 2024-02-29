@@ -1,12 +1,14 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
 import base from '../api/baseService.jsx';
+import {displayNotification} from "./notification.jsx";
 
 
 const api = base.service(true);
 export const initialState = {
     userRoles: [],
     userAdminRoles: [],
+    userStatus: [],
     users: [],
     pagination: {
         total: 0,
@@ -45,6 +47,17 @@ export const getAdminUserRoles = createAsyncThunk(
         }
     }
 );
+
+export const getUserStatus = createAsyncThunk(
+    'user/userStatus', async ({rejectWithValue}) => {
+        try {
+            const response = await api.get('/api/users/userStatus');
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
 export const getAllUsers = createAsyncThunk(
     'users', async ({page = 1, size = 10}, {rejectWithValue}) => {
         try {
@@ -67,6 +80,48 @@ export const getUserById = createAsyncThunk(
         }
     }
 )
+export const editUser = createAsyncThunk(
+    "users/edit",
+    async (data, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.patch(`/api/users/${data.id}/`, (data));
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "User edited successfully!",
+                title: "User"
+            }))
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Failed while editing user!",
+                title: "User"
+            }))
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+export const addUser = createAsyncThunk(
+    "users/add",
+    async (data, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.post(`/api/users/add_user/`, (data));
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "User added successfully!",
+                title: "User"
+            }))
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Failed while adding user!",
+                title: "User"
+            }))
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
 
 
 export const userSlice = createSlice({
@@ -75,7 +130,6 @@ export const userSlice = createSlice({
     reducers: {
         setUserModalState: (state, action) => {
             const {modalOpen, mode} = action.payload;
-            console.log("mode ", mode ," modal open ", modalOpen)
             state.form.modalOpen = modalOpen;
             state.form.formSubmitting = false;
             state.form.backendErrors = {};
@@ -85,29 +139,17 @@ export const userSlice = createSlice({
     },
     extraReducers: builder => {
         builder
-            .addCase(getUserRoles.pending, state => {
-                state.loading = true;
-            })
-            .addCase(getUserRoles.rejected, (state, action) => {
-                state.backendErrors = action.payload
-                state.loading = false;
-                state.error = true;
-            })
             .addCase(getUserRoles.fulfilled, (state, action) => {
                 state.loading = false;
                 state.userRoles = action.payload;
             })
-            .addCase(getAdminUserRoles.pending, state => {
-                state.loading = true;
-            })
-            .addCase(getAdminUserRoles.rejected, (state, action) => {
-                state.backendErrors = action.payload
-                state.loading = false;
-                state.error = true;
-            })
             .addCase(getAdminUserRoles.fulfilled, (state, action) => {
                 state.loading = false;
                 state.userAdminRoles = action.payload;
+            })
+            .addCase(getUserStatus.fulfilled, (state, action) => {
+                state.loading = false;
+                state.userStatus = action.payload;
             })
             .addCase(getAllUsers.pending, state => {
                 state.loading = true;
@@ -133,7 +175,32 @@ export const userSlice = createSlice({
                 state.form.mode = "edit"
             })
 
-
+            .addCase(editUser.pending, (state) => {
+                state.form.formSubmitting = true
+            })
+            .addCase(editUser.rejected, (state, action) => {
+                state.form.formSubmitting = false
+                state.form.backendErrors = action.payload
+            })
+            .addCase(editUser.fulfilled, (state) => {
+                state.form.formSubmitting = false
+                state.form.modalOpen = false
+                state.form.userObj = {}
+                state.form.mode = ""
+            })
+            .addCase(addUser.pending, (state) => {
+                state.form.formSubmitting = true
+            })
+            .addCase(addUser.rejected, (state, action) => {
+                state.form.formSubmitting = false
+                state.form.backendErrors = action.payload
+            })
+            .addCase(addUser.fulfilled, (state) => {
+                state.form.formSubmitting = false
+                state.form.modalOpen = false
+                state.form.userObj = {}
+                state.form.mode = ""
+            })
     }
 })
 export const {setUserModalState} = userSlice.actions;
