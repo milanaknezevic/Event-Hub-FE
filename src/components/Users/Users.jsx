@@ -1,30 +1,36 @@
-import {Button, Space,Input, Table, Tooltip} from "antd";
-import {useEffect} from "react";
+import {Button, Input, Space, Table, Tooltip} from "antd";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllUsers, getUserById, setUserModalState} from "../../redux/user.jsx";
+import {deleteUser, getAllUsers, getUserById, setUserModalState} from "../../redux/user.jsx";
 import {user} from "../../redux/selectors.jsx";
 import {FaCircle, FaEdit, FaTrash} from 'react-icons/fa';
-const { Search } = Input;
 import UsersModal from "./UsersModal.jsx";
 import DeleteUserModal from "./DeleteUserModal.jsx";
+
+const {Search} = Input;
 
 const Users = () => {
     const dispatch = useDispatch()
     const {users, loading, pagination} = useSelector(user);
+    const [userId, setUserId] = useState(null)
 
 
     useEffect(() => {
-        dispatch(getAllUsers({page: 1, size: 10}))
+        dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize,search:""}))
     }, [])
 
     const handleEdit = (id) => {
         dispatch(getUserById(id))
     }
-    const handleDelete = (id) => {
-        dispatch(setUserModalState({ modalOpen: true, mode: 'delete' }));
+    const confirmUserDelete = () => {
+        dispatch(deleteUser({id: userId, pagination: pagination}));
     }
-    const handleAddUser=()=>{
-        dispatch(setUserModalState({ modalOpen: true, mode: 'create' }));
+    const handleDelete = (id) => {
+        setUserId(id)
+        dispatch(setUserModalState({modalOpen: true, mode: 'delete'}));
+    }
+    const handleAddUser = () => {
+        dispatch(setUserModalState({modalOpen: true, mode: 'create'}));
     }
 
     function CheckUserStatus(checkStatus) {
@@ -103,14 +109,17 @@ const Users = () => {
         },
     ];
     const handleChange = (newPagination) => {
-        dispatch(getAllUsers({page: newPagination.current, size: newPagination.pageSize}))
+        dispatch(getAllUsers({page: newPagination.current, size: newPagination.pageSize,search:""}))
     }
 
-    const onSearch = (value, _e, info) => console.log(info?.source, value);
+    const onSearch = (data) => {
+        console.log("search ", data);
+        dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize, search:data}))
+    }
 
     return (
 
-        <div className="flex-grow-1 container-fluid  users-container mt-4">
+        <div className="flex-grow-1 container-fluid users-container mt-4">
             <div className="row justify-content-center align-items-center">
                 <div className={"col-11"}>
                     <div className={"row"}>
@@ -118,16 +127,18 @@ const Users = () => {
                             <h1>Users</h1>
                         </div>
                     </div>
-                    <div className={"row justify-content-between p-2"}>
-                        <div className="col-12 col-md-3 d-flex justify-content-start search-container">
+                    <div className={"row justify-content-between pt-2 pb-2 "}>
+                        <div className="col-12 col-md-2 d-flex justify-content-start search-container ">
                             <Search
                                 placeholder="input search text"
                                 allowClear
                                 onSearch={onSearch}
                             />
                         </div>
-                        <div className="col-12 col-md-2 d-flex justify-content-end">
-                            <Button onClick={handleAddUser} className="login-btn btn col-12 d-flex justify-content-center align-items-center" htmlType="submit" type="submit">Add user
+                        <div className="col-12 col-md-2 d-flex justify-content-end pt-2 pt-md-0">
+                            <Button onClick={handleAddUser}
+                                    className="login-btn btn col-12 d-flex justify-content-center align-items-center"
+                                    htmlType="submit" type="submit">Add user
                             </Button>
                         </div>
                     </div>
@@ -142,7 +153,7 @@ const Users = () => {
                                        pageSize: pagination.pageSize,
                                        total: pagination.total,
                                        showSizeChanger: true,
-                                       pageSizeOptions: ['10', '50', '100'],
+                                       pageSizeOptions: ['5', '10', '20'],
                                        locale: {items_per_page: ''}
                                    }}/>
                         </div>
@@ -150,7 +161,7 @@ const Users = () => {
                 </div>
             </div>
             <UsersModal/>
-            <DeleteUserModal/>
+            <DeleteUserModal handleOk={confirmUserDelete}/>
         </div>
     );
 };

@@ -13,7 +13,7 @@ export const initialState = {
     pagination: {
         total: 0,
         current: 1,
-        pageSize: 10,
+        pageSize: 5,
     },
     form: {
         modalOpen: false,
@@ -59,9 +59,9 @@ export const getUserStatus = createAsyncThunk(
     }
 );
 export const getAllUsers = createAsyncThunk(
-    'users', async ({page = 1, size = 10}, {rejectWithValue}) => {
+    'users', async ({page = 1, size = 5,search}, {rejectWithValue}) => {
         try {
-            const response = await axios.get(`/api/users?page=${page}&size=${size}`);
+            const response = await axios.get(`/api/users?page=${page}&size=${size}&search=${search}`);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -82,9 +82,10 @@ export const getUserById = createAsyncThunk(
 )
 export const editUser = createAsyncThunk(
     "users/edit",
-    async (data, {dispatch, rejectWithValue}) => {
+    async ({data, pagination}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.patch(`/api/users/${data.id}/`, (data));
+            dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize,search:""}))
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "User edited successfully!",
@@ -92,9 +93,27 @@ export const editUser = createAsyncThunk(
             }))
             return response.data;
         } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
+export const deleteUser = createAsyncThunk(
+    "users/delete",
+    async ({id, pagination}, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.patch(`/api/users/delete/${id}/`);
+            dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize,search:""}))
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "User deleted successfully!",
+                title: "User"
+            }))
+            return response.data;
+        } catch (error) {
             dispatch(displayNotification({
                 notificationType: "error",
-                message: "Failed while editing user!",
+                message: "Error while deleting user!",
                 title: "User"
             }))
             return rejectWithValue(error.response.data);
@@ -103,9 +122,10 @@ export const editUser = createAsyncThunk(
 )
 export const addUser = createAsyncThunk(
     "users/add",
-    async (data, {dispatch, rejectWithValue}) => {
+    async ({data, pagination}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.post(`/api/users/add_user/`, (data));
+            dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize,search:""}))
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "User added successfully!",
@@ -113,11 +133,6 @@ export const addUser = createAsyncThunk(
             }))
             return response.data;
         } catch (error) {
-            dispatch(displayNotification({
-                notificationType: "error",
-                message: "Failed while adding user!",
-                title: "User"
-            }))
             return rejectWithValue(error.response.data);
         }
     }
@@ -183,6 +198,12 @@ export const userSlice = createSlice({
                 state.form.backendErrors = action.payload
             })
             .addCase(editUser.fulfilled, (state) => {
+                state.form.formSubmitting = false
+                state.form.modalOpen = false
+                state.form.userObj = {}
+                state.form.mode = ""
+            })
+            .addCase(deleteUser.fulfilled, (state) => {
                 state.form.formSubmitting = false
                 state.form.modalOpen = false
                 state.form.userObj = {}

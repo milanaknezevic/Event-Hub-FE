@@ -7,8 +7,21 @@ import Register from "./components/Register/Register.jsx";
 import ProtectedRoute from "./api/ProtectedRoutes.jsx";
 import Users from "./components/Users/Users.jsx";
 import Page404 from "./constants/ErrorPages/Page404.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {auth} from "./redux/selectors.jsx";
+import {useEffect} from "react";
+import {getLoggedUser} from "./redux/auth.jsx";
+
 
 const App = () => {
+    const {isAuthenticated, loggedUser,loading} = useSelector(auth);
+    const dispatch = useDispatch()
+    const token = localStorage.getItem('token');
+
+    useEffect(() => {
+        if (!isAuthenticated && !loggedUser && token)
+            dispatch(getLoggedUser({}))
+    }, [isAuthenticated]);
     const router = createBrowserRouter(
         [
             {

@@ -13,14 +13,15 @@ import {editUserSchema, registrationSchema} from "../../schemas/index.jsx";
 
 const UsersModal = () => {
     const dispatch = useDispatch()
-    const {form} = useSelector(user);
-    const {userAdminRoles, userStatus} = useSelector(user);
+    const {userAdminRoles, userStatus,pagination,form} = useSelector(user);
     const [avatarValue, setAvatarValue] = useState("");
 
     useEffect(() => {
         dispatch(getAdminUserRoles({}))
         dispatch(getUserStatus({}))
     }, []);
+
+
 
     const onSubmit = async (values) => {
         let updatedValues = {...values}
@@ -35,11 +36,13 @@ const UsersModal = () => {
         }
 
         if (form.mode === 'edit') {
-            await dispatch(editUser(updatedValues));
+            await dispatch(editUser({ data: updatedValues, pagination: pagination }));
         } else if (form.mode === 'create') {
-            await dispatch(addUser(updatedValues));
+
+            await dispatch(addUser({ data: updatedValues, pagination: pagination }));
+
+            console.log("formik ", formik)
         }
-        formik.resetForm(formik.initialValues)
     };
     const handleCancel = () => {
         dispatch(setUserModalState({modalOpen: false, mode: ''}));
@@ -65,8 +68,9 @@ const UsersModal = () => {
         validationSchema: form.mode === 'create' ? registrationSchema : editUserSchema,
         onSubmit: onSubmit,
     });
+
     useEffect(() => {
-        if (form.mode === 'edit') {
+        // if (form.mode === 'edit') {
             const statusKey = userStatus.find(item => item.value === form.userObj.status)?.key;
             const roleKey = userAdminRoles.find(item => item.value === form.userObj.role)?.key;
 
@@ -77,7 +81,7 @@ const UsersModal = () => {
             };
 
             formik.setValues(updatedValues);
-        }
+        // }
     }, [form.mode, form.userObj]);
     useFormattedBackendErrors(form.backendErrors, formik.setErrors)
 

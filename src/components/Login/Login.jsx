@@ -25,7 +25,7 @@ const Login = () => {
 
             navigate("/users")
         }
-        // formik.resetForm();
+        console.log("is auth ", isAuthenticated)
 
     }, [isAuthenticated])
 

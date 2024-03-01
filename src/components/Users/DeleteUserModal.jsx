@@ -3,15 +3,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {user} from "../../redux/selectors.jsx";
 import {setUserModalState} from "../../redux/user.jsx";
 
-const DeleteUserModal = () => {
+const DeleteUserModal = ({handleOk}) => {
     const dispatch = useDispatch()
     const {form} = useSelector(user);
 
-
-    const handleOk = async (values) => {
-        console.log("on Submit ", values)
-
-    };
     const handleCancel = () => {
         dispatch(setUserModalState({modalOpen: false, mode: ''}));
     };
@@ -24,7 +19,6 @@ const DeleteUserModal = () => {
                 <div>
                     Are you sure you want to delete user?
                 </div>
-
             </Modal>
         </>
     );

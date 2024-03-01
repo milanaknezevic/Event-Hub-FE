@@ -11,10 +11,10 @@ const ProtectedRoute = ({children, path}) => {
     const dispatch = useDispatch()
     const token = localStorage.getItem('token');
 
-    useEffect(() => {
-        if (!isAuthenticated && !loggedUser && token)
-            dispatch(getLoggedUser({}))
-    }, [isAuthenticated]);
+    // useEffect(() => {
+    //     if (!isAuthenticated && !loggedUser && token)
+    //         dispatch(getLoggedUser({}))
+    // }, [isAuthenticated]);
 
 
     const getProtectedRoutes = () => {

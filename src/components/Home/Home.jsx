@@ -1,8 +1,11 @@
 import {useNavigate} from "react-router-dom";
 import {Button} from "antd";
+import {useSelector} from "react-redux";
+import {auth} from "../../redux/selectors.jsx";
 
 const Home = () => {
     const navigate = useNavigate();
+    const {isAuthenticated} = useSelector(auth);
     const handleLogin = () => {
         navigate('/login');
     };
@@ -17,12 +20,16 @@ const Home = () => {
                         <div className={"welcome-description text-center text-md-end"}>Join us and start your journey
                             through the best events
                         </div>
-                        <div className={"row justify-content-center justify-content-md-end"}>
-                            <div className={"col-12 col-md-4"}>
-                                <Button className="login-btn btn col-12 d-flex justify-content-center align-items-center" type="submit" onClick={handleLogin}>Login
-                                </Button>
+                        {!isAuthenticated &&
+                            <div className={"row justify-content-center justify-content-md-end"}>
+                                <div className={"col-12 col-md-4"}>
+                                    <Button
+                                        className="login-btn btn col-12 d-flex justify-content-center align-items-center"
+                                        type="submit" onClick={handleLogin}>Login
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
