@@ -1,7 +1,6 @@
 import {Table, Tooltip} from "antd";
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getUserById} from "../../redux/user.jsx";
 import {FaCircle, FaEye} from 'react-icons/fa';
 import {getAllTickets, getTicketById, getTicketPriority, getTicketStatus} from "../../redux/tickets.jsx";
 import Ticket from "./Ticket.jsx";
@@ -24,7 +23,6 @@ const Tickets = () => {
     }, [])
 
     const handleWatchTicket = (id) => {
-        console.log("ticket id ", id)
         dispatch(getTicketById(id))
     }
 
@@ -94,8 +92,8 @@ const Tickets = () => {
         dispatch(getAllTickets({
             page: newPagination.current,
             size: newPagination.pageSize,
-            status: newFilters.status,
-            priority: newFilters.priority
+            status: newFilters.status ?? "",
+            priority: newFilters.priority ?? ""
         }))
     }
 
@@ -107,7 +105,7 @@ const Tickets = () => {
                     <h1>Tickets</h1>
                 </div>
                 <div className="col-11">
-                    <Table columns={columns} dataSource={tickets.map(user => ({...user, key: user.id}))}
+                    <Table columns={columns} dataSource={tickets.map(ticket => ({...ticket, key: ticket.id}))}
                            loading={loading}
                            scroll={{y: 800, x: 1000}}
                            onChange={handleChange}

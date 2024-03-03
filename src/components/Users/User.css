@@ -17,6 +17,7 @@
     color: var(--white-color)
 }
 
+.ticket-modal .ant-modal-header .ant-modal-title,
 .user-modal .ant-modal-header .ant-modal-title {
     color: var(--blue-color);
     font-size: 1.5em;

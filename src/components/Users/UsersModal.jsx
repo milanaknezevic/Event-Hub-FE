@@ -37,13 +37,14 @@ const UsersModal = () => {
 
         if (form.mode === 'edit') {
             await dispatch(editUser({ data: updatedValues, pagination: pagination }));
+
         } else if (form.mode === 'create') {
 
             await dispatch(addUser({ data: updatedValues, pagination: pagination }));
 
-            console.log("formik ", formik)
         }
     };
+
     const handleCancel = () => {
         dispatch(setUserModalState({modalOpen: false, mode: ''}));
         formik.resetForm(formik.initialValues)
@@ -70,7 +71,7 @@ const UsersModal = () => {
     });
 
     useEffect(() => {
-        // if (form.mode === 'edit') {
+         if (form.mode === 'edit') {
             const statusKey = userStatus.find(item => item.value === form.userObj.status)?.key;
             const roleKey = userAdminRoles.find(item => item.value === form.userObj.role)?.key;
 
@@ -81,7 +82,11 @@ const UsersModal = () => {
             };
 
             formik.setValues(updatedValues);
-        // }
+       }
+         if(form.mode === 'create')
+         {
+             formik.resetForm(formik.initialValues);
+         }
     }, [form.mode, form.userObj]);
     useFormattedBackendErrors(form.backendErrors, formik.setErrors)
 

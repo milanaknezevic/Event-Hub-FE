@@ -17,16 +17,13 @@ const Login = () => {
     const {backendErrors, isAuthenticated} = useSelector(auth);
 
     const onSubmit = async (values) => {
-       await dispatch(userLogin(values));
+        await dispatch(userLogin(values));
 
     };
     useEffect(() => {
         if (isAuthenticated) {
-
             navigate("/users")
         }
-        console.log("is auth ", isAuthenticated)
-
     }, [isAuthenticated])
 
     const formik = useFormik({

@@ -71,11 +71,16 @@ export const getAllUsers = createAsyncThunk(
 
 export const getUserById = createAsyncThunk(
     "users/getUser",
-    async (id, {rejectWithValue}) => {
+    async (id, {dispatch,rejectWithValue}) => {
         try {
             const response = await api.get(`/api/users/${id}/`);
             return response.data;
         } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Failed to fetch user!",
+                title: "User"
+            }))
             return rejectWithValue(error.response.data);
         }
     }
@@ -189,7 +194,6 @@ export const userSlice = createSlice({
                 state.form.modalOpen = true
                 state.form.mode = "edit"
             })
-
             .addCase(editUser.pending, (state) => {
                 state.form.formSubmitting = true
             })
@@ -202,6 +206,7 @@ export const userSlice = createSlice({
                 state.form.modalOpen = false
                 state.form.userObj = {}
                 state.form.mode = ""
+                state.form.backendErrors = {}
             })
             .addCase(deleteUser.fulfilled, (state) => {
                 state.form.formSubmitting = false
@@ -221,6 +226,7 @@ export const userSlice = createSlice({
                 state.form.modalOpen = false
                 state.form.userObj = {}
                 state.form.mode = ""
+                state.form.backendErrors = {}
             })
     }
 })

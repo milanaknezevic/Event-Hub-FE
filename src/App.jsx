@@ -7,30 +7,45 @@ import Register from "./components/Register/Register.jsx";
 import ProtectedRoute from "./api/ProtectedRoutes.jsx";
 import Users from "./components/Users/Users.jsx";
 import Page404 from "./constants/ErrorPages/Page404.jsx";
-import {useDispatch, useSelector} from "react-redux";
-import {auth} from "./redux/selectors.jsx";
-import {useEffect} from "react";
-import {getLoggedUser} from "./redux/auth.jsx";
 import Tickets from "./components/Tickets/Tickets.jsx";
-import Spinner from "./constants/Spinner.jsx";
-
+import {auth} from "./redux/selectors.jsx";
+import {useSelector} from "react-redux";
+// import {useEffect} from "react";
+// import {getLoggedUser, logout} from "./redux/auth.jsx";
+// import Spinner from "./constants/Spinner.jsx";
+// import {jwtDecode} from "jwt-decode";
 
 const App = () => {
-    const {isAuthenticated, loggedUser, loading} = useSelector(auth);
-    const dispatch = useDispatch()
-    const token = localStorage.getItem('token');
+    // const {isAuthenticated, loggedUser, loading} = useSelector(auth);
+    // const dispatch = useDispatch()
+    // const token = localStorage.getItem('token');
+    //
+    // useEffect(() => {
+    //     if (token) {
+    //         const decodedToken = jwtDecode(token);
+    //         console.log("decodedToken.exp * 1000 ",decodedToken.exp * 1000)
+    //         console.log("Date.now() ",Date.now())
+    //         console.log("decodedToken.exp * 1000 < Date.now() ",decodedToken.exp * 1000 < Date.now())
+    //         if (decodedToken.exp * 1000 < Date.now()) {
+    //             console.log("istekao je")
+    //             dispatch(logout());
+    //         }
+    //     }
+    //     if (!isAuthenticated && !loggedUser && token)
+    //         dispatch(getLoggedUser({}))
+    // }, [isAuthenticated]);
 
-    useEffect(() => {
-        if (!isAuthenticated && !loggedUser && token)
-            dispatch(getLoggedUser({}))
-    }, [isAuthenticated]);
     const router = createBrowserRouter(
         [
             {
                 element: <HorizontalNavbar/>,
                 children: [{
                     path: '/',
-                    element: <Home/>
+                    element: (
+                        <ProtectedRoute path={"/"}>
+                            <Home/>
+                        </ProtectedRoute>
+                    )
                 }, {
                     path: "/login",
                     element: <Login/>
@@ -57,9 +72,10 @@ const App = () => {
                 errorElement: <Page404/>
             }
         ],)
-    if (loading) {
-        return <Spinner/>
-    }
+    // if (loading) {
+    //     return <Spinner/>
+    // }
+
     return <RouterProvider router={router}/>
 
 }

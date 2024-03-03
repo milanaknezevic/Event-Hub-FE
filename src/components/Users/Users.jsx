@@ -19,8 +19,8 @@ const Users = () => {
         dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize,search:""}))
     }, [])
 
-    const handleEdit = (id) => {
-        dispatch(getUserById(id))
+    const handleEdit = (user) => {
+       dispatch(getUserById(user.id))
     }
     const confirmUserDelete = () => {
         dispatch(deleteUser({id: userId, pagination: pagination}));
@@ -97,7 +97,7 @@ const Users = () => {
             render: (cell, row) => (
                 <Space size="middle"><>
                     <Tooltip placement={"top"} title={"Edit"}>
-                        <FaEdit onClick={handleEdit.bind(this, row.id)} className={"cursor-button"}/>
+                        <FaEdit onClick={handleEdit.bind(this, row)} className={"cursor-button"}/>
                     </Tooltip>
                     <Tooltip placement={"top"} title={"Delete"}>
                         <FaTrash onClick={handleDelete.bind(this, row.id)} color="red" className={"cursor-button"}/>

@@ -19,6 +19,7 @@ export const userLogin = createAsyncThunk(
             const {accessToken} = response.data;
             localStorage.setItem('token', accessToken);
             dispatch(getLoggedUser({}))
+            // history.navigate("/users")
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "Login successful!",

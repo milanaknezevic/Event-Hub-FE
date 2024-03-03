@@ -30,6 +30,9 @@ export const registrationSchema = yup.object().shape({
     phoneNumber: yup.string().required('Required'),
     role: yup.string().required('Required'),
 });
+export const replyToTicketSchema = yup.object().shape({
+    answer: yup.string().required('Required'),
+});
 
 export const editUserSchema = yup.object().shape({
     name: yup.string().required('Name is required'),
