@@ -5,6 +5,9 @@ body .navbar-toggler {
 .nav-container {
     background-color: var(--dark-color);
 }
+.nav-container .dropdown-menu{
+    right: 0;
+}
 .footer-container .text,
 .footer-container .text a {
     color: var(--white-color);
@@ -14,12 +17,11 @@ body .navbar-toggler {
 }
 .nav-container .nav-link {
     color: var(--white-color);
+    font-weight: bold;
 }
-
+.nav-container .navbar-nav .nav-link.active,
 .nav-container .nav-link:hover {
     color: black;
+    font-weight: bold;
 }
 
-/*.nav-container .navbar-nav .nav-link.active {*/
-/*    !*color: var(--carob-color);*!*/
-/*}*/

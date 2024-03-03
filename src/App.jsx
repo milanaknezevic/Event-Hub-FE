@@ -8,33 +8,9 @@ import ProtectedRoute from "./api/ProtectedRoutes.jsx";
 import Users from "./components/Users/Users.jsx";
 import Page404 from "./constants/ErrorPages/Page404.jsx";
 import Tickets from "./components/Tickets/Tickets.jsx";
-import {auth} from "./redux/selectors.jsx";
-import {useSelector} from "react-redux";
-// import {useEffect} from "react";
-// import {getLoggedUser, logout} from "./redux/auth.jsx";
-// import Spinner from "./constants/Spinner.jsx";
-// import {jwtDecode} from "jwt-decode";
+
 
 const App = () => {
-    // const {isAuthenticated, loggedUser, loading} = useSelector(auth);
-    // const dispatch = useDispatch()
-    // const token = localStorage.getItem('token');
-    //
-    // useEffect(() => {
-    //     if (token) {
-    //         const decodedToken = jwtDecode(token);
-    //         console.log("decodedToken.exp * 1000 ",decodedToken.exp * 1000)
-    //         console.log("Date.now() ",Date.now())
-    //         console.log("decodedToken.exp * 1000 < Date.now() ",decodedToken.exp * 1000 < Date.now())
-    //         if (decodedToken.exp * 1000 < Date.now()) {
-    //             console.log("istekao je")
-    //             dispatch(logout());
-    //         }
-    //     }
-    //     if (!isAuthenticated && !loggedUser && token)
-    //         dispatch(getLoggedUser({}))
-    // }, [isAuthenticated]);
-
     const router = createBrowserRouter(
         [
             {

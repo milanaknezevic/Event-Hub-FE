@@ -21,7 +21,6 @@ const Ticket = () => {
     }
 
     const onSubmit = (value) => {
-        console.log("pozvace se ?")
         if (value !== "") {
             dispatch(replyToTicket({id: form.ticketObj.id, data: value, pagination: pagination, filters: filters}));
         }
@@ -72,15 +71,19 @@ const Ticket = () => {
                     </Tooltip>
                 </div>
 
-                {/*Creation Date: {new Date(form.ticketObj.creationDate).toLocaleString()}*/}
+
                 <div className={"row"}>
                     <div className={"col-12"}>
                         <CustomTextArea label="Question" name="question" value={form.ticketObj?.question} rows={4}
                                         disabled={true}/>
                     </div>
+                    {/*<div className={"col-12 d-flex justify-content-end username"}>*/}
+                    {/*    Creation Date: {new Date(form.ticketObj.creationDate).toLocaleString()}*/}
+                    {/*</div>*/}
                     <div className={"col-12 d-flex justify-content-end username"}>
                         User: {form.ticketObj?.createdTicket?.username}
                     </div>
+
 
                 </div>
                 <div className={"row"}>

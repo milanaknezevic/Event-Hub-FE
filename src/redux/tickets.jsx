@@ -90,7 +90,6 @@ export const assignToTicket = createAsyncThunk(
 export const replyToTicket = createAsyncThunk(
     'ticket/reply', async ({id,data, pagination,filters}, {dispatch,rejectWithValue}) => {
         try {
-            console.log("pozvalo se?")
             const response = await api.put(`/api/tickets/reply/${id}/`,data);
             dispatch(getAllTickets({
                 page: pagination.current,

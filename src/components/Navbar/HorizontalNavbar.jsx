@@ -1,9 +1,12 @@
 import logoImage from '../../assets/logo.png';
 import {Link, Outlet, useLocation, useNavigate} from "react-router-dom";
 import Footer from "../Footer/Footer.jsx";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {auth} from "../../redux/selectors.jsx";
-
+import {logout} from "../../redux/auth.jsx";
+import {FaUser} from 'react-icons/fa';
+import {Tooltip} from "antd";
+import {LogoutOutlined, PlusOutlined, QuestionCircleOutlined, UserOutlined} from '@ant-design/icons';
 export const history = {
     navigate: null
 }
@@ -11,15 +14,13 @@ export const history = {
 const HorizontalNavbar = () => {
     const {isAuthenticated, loggedUser} = useSelector(auth);
     const {pathname} = useLocation();
-
+    const dispatch = useDispatch()
     history.navigate = useNavigate()
-
 
     const routes = [
         {linkPath: '/', routeTitle: 'Home', public: true, allowedRoles: []},
         {linkPath: '/users', routeTitle: 'Users', public: false, allowedRoles: ["SUPPORT"]},
         {linkPath: '/tickets', routeTitle: 'Tickets', public: false, allowedRoles: ["SUPPORT"]},
-
     ];
     return (
         <div className={"d-flex flex-column min-vh-100"}>
@@ -33,7 +34,7 @@ const HorizontalNavbar = () => {
                     </button>
                     <div className="collapse navbar-collapse d-md-flex justify-content-md-end mx-3"
                          id="navbarNavDropdown">
-                        <ul className="navbar-nav d-flex align-items-end">
+                        <ul className="navbar-nav d-flex justify-content-center align-items-center">
 
                             {routes.map((route) => {
                                     return ((
@@ -47,16 +48,25 @@ const HorizontalNavbar = () => {
                                     ))
                                 }
                             )}
-                            <li className="nav-item dropdown ">
-                                <a className="nav-link dropdown-toggle d-flex align-items-center justify-content-end" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Dropdown link
-                                </a>
-                                <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a className="dropdown-item" href="#">Action</a>
-                                    <a className="dropdown-item" href="#">Another action</a>
-                                    <a className="dropdown-item" href="#">Something </a>
-                                </div>
-                            </li>
+                            {isAuthenticated && (
+                                <li className="nav-item dropdown">
+                                    <a className="nav-link dropdown-toggle d-flex align-items-center justify-content-end"
+                                       href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                       aria-expanded="false">
+                                        <Tooltip placement={"top"} title={"User info"}>
+                                            <FaUser/>
+                                        </Tooltip>
+                                    </a>
+
+                                    <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <Link className="dropdown-item" to="/user-info"><UserOutlined/> User Info</Link>
+                                        <Link className="dropdown-item" to="/change-password">Change Password</Link>
+                                        <div className="dropdown-divider"></div>
+                                        <button className="dropdown-item" onClick={() => dispatch(logout())}>
+                                            <LogoutOutlined/> Logout</button>
+                                    </div>
+                                </li>
+                            )}
 
                         </ul>
                     </div>

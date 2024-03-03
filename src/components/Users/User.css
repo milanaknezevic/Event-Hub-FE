@@ -1,5 +1,6 @@
 .users-container h1 {
     color: var(--blue-color);
+    font-weight: bold;
 }
 
 .users-container .ant-table {

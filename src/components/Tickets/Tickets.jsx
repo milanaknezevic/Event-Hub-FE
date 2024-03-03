@@ -25,20 +25,18 @@ const Tickets = () => {
     const handleWatchTicket = (id) => {
         dispatch(getTicketById(id))
     }
-
-
-    function CheckTicketStatus(checkStatus) {
-        switch (checkStatus) {
-            case "CLOSED":
-                return <Tooltip placement={"top"} title={"Closed"}>
+    function checkTicketPriority(priority) {
+        switch (priority) {
+            case "LOW":
+                return <Tooltip placement={"top"} title={"Low"}>
                     <FaCircle color="green" size="1em"/>
                 </Tooltip>;
-            case "IN_PROGRESS":
-                return <Tooltip placement={"top"} title={"In progress"}>
+            case "MEDIUM":
+                return <Tooltip placement={"top"} title={"Medium"}>
                     <FaCircle color="#000080" size="1em"/>
                 </Tooltip>;
-            case "OPENED":
-                return <Tooltip placement={"top"} title={"Opened"}>
+            case "HIGH":
+                return <Tooltip placement={"top"} title={"High"}>
                     <FaCircle color="red" size="1em"/>
                 </Tooltip>;
             default:
@@ -46,22 +44,47 @@ const Tickets = () => {
         }
     }
 
-    const columns = [
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
+    // function CheckTicketStatus(checkStatus) {
+    //     switch (checkStatus) {
+    //         case "CLOSED":
+    //             return <Tooltip placement={"top"} title={"Closed"}>
+    //                 <FaCircle color="green" size="1em"/>
+    //             </Tooltip>;
+    //         case "IN_PROGRESS":
+    //             return <Tooltip placement={"top"} title={"In progress"}>
+    //                 <FaCircle color="#000080" size="1em"/>
+    //             </Tooltip>;
+    //         case "OPENED":
+    //             return <Tooltip placement={"top"} title={"Opened"}>
+    //                 <FaCircle color="red" size="1em"/>
+    //             </Tooltip>;
+    //         default:
+    //             return
+    //     }
+    // }
 
-        },
+    const columns = [
+        // {
+        //     title: 'ID',
+        //     dataIndex: 'id',
+        //     key: 'id',
+        //
+        // },
         {
             title: 'Creation date',
             key: 'creationDate',
             dataIndex: 'creationDate',
+            render:(cell)=>{
+                return new Date(cell).toLocaleString()
+            }
         },
         {
             title: 'Priority',
             dataIndex: 'priority',
             key: 'priority',
+            render: (cell) => {
+                return checkTicketPriority(cell)
+            },
             filters: ticketPriority.map(option => ({text: option.value, value: option.key})),
             filterMultiple: false,
         },
@@ -70,7 +93,7 @@ const Tickets = () => {
             key: 'status',
             dataIndex: 'status',
             render: (cell) => {
-                return CheckTicketStatus(cell)
+                return cell.replace(/_/g, ' ')
             },
             filters: ticketStatus.map(option => ({text: option.value, value: option.key})),
             filterMultiple: false,
@@ -88,7 +111,6 @@ const Tickets = () => {
         },
     ];
     const handleChange = (newPagination, newFilters) => {
-        console.log("filters ", newFilters)
         dispatch(getAllTickets({
             page: newPagination.current,
             size: newPagination.pageSize,
