@@ -90,7 +90,6 @@ const Users = () => {
             render: (cell) => {
                 return CheckUserStatus(cell)
             },
-            align: 'center',
         },
         {
             title: 'Action',
@@ -113,7 +112,6 @@ const Users = () => {
     }
 
     const onSearch = (data) => {
-        console.log("search ", data);
         dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize, search:data}))
     }
 
@@ -130,7 +128,7 @@ const Users = () => {
                     <div className={"row justify-content-between pt-2 pb-2 "}>
                         <div className="col-12 col-md-2 d-flex justify-content-start search-container ">
                             <Search
-                                placeholder="input search text"
+                                placeholder="Search..."
                                 allowClear
                                 onSearch={onSearch}
                             />
@@ -153,7 +151,7 @@ const Users = () => {
                                        pageSize: pagination.pageSize,
                                        total: pagination.total,
                                        showSizeChanger: true,
-                                       pageSizeOptions: ['5', '10', '20'],
+                                       pageSizeOptions: ['10', '20', '50'],
                                        locale: {items_per_page: ''}
                                    }}/>
                         </div>

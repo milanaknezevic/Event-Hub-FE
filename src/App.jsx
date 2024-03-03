@@ -11,10 +11,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {auth} from "./redux/selectors.jsx";
 import {useEffect} from "react";
 import {getLoggedUser} from "./redux/auth.jsx";
+import Tickets from "./components/Tickets/Tickets.jsx";
+import Spinner from "./constants/Spinner.jsx";
 
 
 const App = () => {
-    const {isAuthenticated, loggedUser,loading} = useSelector(auth);
+    const {isAuthenticated, loggedUser, loading} = useSelector(auth);
     const dispatch = useDispatch()
     const token = localStorage.getItem('token');
 
@@ -43,11 +45,21 @@ const App = () => {
                         </ProtectedRoute>
                     ),
                 },
+                    {
+                        path: "/tickets",
+                        element: (
+                            <ProtectedRoute path={"/tickets"}>
+                                <Tickets/>
+                            </ProtectedRoute>
+                        ),
+                    },
                 ],
                 errorElement: <Page404/>
             }
         ],)
-
+    if (loading) {
+        return <Spinner/>
+    }
     return <RouterProvider router={router}/>
 
 }

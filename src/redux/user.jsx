@@ -13,7 +13,7 @@ export const initialState = {
     pagination: {
         total: 0,
         current: 1,
-        pageSize: 5,
+        pageSize: 10,
     },
     form: {
         modalOpen: false,
@@ -59,9 +59,9 @@ export const getUserStatus = createAsyncThunk(
     }
 );
 export const getAllUsers = createAsyncThunk(
-    'users', async ({page = 1, size = 5,search}, {rejectWithValue}) => {
+    'users', async ({page = 1, size = 10,search}, {rejectWithValue}) => {
         try {
-            const response = await axios.get(`/api/users?page=${page}&size=${size}&search=${search}`);
+            const response = await api.get(`/api/users?page=${page}&size=${size}&search=${search}`);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -73,7 +73,7 @@ export const getUserById = createAsyncThunk(
     "users/getUser",
     async (id, {rejectWithValue}) => {
         try {
-            const response = await axios.get(`/api/users/${id}/`);
+            const response = await api.get(`/api/users/${id}/`);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);

@@ -87,6 +87,7 @@ export const authSlice = createSlice({
             state.loading = false;
             state.loggedUser = null;
             localStorage.removeItem("token")
+            history.navigate("/login")
         },
         resetAuthState: () => initialState,
     },

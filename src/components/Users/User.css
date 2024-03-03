@@ -5,6 +5,9 @@
 .users-container .ant-table {
     background-color: var(--gray-color);
 }
+.users-container .ant-table-body{
+    max-height: 40vh!important;
+}
 
 .users-container .ant-table-wrapper .ant-table-tbody > tr > td {
     /*padding: 10px 10px*/
@@ -43,10 +46,74 @@
 .users-container .search-container .ant-input-affix-wrapper {
     background-color: var(--gray-color);
 }
+.users-container .ant-table-body .ant-table-tbody .ant-table-cell{
+    text-align: center;
+}
+.users-container .ant-table-wrapper .ant-table-filter-trigger{
+    color: var(--white-color);
+}
+.users-container .ant-table-wrapper .ant-table-filter-trigger.active {
+    color: var(--blue-color);
+}
 
 .users-container .ant-table-thead .ant-table-cell {
     background-color: #858383;
+    text-align: center;
 }
+
+.ticket-modal .svg-inline--fa {
+    color: black;
+}
+
+.ticket-modal .svg-inline--fa:hover {
+    color: green;
+}
+
+.ticket-modal .svg-inline--fa.clicked {
+    color: green;
+}
+.ticket-modal .username{
+    font-style: italic;
+    /*color: var(--gray2-color);*/
+}
+
+
+.ticket-modal .ant-modal-footer .ant-btn-default {
+    color: var(--white-color);
+    background-color: red;
+}
+
+.ticket-modal .ant-modal-footer .ant-btn-default:hover {
+    color: var(--white-color);
+    background-color: #ea1f1f;
+}
+
+.ticket-modal .ant-modal-footer .ant-btn-primary {
+    color: var(--white-color);
+    background-color: var(--blue-color);
+}
+
+.ticket-modal .ant-modal-footer .ant-btn-primary:hover {
+    color: var(--white-color);
+    background-color: var(--blue2-color);
+}
+
+
+/*buttoni na dropdown vidjeti
+.main .ant-btn-primary{*/
+/*    color: var(--white-color);*/
+/*    background-color: var(--blue-color);*/
+/*}*/
+/*.main .ant-btn-primary:hover {*/
+/*    color: var(--white-color);*/
+/*    background-color: var(--blue2-color);*/
+/*}*/
+/*.main .ant-btn-link:hover {*/
+/*    color: black;*/
+/*}*/
+/*.main .ant-btn-link{*/
+/*    color: var(--gray-color);*/
+/*}*/
 
 
 /*.users-container .ant-table .ant-table-header .ant-table-thead{*/

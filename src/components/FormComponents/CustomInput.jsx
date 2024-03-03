@@ -1,6 +1,6 @@
 import { Form, Input } from "antd";
 
-const CustomInput = ({ label, name, type, onChange, value, errorMessage }) => {
+const CustomInput = ({ label, name, type, onChange, value, errorMessage,disabled=false }) => {
     const inputComponent =
         type === "password" ? (
             <Input.Password
@@ -8,6 +8,7 @@ const CustomInput = ({ label, name, type, onChange, value, errorMessage }) => {
                 name={name}
                 onChange={onChange}
                 value={value}
+                disabled={disabled}
             />
         ) : type === "file" ? (
             <input type="file" accept=".jpg,.jpeg,.png" id={name} name={name} onChange={onChange} />
@@ -18,6 +19,7 @@ const CustomInput = ({ label, name, type, onChange, value, errorMessage }) => {
                 type={type}
                 onChange={onChange}
                 value={value}
+                disabled={disabled}
             />
         );
 

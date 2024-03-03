@@ -18,6 +18,7 @@ const HorizontalNavbar = () => {
     const routes = [
         {linkPath: '/', routeTitle: 'Home', public: true, allowedRoles: []},
         {linkPath: '/users', routeTitle: 'Users', public: false, allowedRoles: ["SUPPORT"]},
+        {linkPath: '/tickets', routeTitle: 'Tickets', public: false, allowedRoles: ["SUPPORT"]},
 
     ];
     return (

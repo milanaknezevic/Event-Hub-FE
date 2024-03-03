@@ -1,14 +1,11 @@
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {auth} from "../redux/selectors.jsx";
 import Page404 from "../constants/ErrorPages/Page404.jsx";
-import {useEffect} from "react";
-import {getLoggedUser} from "../redux/auth.jsx";
 import Spinner from "../constants/Spinner.jsx";
 
 
 const ProtectedRoute = ({children, path}) => {
-    const {isAuthenticated, loggedUser,loading} = useSelector(auth);
-    const dispatch = useDispatch()
+    const {isAuthenticated, loggedUser, loading} = useSelector(auth);
     const token = localStorage.getItem('token');
 
     // useEffect(() => {
@@ -20,21 +17,20 @@ const ProtectedRoute = ({children, path}) => {
     const getProtectedRoutes = () => {
         switch (loggedUser?.role) {
             case "SUPPORT":
-                return ["users"];
+                return ["users", "tickets"];
             case "ORGANIZER":
                 return [];
             case "CLIENT":
                 return [];
             default:
-        return ["/users", "/events"];
+                return ["/users", "/events"];
         }
     };
 
-    if( loading)
-    {
+    if (loading) {
         return <Spinner/>
     }
-    if ( getProtectedRoutes() && getProtectedRoutes().includes(path) && !isAuthenticated && !token) {
+    if (getProtectedRoutes() && getProtectedRoutes().includes(path) && !isAuthenticated && !token) {
         return <Page404/>;
     }
 
