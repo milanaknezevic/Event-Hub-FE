@@ -8,6 +8,7 @@ import ProtectedRoute from "./api/ProtectedRoutes.jsx";
 import Users from "./components/Users/Users.jsx";
 import Page404 from "./constants/ErrorPages/Page404.jsx";
 import Tickets from "./components/Tickets/Tickets.jsx";
+import MyProfile from "./components/ManageUser/MyProfile.jsx";
 
 
 const App = () => {
@@ -41,6 +42,14 @@ const App = () => {
                         element: (
                             <ProtectedRoute path={"/tickets"}>
                                 <Tickets/>
+                            </ProtectedRoute>
+                        ),
+                    },
+                    {
+                        path: "/my_profile",
+                        element: (
+                            <ProtectedRoute path={"/my_profile"}>
+                                <MyProfile/>
                             </ProtectedRoute>
                         ),
                     },

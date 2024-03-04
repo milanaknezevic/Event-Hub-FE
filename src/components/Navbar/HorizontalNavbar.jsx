@@ -6,7 +6,9 @@ import {auth} from "../../redux/selectors.jsx";
 import {logout} from "../../redux/auth.jsx";
 import {FaUser} from 'react-icons/fa';
 import {Tooltip} from "antd";
-import {LogoutOutlined, PlusOutlined, QuestionCircleOutlined, UserOutlined} from '@ant-design/icons';
+//import {LogoutOutlined, PlusOutlined, QuestionCircleOutlined, UserOutlined} from '@ant-design/icons';
+import {LogoutOutlined} from '@ant-design/icons';
+
 export const history = {
     navigate: null
 }
@@ -22,6 +24,13 @@ const HorizontalNavbar = () => {
         {linkPath: '/users', routeTitle: 'Users', public: false, allowedRoles: ["SUPPORT"]},
         {linkPath: '/tickets', routeTitle: 'Tickets', public: false, allowedRoles: ["SUPPORT"]},
     ];
+
+    const dropdown = [
+        {linkPath: '/my_profile', routeTitle: 'My Profile'},
+        {linkPath: '/change_password', routeTitle: 'Change password'},
+    ];
+    const isDropdownItemActive = dropdown.some(item => item.linkPath === pathname);
+
     return (
         <div className={"d-flex flex-column min-vh-100"}>
             <div className="container-fluid nav-container">
@@ -50,7 +59,8 @@ const HorizontalNavbar = () => {
                             )}
                             {isAuthenticated && (
                                 <li className="nav-item dropdown">
-                                    <a className="nav-link dropdown-toggle d-flex align-items-center justify-content-end"
+                                    <a className={`nav-link dropdown-toggle d-flex align-items-center justify-content-end  ${isDropdownItemActive ? 'active' : ""} `}
+
                                        href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
                                        aria-expanded="false">
                                         <Tooltip placement={"top"} title={"User info"}>
@@ -59,11 +69,21 @@ const HorizontalNavbar = () => {
                                     </a>
 
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                        <Link className="dropdown-item" to="/user-info"><UserOutlined/> User Info</Link>
-                                        <Link className="dropdown-item" to="/change-password">Change Password</Link>
+                                        {dropdown.map((route) => {
+                                                return ((
+                                                    (
+                                                        <Link className="dropdown-item" key={route.linkPath}
+                                                              to={route.linkPath}>
+                                                            {route.routeTitle}
+                                                        </Link>
+                                                    )
+                                                ))
+                                            }
+                                        )}
                                         <div className="dropdown-divider"></div>
                                         <button className="dropdown-item" onClick={() => dispatch(logout())}>
-                                            <LogoutOutlined/> Logout</button>
+                                            <LogoutOutlined/> Logout
+                                        </button>
                                     </div>
                                 </li>
                             )}
