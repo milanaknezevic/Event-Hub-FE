@@ -14,17 +14,23 @@ const Login = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate();
-    const {backendErrors, isAuthenticated} = useSelector(auth);
+    const {backendErrors, isAuthenticated,loggedUser} = useSelector(auth);
 
     const onSubmit = async (values) => {
         await dispatch(userLogin(values));
 
     };
     useEffect(() => {
-        if (isAuthenticated) {
+        if (isAuthenticated && loggedUser !== null) {
+            if(loggedUser?.role === 'SUPPORT')
+            {
             navigate("/users")
+            }
+            else if(loggedUser?.role === 'ORGANIZER'){
+                navigate("/events")
+            }
         }
-    }, [isAuthenticated])
+    }, [loggedUser,isAuthenticated])
 
     const formik = useFormik({
         initialValues: {

@@ -19,7 +19,6 @@ export const userLogin = createAsyncThunk(
             const {accessToken} = response.data;
             localStorage.setItem('token', accessToken);
             dispatch(getLoggedUser({}))
-            // history.navigate("/users")
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "Login successful!",
@@ -102,7 +101,7 @@ export const authSlice = createSlice({
                 state.isAuthenticated = false;
                 state.loading = false;
             })
-            .addCase(userLogin.fulfilled, (state) => {
+            .addCase(userLogin.fulfilled, (state,action) => {
                 state.loading = false;
                 state.backendErrors = {};
                 state.isAuthenticated = true;

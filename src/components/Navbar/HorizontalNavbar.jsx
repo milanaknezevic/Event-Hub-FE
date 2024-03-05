@@ -23,6 +23,7 @@ const HorizontalNavbar = () => {
         {linkPath: '/', routeTitle: 'Home', public: true, allowedRoles: []},
         {linkPath: '/users', routeTitle: 'Users', public: false, allowedRoles: ["SUPPORT"]},
         {linkPath: '/tickets', routeTitle: 'Tickets', public: false, allowedRoles: ["SUPPORT"]},
+        {linkPath: '/events', routeTitle: 'Events', public: false, allowedRoles: ["ORGANIZER"]},
     ];
 
     const dropdown = [
@@ -43,7 +44,7 @@ const HorizontalNavbar = () => {
                     </button>
                     <div className="collapse navbar-collapse d-md-flex justify-content-md-end mx-3"
                          id="navbarNavDropdown">
-                        <ul className="navbar-nav d-flex justify-content-center align-items-center">
+                        <ul className="navbar-nav d-flex align-items-end justify-content-md-center align-items-md-center">
 
                             {routes.map((route) => {
                                     return ((

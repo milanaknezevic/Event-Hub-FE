@@ -1,6 +1,7 @@
 @import url('./components/Login/Login.css');
 @import url('./components/Navbar/HorizontalNavbar.css');
 @import url('./components/Users/User.css');
+@import url('./components/Events/Events.css');
 
 :root {
     --dark-color: #8B735B;
@@ -25,6 +26,7 @@
 
 .welcome-background h1 {
     color: var(--white-color);
+    cursor: pointer;
 }
 
 .welcome-background .welcome-description {

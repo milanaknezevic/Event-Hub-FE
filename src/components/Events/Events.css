@@ -1,0 +1,64 @@
+
+.event-container .ant-card {
+    background-color: var(--gray-color);
+}
+.event-container .ant-card-actions{
+    background-color: var(--gray2-color);
+}
+.event-container .ant-layout{
+    overflow: hidden;
+    background-color: white;
+}
+.event-container .ant-tree-list{
+    background-color: var(--gray-color);
+}
+.event-container .ant-layout-footer{
+    background-color: white;
+}
+.event-container .ant-layout-sider{
+    background-color: var(--gray-color);
+}
+.event-container .ant-layout-header{
+    height: 14vh;
+    padding: 0;
+    background-color: white;
+
+}
+.event-container .cover_img{
+    height: 30vh;
+}
+.event-container .ant-pagination{
+    width: auto;
+}
+.event-container h1{
+    color: var(--blue-color);
+    font-weight: bold;
+    cursor: pointer;
+}
+.event-container .add-btn{
+    background-color: var(--blue-color);
+    color: var(--white-color);
+    font-weight: bold;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.event-container .add-btn:hover {
+    color: var(--white-color);
+    background-color: var(--blue2-color);
+}
+.event-container .search-container .ant-btn,
+.event-container .search-container .ant-input-affix-wrapper {
+    /*background-color: var(--gray-color);*/
+}
+.event-container .event-description{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.event-container .ant-card-meta-detail{
+    cursor: pointer;
+}
