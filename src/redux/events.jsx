@@ -1,20 +1,19 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import base from '../api/baseService.jsx';
-import {getAdminUserRoles} from "./user.jsx";
 
 
 const api = base.service(true);
 export const initialState = {
     events: [],
     eventTypes: [],
-    locations:[],
+    locations: [],
     pagination: {
         total: 0,
         current: 1,
         pageSize: 10,
     },
     filters: {
-        search:"",
+        search: "",
         selectedEvent: "",
         selectedLocation: "",
     },
@@ -30,7 +29,7 @@ export const initialState = {
 
 
 export const getAllEvents = createAsyncThunk(
-    'events', async ({page = 1, size = 10,search="",locationId="",eventTypeId=""}, {rejectWithValue}) => {
+    'events', async ({page = 1, size = 10, search = "", locationId = "", eventTypeId = ""}, {rejectWithValue}) => {
         try {
             const response = await api.get(`/api/users/organizer_events/?page=${page}&size=${size}&search=${search}&locationId=${locationId}&eventTypeId=${eventTypeId}`);
             return response.data;

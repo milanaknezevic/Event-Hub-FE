@@ -4,9 +4,10 @@ import {event} from "../../redux/selectors.jsx";
 import {getAllEvents, getEventLocations, getEventTypes} from "../../redux/events.jsx";
 import {Button, Card, Flex, Layout, Pagination, Tooltip} from 'antd';
 import def from "../../assets/noImage.png"
-import {FaEdit, FaEye, FaTrash} from 'react-icons/fa';
+import {FaEye, FaTrash} from 'react-icons/fa';
 import CustomSidebar from "../FormComponents/CustomSidebar.jsx";
-import {getAllUsers} from "../../redux/user.jsx";
+import {MailOutlined} from "@ant-design/icons";
+
 
 const {Header, Footer, Sider, Content} = Layout;
 
@@ -16,37 +17,73 @@ const Events = () => {
     const dispatch = useDispatch()
     const {events, eventTypes, locations, pagination, filters} = useSelector(event);
     const [collapsed, setCollapsed] = useState(true);
-    const [selectedKeys, setSelectedKeys] = useState([]);
+    const initialEvent = filters.selectedEvent ? [filters.selectedEvent] : [];
+    const [selectedKeysEvents, setSelectedKeysEvents] = useState(initialEvent);
+
+    const initialLocation = filters.selectedLocation ? [filters.selectedLocation] : [];
+    const [selectedKeysLocation, setSelectedKeysLocation] = useState(initialLocation);
+    // const [selectedKeysEvents, setSelectedKeysEvents] = useState([]);
+    // const [selectedKeysLocation, setSelectedKeysLocation] = useState([]);
+
     useEffect(() => {
-        dispatch(getAllEvents({page: pagination.current, size: pagination.pageSize}))
+        dispatch(getAllEvents({
+            page: pagination.current,
+            size: pagination.pageSize,
+            search: filters.search,
+            locationId: filters.selectedLocation,
+            eventTypeId: filters.selectedEvent
+        }))
         dispatch(getEventTypes({}))
         dispatch(getEventLocations({}))
     }, [])
     const handleChange = (page, pageSize) => {
-        dispatch(getAllEvents({page: page, size: pageSize, search: filters.search}))
+        dispatch(getAllEvents({
+            page: page,
+            size: pageSize,
+            search: filters.search,
+            locationId: filters.selectedLocation,
+            eventTypeId: filters.selectedEvent
+        }))
     };
     const handleAddEvent = () => {
         console.log("add")
     };
     const onSearch = (value) => {
-        dispatch(getAllEvents({page: pagination.current, size: pagination.pageSize, search: value}))
+        dispatch(getAllEvents({
+            page: pagination.current,
+            size: pagination.pageSize,
+            search: value,
+            locationId: filters.selectedLocation,
+            eventTypeId: filters.selectedEvent
+        }))
     }
-    const handleSelect = (selectedKeys) => {
-        setSelectedKeys(selectedKeys);
-        const [name, id] = selectedKeys[0].split('#');
-        if (name === 'locationId') {
-            dispatch(getAllEvents({page: pagination.current, size: pagination.pageSize, search: filters.search, locationId:id,eventTypeId:filters.selectedEvent}))
-        }else if (name === 'eventTypeId'){
-            dispatch(getAllEvents({page: pagination.current, size: pagination.pageSize, search: filters.search, locationId:filters.selectedLocation,eventTypeId:id}))
+    const handleSelectEvent = (selectedKeys) => {
+        setSelectedKeysEvents(selectedKeys);
+        dispatch(getAllEvents({
+            page: pagination.current,
+            size: pagination.pageSize,
+            search: filters.search,
+            locationId: filters.selectedLocation,
+            eventTypeId: selectedKeys[0]
+        }))
+    };
+    const handleSelectLocation = (selectedKeys) => {
+        setSelectedKeysLocation(selectedKeys);
+        dispatch(getAllEvents({
+            page: pagination.current,
+            size: pagination.pageSize,
+            search: filters.search,
+            locationId: selectedKeys[0],
+            eventTypeId: filters.selectedEvent
+        }))
 
-        }
     };
     const handleWatchEvent = (eventId) => {
         console.log("Watching event with ID:", eventId);
     };
 
-    const handleEditEvent = (eventId) => {
-        console.log("Editing event with ID:", eventId);
+    const handleInvitations = (eventId) => {
+        console.log("Invitations for event ID:", eventId);
     };
 
     const handleDeleteEvent = (eventId) => {
@@ -59,7 +96,9 @@ const Events = () => {
             <Layout>
                 <Sider trigger={null} collapsible collapsed={collapsed} collapsedWidth={50}>
                     <CustomSidebar collapsed={collapsed} setCollapsed={setCollapsed} onSearch={onSearch}
-                                   eventTypes={eventTypes} locations={locations} handleSelect={handleSelect} selectedKeys={selectedKeys}/>
+                                   eventTypes={eventTypes} locations={locations}
+                                   handleSelectLocation={handleSelectLocation} handleSelectEvent={handleSelectEvent}
+                                   selectedKeysLocation={selectedKeysLocation} selectedKeysEvents={selectedKeysEvents}/>
                 </Sider>
                 <Layout>
                     <Header>
@@ -88,9 +127,9 @@ const Events = () => {
                                                 <FaEye className="cursor-button"
                                                        onClick={() => handleWatchEvent(event.id)}/>
                                             </Tooltip>,
-                                            <Tooltip key="edit" placement="top" title="Edit">
-                                                <FaEdit className="cursor-button"
-                                                        onClick={() => handleEditEvent(event.id)}/>
+                                            <Tooltip key="invitations" placement="top" title="Invitations">
+                                                <MailOutlined className="cursor-button"
+                                                              onClick={() => handleInvitations(event.id)}/>
                                             </Tooltip>,
                                             <Tooltip key="delete" placement="top" title="Delete">
                                                 <FaTrash color="red" className="cursor-button"

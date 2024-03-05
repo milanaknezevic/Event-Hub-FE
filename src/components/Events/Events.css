@@ -9,6 +9,12 @@
     overflow: hidden;
     background-color: white;
 }
+
+.event-container .ant-tree-node-selected{
+    background-color: var(--blue-color)!important;
+    color: var(--white-color);
+}
+
 .event-container .ant-tree-list{
     background-color: var(--gray-color);
 }

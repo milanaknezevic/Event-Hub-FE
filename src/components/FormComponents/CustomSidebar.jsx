@@ -3,32 +3,35 @@ import {MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
 import {useState} from "react";
 import {useSelector} from "react-redux";
 import {event} from "../../redux/selectors.jsx";
+import CustomTree from "./CustomTree.jsx";
+
 const {Search} = Input;
 
-const CustomSidebar = ({collapsed,onSearch,setCollapsed,eventTypes,locations,handleSelect,selectedKeys}) => {
-    const {filters} = useSelector(event);
-    const treeData = [
+const CustomSidebar = ({collapsed, onSearch, setCollapsed, eventTypes, locations, handleSelectEvent, selectedKeysEvents,handleSelectLocation,selectedKeysLocation}) => {
+
+    const eventTypesData = [
         {
-            title: 'Event types',
+            title:<b>Event types</b>,
             key: 'event',
+            selectable: false,
             children: eventTypes.map((eventType) => ({
                 title: eventType.name,
-                key: "eventTypeId"+"#"+eventType.id,
-            })),
-        },
-        {
-            title: 'Locations',
-            key: 'loc',
-            children: locations.map((location) => ({
-                title: location.address,
-                key: "locationId"+"#"+location.id,
+                key:eventType.id,
             })),
         },
     ];
-
+    const locationsData = [
+        {
+            title: <b>Locations</b>,
+            key: 'location',
+            selectable: false,
+            children: locations.map((location) => ({
+                title: location.address,
+                key:location.id,
+            })),
+        },
+    ];
     const [expandedKeys, setExpandedKeys] = useState([]);
-
-
     const onExpand = (newExpandedKeys) => {
         setExpandedKeys(newExpandedKeys);
     };
@@ -37,11 +40,11 @@ const CustomSidebar = ({collapsed,onSearch,setCollapsed,eventTypes,locations,han
             <div className={"row justify-content-end px-4"}>
                 <Button
                     type="text"
-                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                    icon={collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}
                     onClick={() => setCollapsed(!collapsed)}
                 />
             </div>
-            {collapsed? <></>:<div className={"row justify-content-center"}>
+            {collapsed ? <></> : <div className={"row justify-content-center"}>
                 <div className={"col-11  search-container"}>
                     <Search
                         placeholder="Search..."
@@ -50,14 +53,11 @@ const CustomSidebar = ({collapsed,onSearch,setCollapsed,eventTypes,locations,han
                     />
                 </div>
                 <div className={"col-11 pt-4"}>
-                    <Tree
-                        className="draggable-tree"
-                        onExpand={onExpand}
-                        expandedKeys={expandedKeys}
-                        onSelect={handleSelect}
-                        selectedKeys={selectedKeys}
-                        treeData={treeData}
-                    />
+                    <CustomTree onExpand={onExpand} expandedKeys={expandedKeys} handleSelect={handleSelectEvent}
+                                selectedKeys={selectedKeysEvents} treeData={eventTypesData}/>
+
+                    <CustomTree onExpand={onExpand} expandedKeys={expandedKeys} handleSelect={handleSelectLocation}
+                                selectedKeys={selectedKeysLocation} treeData={locationsData}/>
                 </div>
             </div>}
 
