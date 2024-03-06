@@ -64,7 +64,7 @@ const HorizontalNavbar = () => {
 
                                        href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
                                        aria-expanded="false">
-                                        <Tooltip placement={"top"} title={"User info"}>
+                                        <Tooltip placement={"top"} title={"About user"}>
                                             <FaUser/>
                                         </Tooltip>
                                     </a>

@@ -1,0 +1,8 @@
+.invitations-container .ant-radio-button-wrapper-checked{
+    background-color: var(--blue-color);
+    color: var(--white-color);
+}
+.invitations-container .ant-radio-button-wrapper:hover{
+    background-color: var(--blue2-color);
+    color: var(--white-color);
+}

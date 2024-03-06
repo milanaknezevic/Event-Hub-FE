@@ -1,9 +1,14 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import base from '../api/baseService.jsx';
+import {displayNotification} from "./notification.jsx";
 
 
 const api = base.service(true);
 export const initialState = {
+    eventData: {
+        invitations: [],
+        status: true,
+    },
     events: [],
     eventTypes: [],
     locations: [],
@@ -29,32 +34,96 @@ export const initialState = {
 
 
 export const getAllEvents = createAsyncThunk(
-    'events', async ({page = 1, size = 10, search = "", locationId = "", eventTypeId = ""}, {rejectWithValue}) => {
+    'events', async ({page = 1, size = 10, search = "", locationId = "", eventTypeId = ""}, {dispatch,rejectWithValue}) => {
         try {
             const response = await api.get(`/api/users/organizer_events/?page=${page}&size=${size}&search=${search}&locationId=${locationId}&eventTypeId=${eventTypeId}`);
             return response.data;
         } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Failed to fetch Events!",
+                title: "User"
+            }))
             return rejectWithValue(error.response.data);
         }
     }
 );
+export const getEventById = createAsyncThunk(
+    "events/getEvent",
+    async (id, {dispatch,rejectWithValue}) => {
+        try {
+            const response = await api.get(`/api/events/${id}/`);
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Failed to fetch Event!",
+                title: "User"
+            }))
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+export const getAllGuestsForEvent = createAsyncThunk(
+    "events/guests",
+    async ({id, status}, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.get(`/api/users/guests/${id}/?status=${status}`);
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Failed to fetch guests!",
+                title: "User"
+            }))
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+export const getInvitationsByEventId = createAsyncThunk(
+    "events/invitations",
+    async (id, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.get(`/api/invitations/event/${id}/`);
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Failed to fetch invitations!",
+                title: "User"
+            }))
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
 
 export const getEventTypes = createAsyncThunk(
-    'eventTypes', async ({rejectWithValue}) => {
+    'eventTypes', async ({dispatch,rejectWithValue}) => {
         try {
             const response = await api.get('/api/eventTypes');
             return response.data;
         } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Failed to fetch event types!",
+                title: "User"
+            }))
             return rejectWithValue(error.response.data);
         }
     }
 );
 export const getEventLocations = createAsyncThunk(
-    'locations', async ({rejectWithValue}) => {
+    'locations', async ({dispatch,rejectWithValue}) => {
         try {
             const response = await api.get('/api/locations');
             return response.data;
         } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Failed to fetch event locations!",
+                title: "User"
+            }))
             return rejectWithValue(error.response.data);
         }
     }
@@ -101,6 +170,31 @@ export const eventSlice = createSlice({
             .addCase(getEventLocations.fulfilled, (state, action) => {
                 state.loading = false;
                 state.locations = action.payload;
+            })
+            .addCase(getAllGuestsForEvent.pending, state => {
+                state.loading = true;
+            })
+            .addCase(getAllGuestsForEvent.rejected, (state) => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addCase(getAllGuestsForEvent.fulfilled, (state, action) => {
+                state.eventData.invitations = action.payload.invitations
+                state.eventData.status = action.meta.arg.status
+            })
+            .addCase(getInvitationsByEventId.pending, state => {
+                state.loading = true;
+            })
+            .addCase(getInvitationsByEventId.rejected, (state) => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addCase(getInvitationsByEventId.fulfilled, (state, action) => {
+                state.eventData.invitations = action.payload.invitations
+            })
+            .addCase(getEventById.fulfilled, (state, action) => {
+                state.form.eventObj = action.payload
+
             })
     }
 })

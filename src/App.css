@@ -2,6 +2,7 @@
 @import url('./components/Navbar/HorizontalNavbar.css');
 @import url('./components/Users/User.css');
 @import url('./components/Events/Events.css');
+@import url('./components/Invitations/Invitations.css');
 
 :root {
     --dark-color: #8B735B;

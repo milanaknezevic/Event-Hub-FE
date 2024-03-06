@@ -5,6 +5,7 @@ import Spinner from "../constants/Spinner.jsx";
 import {useEffect} from "react";
 import {jwtDecode} from "jwt-decode";
 import {getLoggedUser, logout} from "../redux/auth.jsx";
+
 const ProtectedRoute = ({children, path}) => {
     const {isAuthenticated, loggedUser, loading} = useSelector(auth);
     const dispatch = useDispatch()
@@ -25,22 +26,25 @@ const ProtectedRoute = ({children, path}) => {
     const getProtectedRoutes = () => {
         switch (loggedUser?.role) {
             case "SUPPORT":
-                return ["users", "tickets"];
+                return ["/users", "/tickets", "/", "/my_profile"];
             case "ORGANIZER":
-                return [];
+                return ["/events", "/events/event/:id/invitations", "/", "/my_profile"];
             case "CLIENT":
-                return [];
+                return ["/", "/my_profile"];
             default:
-                return ["/users", "/events"];
+                return ["/users", "/tickets", "/events", "/events/event/:id/invitations", '/my_profile'];
         }
     };
+
 
     if (loading) {
         return <Spinner/>
     }
 
-
-    if (getProtectedRoutes() && getProtectedRoutes().includes(path) && !isAuthenticated && !token) {
+    if (!isAuthenticated && !token && getProtectedRoutes()?.includes(path)) {
+        return <Page404/>;
+    }
+    if (isAuthenticated && token && !getProtectedRoutes()?.includes(path)) {
         return <Page404/>;
     }
 

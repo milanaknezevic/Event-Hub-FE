@@ -10,6 +10,7 @@ import Page404 from "./constants/ErrorPages/Page404.jsx";
 import Tickets from "./components/Tickets/Tickets.jsx";
 import MyProfile from "./components/ManageUser/MyProfile.jsx";
 import Events from "./components/Events/Events.jsx";
+import Invitations from "./components/Invitations/Invitations.jsx";
 
 
 const App = () => {
@@ -62,6 +63,13 @@ const App = () => {
                             </ProtectedRoute>
                         ),
                     },
+                    {
+                        path: "/events/event/:id/invitations",
+                        element: <ProtectedRoute path={"/events/event/:id/invitations"}>
+                            <Invitations/>
+                        </ProtectedRoute>,
+                    },
+
                 ],
                 errorElement: <Page404/>
             }

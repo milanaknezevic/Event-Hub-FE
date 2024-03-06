@@ -5,6 +5,7 @@
 .event-container .ant-card-actions{
     background-color: var(--gray2-color);
 }
+.invitations-container .ant-layout,
 .event-container .ant-layout{
     overflow: hidden;
     background-color: white;
@@ -18,12 +19,14 @@
 .event-container .ant-tree-list{
     background-color: var(--gray-color);
 }
+.invitations-container .ant-layout-footer,
 .event-container .ant-layout-footer{
     background-color: white;
 }
 .event-container .ant-layout-sider{
     background-color: var(--gray-color);
 }
+.invitations-container .ant-layout-header,
 .event-container .ant-layout-header{
     height: 14vh;
     padding: 0;
@@ -33,9 +36,11 @@
 .event-container .cover_img{
     height: 30vh;
 }
+.invitations-container .ant-pagination,
 .event-container .ant-pagination{
     width: auto;
 }
+.invitations-container h1,
 .event-container h1{
     color: var(--blue-color);
     font-weight: bold;

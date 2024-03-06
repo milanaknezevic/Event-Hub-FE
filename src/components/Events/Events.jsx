@@ -1,12 +1,13 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {event} from "../../redux/selectors.jsx";
-import {getAllEvents, getEventLocations, getEventTypes} from "../../redux/events.jsx";
+import {getAllEvents, getEventById, getEventLocations, getEventTypes} from "../../redux/events.jsx";
 import {Button, Card, Flex, Layout, Pagination, Tooltip} from 'antd';
 import def from "../../assets/noImage.png"
 import {FaEye, FaTrash} from 'react-icons/fa';
 import CustomSidebar from "../FormComponents/CustomSidebar.jsx";
 import {MailOutlined} from "@ant-design/icons";
+import {useNavigate} from "react-router-dom";
 
 
 const {Header, Footer, Sider, Content} = Layout;
@@ -24,6 +25,8 @@ const Events = () => {
     const [selectedKeysLocation, setSelectedKeysLocation] = useState(initialLocation);
     // const [selectedKeysEvents, setSelectedKeysEvents] = useState([]);
     // const [selectedKeysLocation, setSelectedKeysLocation] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(getAllEvents({
@@ -82,9 +85,10 @@ const Events = () => {
         console.log("Watching event with ID:", eventId);
     };
 
-    const handleInvitations = (eventId) => {
-        console.log("Invitations for event ID:", eventId);
+    const handleInvitations = (id) => {
+            navigate(`/events/event/${id}/invitations`);
     };
+
 
     const handleDeleteEvent = (eventId) => {
         console.log("Deleting event with ID:", eventId);
