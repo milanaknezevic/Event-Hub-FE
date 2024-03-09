@@ -22,11 +22,12 @@ const Login = () => {
     };
     useEffect(() => {
         if (isAuthenticated && loggedUser !== null) {
-            if(loggedUser?.role === 'SUPPORT')
+            if(loggedUser?.role === 1)
             {
+
             navigate("/users")
             }
-            else if(loggedUser?.role === 'ORGANIZER'){
+            else if(loggedUser?.role === 0){
                 navigate("/events")
             }
         }

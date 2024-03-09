@@ -1,13 +1,15 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {event} from "../../redux/selectors.jsx";
-import {getAllEvents, getEventById, getEventLocations, getEventTypes} from "../../redux/events.jsx";
+import {deleteEvent, getAllEvents, getEventLocations, getEventTypes, setEventModalState} from "../../redux/events.jsx";
 import {Button, Card, Flex, Layout, Pagination, Tooltip} from 'antd';
-import def from "../../assets/noImage.png"
+import defImg from "../../assets/noImage.png"
 import {FaEye, FaTrash} from 'react-icons/fa';
 import CustomSidebar from "../FormComponents/CustomSidebar.jsx";
 import {MailOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
+import DeleteEventModal from "./DeleteEventModal.jsx";
+import AddEventModal from "./AddEventModal.jsx";
 
 
 const {Header, Footer, Sider, Content} = Layout;
@@ -25,6 +27,7 @@ const Events = () => {
     const [selectedKeysLocation, setSelectedKeysLocation] = useState(initialLocation);
     // const [selectedKeysEvents, setSelectedKeysEvents] = useState([]);
     // const [selectedKeysLocation, setSelectedKeysLocation] = useState([]);
+    const [eventId, setEventId] = useState(null)
 
     const navigate = useNavigate();
 
@@ -49,7 +52,7 @@ const Events = () => {
         }))
     };
     const handleAddEvent = () => {
-        console.log("add")
+        dispatch(setEventModalState({modalOpen: true, mode: 'create'}));
     };
     const onSearch = (value) => {
         dispatch(getAllEvents({
@@ -86,12 +89,15 @@ const Events = () => {
     };
 
     const handleInvitations = (id) => {
-            navigate(`/events/event/${id}/invitations`);
+        navigate(`/events/event/${id}/invitations`);
     };
 
-
-    const handleDeleteEvent = (eventId) => {
-        console.log("Deleting event with ID:", eventId);
+    const confirmEventDelete = () => {
+        dispatch(deleteEvent({id: eventId, pagination: pagination, filters: filters}));
+    }
+    const handleDeleteEvent = (id) => {
+        setEventId(id)
+        dispatch(setEventModalState({modalOpen: true, mode: 'delete'}));
     };
 
 
@@ -125,7 +131,7 @@ const Events = () => {
                                 <div key={event.id} className=" col-12 col-md-3 col-xl-2 pt-2">
                                     <Card
                                         cover={<img className={"cover_img"} alt="example"
-                                                    src={event.eventImages.length > 0 ? event.eventImages[0].image : def}/>}
+                                                    src={event.eventImages.length > 0 ? event.eventImages[0].image : defImg}/>}
                                         actions={[
                                             <Tooltip key="watch" placement="top" title="Watch">
                                                 <FaEye className="cursor-button"
@@ -174,7 +180,8 @@ const Events = () => {
                     </Footer>
                 </Layout>
             </Layout>
-
+            <DeleteEventModal handleOk={confirmEventDelete}/>
+            <AddEventModal/>
         </Flex>
     );
 };

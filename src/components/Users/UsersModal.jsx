@@ -1,4 +1,4 @@
-import {Modal} from 'antd';
+import {Modal, Upload} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {user} from "../../redux/selectors.jsx";
 import {addUser, editUser, getAdminUserRoles, getUserStatus, setUserModalState} from "../../redux/user.jsx";
@@ -9,12 +9,14 @@ import CustomSelect from "../FormComponents/CustomSelect.jsx";
 import {useEffect, useState} from "react";
 import {uploadAvatar} from "../../redux/auth.jsx";
 import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErrors.jsx";
-import {editUserSchema, registrationSchema} from "../../schemas/index.jsx";
+import {PlusOutlined} from "@ant-design/icons";
+
 
 const UsersModal = () => {
     const dispatch = useDispatch()
-    const {userAdminRoles, userStatus,pagination,form} = useSelector(user);
+    const {userAdminRoles, userStatus, pagination, form} = useSelector(user);
     const [avatarValue, setAvatarValue] = useState("");
+    const [images, setImages] = useState([]);
 
     useEffect(() => {
         dispatch(getAdminUserRoles({}))
@@ -22,36 +24,33 @@ const UsersModal = () => {
     }, []);
 
 
-
     const onSubmit = async (values) => {
         let updatedValues = {...values}
+        let formData;
+        let uid;
         if (avatarValue) {
-            const formData = new FormData();
-            formData.append("file", avatarValue)
-            const {payload} = await dispatch(uploadAvatar(formData));
-
-            if (payload && payload.imageName && payload.buffer) {
-                updatedValues = {...values, avatar: payload.imageName, buffer: payload.buffer};
-            }
+            formData = new FormData();
+            formData.append("file", avatarValue.originFileObj)
+            uid = avatarValue.uid
+            updatedValues = {...values, avatar: avatarValue.uid};
         }
-
+        let res;
         if (form.mode === 'edit') {
-            await dispatch(editUser({ data: updatedValues, pagination: pagination }));
-
+            res = await dispatch(editUser({data: updatedValues, pagination: pagination}));
         } else if (form.mode === 'create') {
-
-            await dispatch(addUser({ data: updatedValues, pagination: pagination }));
-
+            res = await dispatch(addUser({data: updatedValues, pagination: pagination}));
         }
+        if (res && avatarValue && !res.error) {
+            await dispatch(uploadAvatar({formData, uid}));
+        }
+        //  await dispatch(uploadAvatar({formData, uid}));
+
     };
 
     const handleCancel = () => {
         dispatch(setUserModalState({modalOpen: false, mode: ''}));
         formik.resetForm(formik.initialValues)
-    };
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setAvatarValue(file)
+        setImages([])
     };
     const formik = useFormik({
         initialValues: {
@@ -66,12 +65,12 @@ const UsersModal = () => {
             status: '',
             avatar: '',
         },
-        validationSchema: form.mode === 'create' ? registrationSchema : editUserSchema,
+        // validationSchema: form.mode === 'create' ? registrationSchema : editUserSchema,
         onSubmit: onSubmit,
     });
 
     useEffect(() => {
-         if (form.mode === 'edit') {
+        if (form.mode === 'edit') {
             const statusKey = userStatus.find(item => item.value === form.userObj.status)?.key;
             const roleKey = userAdminRoles.find(item => item.value === form.userObj.role)?.key;
 
@@ -81,17 +80,41 @@ const UsersModal = () => {
                 role: roleKey !== undefined ? roleKey : form.userObj.role,
             };
 
+            if (form.userObj.avatar) {
+                const img = new URL(`../../assets/users/${form.userObj.avatar}.png`, import.meta.url).href
+                setImages([
+                    {
+                        uid: '-1',
+                        name: 'image.png',
+                        status: 'done',
+                        url: img
+
+                    },
+                ])
+            }
+
             formik.setValues(updatedValues);
-       }
-         if(form.mode === 'create')
-         {
-             formik.resetForm(formik.initialValues);
-         }
+        }
+        if (form.mode === 'create') {
+            formik.resetForm(formik.initialValues);
+            setImages([])
+        }
     }, [form.mode, form.userObj]);
     useFormattedBackendErrors(form.backendErrors, formik.setErrors)
 
+    const handleChangeImage = ({fileList: newFileList}) => {
+        if (newFileList.length === 0) {
+            formik.setFieldValue("avatar", "")
+        } else {
+            formik.setFieldValue("avatar ", newFileList[0])
+        }
+        setImages(newFileList);
+        setAvatarValue(newFileList[0]);
+    };
+
     return (
         <>
+
             <Modal className={"user-modal"} size={"lg"} title={form.mode === "create" ? 'Create a user' : 'Edit user'}
                    open={form.modalOpen && (form.mode === 'create' || form.mode === 'edit')}
                    onOk={formik.handleSubmit} onCancel={handleCancel}>
@@ -206,8 +229,35 @@ const UsersModal = () => {
                         />
                     </div>
                     <div className={`col-12 ${form.mode === 'create' ? '' : 'col-md-6'}`}>
-                        <CustomInput label="Avatar" name="avatar" type="file" value={formik.values.avatar}
-                                     onChange={handleFileChange}/>
+                        {/*<CustomInput label="Avatar" name="avatar" type="file" value={formik.values.avatar}*/}
+                        {/*             onChange={handleFileChange}/>*/}
+
+                        <Upload
+                            name="avatar"
+                            className={"m-2"}
+                            beforeUpload={() => false}
+                            listType="picture-card"
+                            fileList={images}
+                            onChange={handleChangeImage}
+                            maxCount={1}
+                        >
+                            <button
+                                style={{
+                                    border: 0,
+                                    background: 'none',
+                                }}
+                                type="button"
+                            >
+                                <PlusOutlined/>
+                                <div
+                                    style={{
+                                        marginTop: 8,
+                                    }}
+                                >
+                                    Upload Avatar
+                                </div>
+                            </button>
+                        </Upload>
                     </div>
                     {form.mode !== 'create' &&
                         <div className={"col-12 col-md-6"}>

@@ -1,9 +1,10 @@
-import {Avatar, Flex, Layout, List, Pagination, Radio, Skeleton} from "antd";
+import {Avatar, Flex, Layout, List, Pagination, Radio, Skeleton, Tooltip} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {event} from "../../redux/selectors.jsx";
 import {useEffect} from "react";
-import {getAllGuestsForEvent, getEventById, getInvitationsByEventId} from "../../redux/events.jsx";
+import {getAllGuestsForEvent, getEventById, getInvitationsByEventId, replyToInvitation} from "../../redux/events.jsx";
 import {useParams} from "react-router-dom";
+import {FaCheck, FaTimes} from 'react-icons/fa';
 
 const {Header, Footer, Content} = Layout;
 
@@ -28,13 +29,22 @@ const Invitations = () => {
         }
 
     };
+    const handleAccept = (eventId, userId) => {
+        dispatch(replyToInvitation({eventId: eventId, userId: userId, accept: true}))
+
+    };
+
+    const handleDecline = (eventId, userId) => {
+        dispatch(replyToInvitation({eventId: eventId, userId: userId, accept: false}))
+    };
 
     useEffect(() => {
         dispatch(getAllGuestsForEvent({id: id, status: eventData.status}))
     }, []);
 
     const handleChange = (page, pageSize) => {
-        console.log("paginacija ",page ," pageSize ",pageSize)
+        //TODO
+        console.log("paginacija ", page, " pageSize ", pageSize)
     };
     return (
         <Flex className={"flex-grow-1 invitations-container"}>
@@ -50,26 +60,41 @@ const Invitations = () => {
                     <Content>
 
                         <Radio.Group className={"d-flex justify-content-center"} onChange={onChange} defaultValue={0}>
-                            <Radio.Button value={0}>Confirmed Attendees</Radio.Button>
+                            <Radio.Button value={0}>Guests</Radio.Button>
                             <Radio.Button value={1}>Invited Guests</Radio.Button>
                             <Radio.Button value={2}>Received Invitations</Radio.Button>
                         </Radio.Group>
 
                         <div className={"row justify-content-center pt-2"}>
                             <div className={"col-7"}>
-
                                 <List
                                     itemLayout="horizontal"
                                     dataSource={eventData.invitations}
                                     renderItem={(item) => (
                                         <List.Item
                                             actions={
-                                                !item?.statusCreator && item?.statusGuest &&
-                                                new Date(item?.event?.startTime) > new Date() ?
+                                                !item?.statusCreator &&
+                                                item?.statusGuest &&
+                                                new Date(item?.event?.startTime) > new Date() ? (
                                                     [
-                                                        <a key="list-loadmore-edit">edit</a>,
-                                                        <a key="list-loadmore-more">more</a>
-                                                    ] : null
+                                                        <Tooltip key={'accept'} placement={'top'} title={'Accept'}>
+                                                            <FaCheck
+                                                                className={'accept-icon'}
+                                                                onClick={() => handleAccept(item.event_id, item.user_id)}
+                                                            />
+                                                        </Tooltip>,
+                                                        <Tooltip
+                                                            key={'decline'}
+                                                            placement={'top'}
+                                                            title={'Decline'}
+                                                        >
+                                                            <FaTimes
+                                                                className={'decline-icon'}
+                                                                onClick={() => handleDecline(item.event_id, item.user_id)}
+                                                            />
+                                                        </Tooltip>
+                                                    ]
+                                                ) : null
                                             }
                                         >
                                             <Skeleton avatar title={false} loading={item?.loading} active>
@@ -79,7 +104,6 @@ const Invitations = () => {
                                                 />
                                             </Skeleton>
                                         </List.Item>
-
                                     )}
                                 />
                             </div>

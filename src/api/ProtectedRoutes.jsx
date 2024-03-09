@@ -25,11 +25,11 @@ const ProtectedRoute = ({children, path}) => {
 
     const getProtectedRoutes = () => {
         switch (loggedUser?.role) {
-            case "SUPPORT":
+            case 1:
                 return ["/users", "/tickets", "/", "/my_profile"];
-            case "ORGANIZER":
+            case 0:
                 return ["/events", "/events/event/:id/invitations", "/", "/my_profile"];
-            case "CLIENT":
+            case 2:
                 return ["/", "/my_profile"];
             default:
                 return ["/users", "/tickets", "/events", "/events/event/:id/invitations", '/my_profile'];
@@ -41,12 +41,12 @@ const ProtectedRoute = ({children, path}) => {
         return <Spinner/>
     }
 
-    if (!isAuthenticated && !token && getProtectedRoutes()?.includes(path)) {
-        return <Page404/>;
-    }
-    if (isAuthenticated && token && !getProtectedRoutes()?.includes(path)) {
-        return <Page404/>;
-    }
+    // if (!isAuthenticated && !token && getProtectedRoutes()?.includes(path)) {
+    //     return <Page404/>;
+    // }
+    // if (isAuthenticated && token && !getProtectedRoutes()?.includes(path)) {
+    //     return <Page404/>;
+    // }
 
     return children;
 };

@@ -33,6 +33,14 @@ export const registrationSchema = yup.object().shape({
 export const replyToTicketSchema = yup.object().shape({
     answer: yup.string().required('Required'),
 });
+export const addGeneralEvent = yup.object().shape({
+    name: yup.string().required('Name is required'),
+    description: yup.string().required('Description is required'),
+    startTime: yup.string().required('Start time is required'),
+    endTime: yup.string().required('End time is required'),
+    eventType_id: yup.string().required('Event is required'),
+    location_id: yup.string().required('Location is required'),
+});
 
 export const editUserSchema = yup.object().shape({
     name: yup.string().required('Name is required'),

@@ -31,10 +31,28 @@ export const initialState = {
     }
 
 }
-
+export const replyToInvitation = createAsyncThunk(
+    'invitation/organizator_reply', async ({eventId, userId, accept}, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.put(`/api/invitations/creator/accept/${eventId}/${userId}/?accept=${accept}`);
+            dispatch(getInvitationsByEventId(eventId))
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "Invitation edited successfully!",
+                title: "Invitation"
+            }))
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
 
 export const getAllEvents = createAsyncThunk(
-    'events', async ({page = 1, size = 10, search = "", locationId = "", eventTypeId = ""}, {dispatch,rejectWithValue}) => {
+    'events', async ({page = 1, size = 10, search = "", locationId = "", eventTypeId = ""}, {
+        dispatch,
+        rejectWithValue
+    }) => {
         try {
             const response = await api.get(`/api/users/organizer_events/?page=${page}&size=${size}&search=${search}&locationId=${locationId}&eventTypeId=${eventTypeId}`);
             return response.data;
@@ -42,7 +60,7 @@ export const getAllEvents = createAsyncThunk(
             dispatch(displayNotification({
                 notificationType: "error",
                 message: "Failed to fetch Events!",
-                title: "User"
+                title: "Event"
             }))
             return rejectWithValue(error.response.data);
         }
@@ -50,7 +68,7 @@ export const getAllEvents = createAsyncThunk(
 );
 export const getEventById = createAsyncThunk(
     "events/getEvent",
-    async (id, {dispatch,rejectWithValue}) => {
+    async (id, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.get(`/api/events/${id}/`);
             return response.data;
@@ -99,7 +117,7 @@ export const getInvitationsByEventId = createAsyncThunk(
 
 
 export const getEventTypes = createAsyncThunk(
-    'eventTypes', async ({dispatch,rejectWithValue}) => {
+    'eventTypes', async ({dispatch, rejectWithValue}) => {
         try {
             const response = await api.get('/api/eventTypes');
             return response.data;
@@ -114,7 +132,7 @@ export const getEventTypes = createAsyncThunk(
     }
 );
 export const getEventLocations = createAsyncThunk(
-    'locations', async ({dispatch,rejectWithValue}) => {
+    'locations', async ({dispatch, rejectWithValue}) => {
         try {
             const response = await api.get('/api/locations');
             return response.data;
@@ -128,12 +146,49 @@ export const getEventLocations = createAsyncThunk(
         }
     }
 );
+export const deleteEvent = createAsyncThunk(
+    "events/delete",
+    async ({id, pagination, filters}, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.delete(`/api/events/${id}/`);
+            dispatch(getAllEvents({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: filters.search,
+                locationId: filters.selectedLocation,
+                eventTypeId: filters.selectedEvent
+            }))
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "Event deleted successfully!",
+                title: "Event"
+            }))
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Error while deleting event!",
+                title: "Event"
+            }))
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
 
 
 export const eventSlice = createSlice({
     name: "events",
     initialState,
-    reducers: {},
+    reducers: {
+        setEventModalState: (state, action) => {
+            const {modalOpen, mode} = action.payload;
+            state.form.modalOpen = modalOpen;
+            state.form.formSubmitting = false;
+            state.form.backendErrors = {};
+            state.form.eventObj = {};
+            state.form.mode = mode;
+        }
+    },
     extraReducers: builder => {
         builder
             .addCase(getAllEvents.pending, state => {
@@ -196,7 +251,14 @@ export const eventSlice = createSlice({
                 state.form.eventObj = action.payload
 
             })
+            .addCase(deleteEvent.fulfilled, (state) => {
+                state.form.formSubmitting = false
+                state.form.modalOpen = false
+                state.form.eventObj = {}
+                state.form.mode = ""
+            })
     }
 })
+export const {setEventModalState} = eventSlice.actions;
 
 export const eventReducer = eventSlice.reducer;

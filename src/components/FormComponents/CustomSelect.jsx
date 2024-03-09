@@ -8,11 +8,11 @@ const CustomSelect = ({ label, name, options, onChange, errorMessage, value="" }
                 id={name}
                 name={name}
                 onChange={(value) => onChange(name, value)}
-                value={value}
+                value={options.find(option => option.id === value)?.name || ''}
             >
                 {options?.map((option) => (
-                    <Select.Option key={option.key} value={option.key}>
-                        {option.value}
+                    <Select.Option key={option.id} value={option.id}>
+                        {option.name}
                     </Select.Option>
                 ))}
             </Select>

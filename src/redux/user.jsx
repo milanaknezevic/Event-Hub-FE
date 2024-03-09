@@ -59,7 +59,7 @@ export const getUserStatus = createAsyncThunk(
     }
 );
 export const getAllUsers = createAsyncThunk(
-    'users', async ({page = 1, size = 10,search}, {rejectWithValue}) => {
+    'users', async ({page = 1, size = 10, search}, {rejectWithValue}) => {
         try {
             const response = await api.get(`/api/users?page=${page}&size=${size}&search=${search}`);
             return response.data;
@@ -71,7 +71,7 @@ export const getAllUsers = createAsyncThunk(
 
 export const getUserById = createAsyncThunk(
     "users/getUser",
-    async (id, {dispatch,rejectWithValue}) => {
+    async (id, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.get(`/api/users/${id}/`);
             return response.data;
@@ -90,7 +90,7 @@ export const editUser = createAsyncThunk(
     async ({data, pagination}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.patch(`/api/users/${data.id}/`, (data));
-            dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize,search:""}))
+            dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize, search: ""}))
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "User edited successfully!",
@@ -108,7 +108,7 @@ export const deleteUser = createAsyncThunk(
     async ({id, pagination}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.patch(`/api/users/delete/${id}/`);
-            dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize,search:""}))
+            dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize, search: ""}))
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "User deleted successfully!",
@@ -130,7 +130,7 @@ export const addUser = createAsyncThunk(
     async ({data, pagination}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.post(`/api/users/add_user/`, (data));
-            dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize,search:""}))
+            dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize, search: ""}))
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "User added successfully!",

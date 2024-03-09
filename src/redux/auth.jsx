@@ -50,15 +50,22 @@ export const getLoggedUser = createAsyncThunk(
 
 
 export const uploadAvatar = createAsyncThunk(
-    'auth/avatar', async (data, {rejectWithValue}) => {
+    'auth/avatar', async ({ formData, uid }, { rejectWithValue }) => {
         try {
-            const response = await axios.post('/api/users/upload_avatar', (data));
+            const response = await axios.post('/api/users/upload_avatar', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                params: { uid } // Dodajte uid kao parametar u zahtevu
+            });
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
     }
 );
+
+
 
 export const userRegister = createAsyncThunk(
     'auth/register', async (data, {dispatch, rejectWithValue}) => {

@@ -6,3 +6,9 @@
     background-color: var(--blue2-color);
     color: var(--white-color);
 }
+.invitations-container .accept-icon:hover{
+    color: green;
+}
+.invitations-container .decline-icon:hover{
+    color: red;
+}

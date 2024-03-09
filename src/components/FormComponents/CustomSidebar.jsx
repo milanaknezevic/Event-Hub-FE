@@ -26,7 +26,7 @@ const CustomSidebar = ({collapsed, onSearch, setCollapsed, eventTypes, locations
             key: 'location',
             selectable: false,
             children: locations.map((location) => ({
-                title: location.address,
+                title: location.name,
                 key:location.id,
             })),
         },

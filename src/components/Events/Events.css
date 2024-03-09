@@ -73,3 +73,14 @@
 .event-container .ant-card-meta-detail{
     cursor: pointer;
 }
+
+.event-form-container .event-btn{
+    background-color: var(--blue-color);
+    color: var(--white-color);
+}
+.event-form-container .event-btn:hover{
+    background-color: var(--blue2-color);
+    color: var(--white-color);
+}
+
+

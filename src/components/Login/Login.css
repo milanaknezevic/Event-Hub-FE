@@ -61,3 +61,6 @@
     justify-content: start;
     width: 100%;
 }
+.login .ant-picker {
+    width: 100%;
+}
