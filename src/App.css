@@ -47,4 +47,9 @@
     background-color: var(--lighter-color);
 }
 
+.custom-upload button{
+ border: 0;
+background: none;
+
+}
 

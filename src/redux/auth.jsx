@@ -50,13 +50,13 @@ export const getLoggedUser = createAsyncThunk(
 
 
 export const uploadAvatar = createAsyncThunk(
-    'auth/avatar', async ({ formData, uid }, { rejectWithValue }) => {
+    'auth/avatar', async ({formData, uid}, {rejectWithValue}) => {
         try {
             const response = await axios.post('/api/users/upload_avatar', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
-                params: { uid } // Dodajte uid kao parametar u zahtevu
+                params: {uid}
             });
             return response.data;
         } catch (error) {
@@ -64,7 +64,6 @@ export const uploadAvatar = createAsyncThunk(
         }
     }
 );
-
 
 
 export const userRegister = createAsyncThunk(
@@ -108,7 +107,7 @@ export const authSlice = createSlice({
                 state.isAuthenticated = false;
                 state.loading = false;
             })
-            .addCase(userLogin.fulfilled, (state,action) => {
+            .addCase(userLogin.fulfilled, (state) => {
                 state.loading = false;
                 state.backendErrors = {};
                 state.isAuthenticated = true;

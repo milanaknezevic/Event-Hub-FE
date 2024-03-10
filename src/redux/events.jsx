@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import base from '../api/baseService.jsx';
 import {displayNotification} from "./notification.jsx";
+import axios from "axios";
 
 
 const api = base.service(true);
@@ -174,7 +175,36 @@ export const deleteEvent = createAsyncThunk(
         }
     }
 )
-
+export const addEvent = createAsyncThunk(
+    "events/add",
+    async (data, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.post(`/api/events/`, (data));
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "Event added successfully!",
+                title: "Event"
+            }))
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+export const uploadEventImages = createAsyncThunk(
+    'events/uploadImages', async (formData, {rejectWithValue}) => {
+        try {
+            const response = await axios.post('/api/eventImages/upload_images', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
 
 export const eventSlice = createSlice({
     name: "events",
@@ -256,6 +286,20 @@ export const eventSlice = createSlice({
                 state.form.modalOpen = false
                 state.form.eventObj = {}
                 state.form.mode = ""
+            })
+            .addCase(addEvent.pending, (state) => {
+                state.form.formSubmitting = true
+            })
+            .addCase(addEvent.rejected, (state, action) => {
+                state.form.formSubmitting = false
+                state.form.backendErrors = action.payload
+            })
+            .addCase(addEvent.fulfilled, () => {
+                // state.form.formSubmitting = false
+                // state.form.modalOpen = false
+                // state.form.eventObj = {}
+                // state.form.mode = ""
+                // state.form.backendErrors = {}
             })
     }
 })

@@ -1,7 +1,7 @@
 import {useState} from 'react';
-import {PlusOutlined} from '@ant-design/icons';
-import {Button, Modal, Upload} from 'antd';
+import {Button, Modal} from 'antd';
 import PropTypes from 'prop-types';
+import CustomUpload from "../FormComponents/CustomUpload.jsx";
 
 const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -15,9 +15,7 @@ const SecondStepForm = ({onImagesChange, handleSubmit, images}) => {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
-
     const handleCancel = () => setPreviewOpen(false);
-
     const handlePreview = async (file) => {
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj);
@@ -33,39 +31,18 @@ const SecondStepForm = ({onImagesChange, handleSubmit, images}) => {
 
     return (
         <>
-            <Upload
-                className={"m-2"}
-                beforeUpload={() => {
-                    return false;
-                }}
-                listType="picture-card"
+            <CustomUpload
+                name={"eventImages"}
                 fileList={images}
+                handleChangeImage={handleChange}
                 onPreview={handlePreview}
-                onChange={handleChange}
-            >
-                <button
-                    style={{
-                        border: 0,
-                        background: 'none',
-                    }}
-                    type="button"
-                >
-                    <PlusOutlined/>
-                    <div
-                        style={{
-                            marginTop: 8,
-                        }}
-                    >
-                        Upload
-                    </div>
-                </button>
-            </Upload>
+                maxCount={10}
+                buttonText={"Upload"}
+            />
             <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
                 <img
                     alt="example"
-                    style={{
-                        width: '100%',
-                    }}
+                    className={"w-100"}
                     src={previewImage}
                 />
             </Modal>

@@ -81,6 +81,7 @@ const UsersModal = () => {
 
             if (form.userObj.avatar) {
                 const img = new URL(`../../assets/users/${form.userObj.avatar}.png`, import.meta.url).href
+                console.log("img ", img)
                 setImages([
                     {
                         uid: '-1',

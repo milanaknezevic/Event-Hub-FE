@@ -5,6 +5,7 @@ import CustomSelect from "../FormComponents/CustomSelect.jsx";
 import {useSelector} from "react-redux";
 import {event} from "../../redux/selectors.jsx";
 import PropTypes from 'prop-types';
+import dayjs from "dayjs";
 
 const FirstStepForm = ({formik}) => {
     const {eventTypes, locations} = useSelector(event)
@@ -44,8 +45,9 @@ const FirstStepForm = ({formik}) => {
                 <CustomDatePicker
                     label="Start time"
                     name="startTime"
-                    onChange={(fieldName, value) =>
-                        formik.setFieldValue("startTime", value)}
+                    value={formik.values.startTime ? dayjs(formik.values.startTime, 'DD.MM.YYYY. HH:mm') : null}
+                    showTime={true}
+                    onChange={(fieldName, value) => formik.setFieldValue("startTime", value)}
                     errorMessage={
                         formik.errors.startTime && formik.touched.startTime
                             ? formik.errors.startTime
@@ -56,9 +58,11 @@ const FirstStepForm = ({formik}) => {
             <div className={"col-12 col-md-6"}>
                 <CustomDatePicker
                     label="End time"
+                    showTime={true}
                     name="endTime"
-                    onChange={(fieldName, value) =>
-                        formik.setFieldValue("endTime", value)}
+                    disableDate={formik.values.startTime ? dayjs(formik.values.startTime, 'DD.MM.YYYY. HH:mm') : null}
+                    value={formik.values.endTime ? dayjs(formik.values.endTime, 'DD.MM.YYYY. HH:mm') : null}
+                    onChange={(fieldName, value) => formik.setFieldValue("endTime", value)}
                     errorMessage={
                         formik.errors.endTime && formik.touched.endTime
                             ? formik.errors.endTime

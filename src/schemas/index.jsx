@@ -1,5 +1,5 @@
 import * as yup from "yup";
-
+import moment from 'moment'
 // const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
 export const loginSchema = yup.object().shape({
     username: yup
@@ -37,7 +37,12 @@ export const addGeneralEvent = yup.object().shape({
     name: yup.string().required('Name is required'),
     description: yup.string().required('Description is required'),
     startTime: yup.string().required('Start time is required'),
-    endTime: yup.string().required('End time is required'),
+    endTime: yup.string().test('is-greater', 'End time must be greater than Start time', function (value, context) {
+        const { startTime } = this.parent;
+        const startDate = moment(startTime, 'DD.MM.YYYY. HH:mm').toDate();
+        const endDate = moment(value, 'DD.MM.YYYY. HH:mm').toDate();
+        return startDate <= endDate;
+    }).required('End time is required'),
     eventType_id: yup.string().required('Event is required'),
     location_id: yup.string().required('Location is required'),
 });

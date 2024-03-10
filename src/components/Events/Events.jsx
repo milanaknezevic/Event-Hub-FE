@@ -128,22 +128,22 @@ const Events = () => {
                     <Content>
                         <div className="row justify-content-center justify-content-md-start p-2">
                             {events.map(event => (
-                                <div key={event.id} className=" col-12 col-md-3 col-xl-2 pt-2">
+                                <div key={event.id} className="col-12 col-md-3 col-xl-2 pt-2">
                                     <Card
-                                        cover={<img className={"cover_img"} alt="example"
-                                                    src={event.eventImages.length > 0 ? event.eventImages[0].image : defImg}/>}
+                                        cover={
+
+                                        <img alt="example" src={event?.eventImages?.length > 0 ? new URL(`../../assets/events/${event.eventImages[0].image}.png`, import.meta.url).href : defImg} />
+
+                                    }
                                         actions={[
                                             <Tooltip key="watch" placement="top" title="Watch">
-                                                <FaEye className="cursor-button"
-                                                       onClick={() => handleWatchEvent(event.id)}/>
+                                                <FaEye className="cursor-button" onClick={() => handleWatchEvent(event.id)} />
                                             </Tooltip>,
                                             <Tooltip key="invitations" placement="top" title="Invitations">
-                                                <MailOutlined className="cursor-button"
-                                                              onClick={() => handleInvitations(event.id)}/>
+                                                <MailOutlined className="cursor-button" onClick={() => handleInvitations(event.id)} />
                                             </Tooltip>,
                                             <Tooltip key="delete" placement="top" title="Delete">
-                                                <FaTrash color="red" className="cursor-button"
-                                                         onClick={() => handleDeleteEvent(event.id)}/>
+                                                <FaTrash color="red" className="cursor-button" onClick={() => handleDeleteEvent(event.id)} />
                                             </Tooltip>,
                                         ]}
                                     >
@@ -161,8 +161,7 @@ const Events = () => {
                                         />
                                     </Card>
                                 </div>
-                            ))
-                            }
+                            ))}
                         </div>
                     </Content>
                     <Footer>
