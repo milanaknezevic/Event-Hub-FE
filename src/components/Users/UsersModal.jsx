@@ -1,4 +1,4 @@
-import {Modal, Upload} from 'antd';
+import {Modal} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {user} from "../../redux/selectors.jsx";
 import {addUser, editUser, getAdminUserRoles, getUserStatus, setUserModalState} from "../../redux/user.jsx";
@@ -9,7 +9,8 @@ import CustomSelect from "../FormComponents/CustomSelect.jsx";
 import {useEffect, useState} from "react";
 import {uploadAvatar} from "../../redux/auth.jsx";
 import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErrors.jsx";
-import {PlusOutlined} from "@ant-design/icons";
+import CustomUpload from "../FormComponents/CustomUpload.jsx";
+import {editUserSchema, registrationSchema} from "../../schemas/index.jsx";
 
 
 const UsersModal = () => {
@@ -43,8 +44,6 @@ const UsersModal = () => {
         if (res && avatarValue && !res.error) {
             await dispatch(uploadAvatar({formData, uid}));
         }
-        //  await dispatch(uploadAvatar({formData, uid}));
-
     };
 
     const handleCancel = () => {
@@ -65,7 +64,7 @@ const UsersModal = () => {
             status: '',
             avatar: '',
         },
-        // validationSchema: form.mode === 'create' ? registrationSchema : editUserSchema,
+        validationSchema: form.mode === 'create' ? registrationSchema : editUserSchema,
         onSubmit: onSubmit,
     });
 
@@ -114,7 +113,6 @@ const UsersModal = () => {
 
     return (
         <>
-
             <Modal className={"user-modal"} size={"lg"} title={form.mode === "create" ? 'Create a user' : 'Edit user'}
                    open={form.modalOpen && (form.mode === 'create' || form.mode === 'edit')}
                    onOk={formik.handleSubmit} onCancel={handleCancel}>
@@ -229,35 +227,8 @@ const UsersModal = () => {
                         />
                     </div>
                     <div className={`col-12 ${form.mode === 'create' ? '' : 'col-md-6'}`}>
-                        {/*<CustomInput label="Avatar" name="avatar" type="file" value={formik.values.avatar}*/}
-                        {/*             onChange={handleFileChange}/>*/}
-
-                        <Upload
-                            name="avatar"
-                            className={"m-2"}
-                            beforeUpload={() => false}
-                            listType="picture-card"
-                            fileList={images}
-                            onChange={handleChangeImage}
-                            maxCount={1}
-                        >
-                            <button
-                                style={{
-                                    border: 0,
-                                    background: 'none',
-                                }}
-                                type="button"
-                            >
-                                <PlusOutlined/>
-                                <div
-                                    style={{
-                                        marginTop: 8,
-                                    }}
-                                >
-                                    Upload Avatar
-                                </div>
-                            </button>
-                        </Upload>
+                        <CustomUpload name={"avatar"} fileList={images} handleChangeImage={handleChangeImage}
+                                      maxCount={1} buttonText={"Upload Avatar"}/>
                     </div>
                     {form.mode !== 'create' &&
                         <div className={"col-12 col-md-6"}>
