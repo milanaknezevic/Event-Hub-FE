@@ -37,13 +37,13 @@ export const addGeneralEvent = yup.object().shape({
     name: yup.string().required('Name is required'),
     description: yup.string().required('Description is required'),
     startTime: yup.string().required('Start time is required'),
-    endTime: yup.string().test('is-greater', 'End time must be greater than Start time', function (value, context) {
+    endTime: yup.string().test('is-greater', 'End time must be greater than Start time', function (value) {
         const { startTime } = this.parent;
         const startDate = moment(startTime, 'DD.MM.YYYY. HH:mm').toDate();
         const endDate = moment(value, 'DD.MM.YYYY. HH:mm').toDate();
         return startDate <= endDate;
     }).required('End time is required'),
-    eventType_id: yup.string().required('Event is required'),
+    eventType_id: yup.string().required('Event type is required'),
     location_id: yup.string().required('Location is required'),
 });
 

@@ -84,8 +84,8 @@ const Events = () => {
         }))
 
     };
-    const handleWatchEvent = (eventId) => {
-        console.log("Watching event with ID:", eventId);
+    const handleWatchEvent = (id) => {
+        navigate(`/events/event/${id}`);
     };
 
     const handleInvitations = (id) => {

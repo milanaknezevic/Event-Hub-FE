@@ -28,11 +28,11 @@ const ProtectedRoute = ({children, path}) => {
             case 1:
                 return ["/users", "/tickets", "/", "/my_profile"];
             case 0:
-                return ["/events", "/events/event/:id/invitations", "/", "/my_profile"];
+                return ["/events", "/events/event/:id/invitations","/events/event/:id", "/", "/my_profile"];
             case 2:
                 return ["/", "/my_profile"];
             default:
-                return ["/users", "/tickets", "/events", "/events/event/:id/invitations", '/my_profile'];
+                return ["/users", "/tickets", "/events", "/events/event/:id/invitations","/events/event/:id", '/my_profile'];
         }
     };
 

@@ -11,6 +11,7 @@ import Tickets from "./components/Tickets/Tickets.jsx";
 import MyProfile from "./components/ManageUser/MyProfile.jsx";
 import Events from "./components/Events/Events.jsx";
 import Invitations from "./components/Invitations/Invitations.jsx";
+import Event from "./components/Events/Event.jsx";
 
 
 const App = () => {
@@ -62,6 +63,12 @@ const App = () => {
                                 <Events/>
                             </ProtectedRoute>
                         ),
+                    },
+                    {
+                        path: "/events/event/:id",
+                        element: <ProtectedRoute path={"/events/event/:id"}>
+                            <Event/>
+                        </ProtectedRoute>,
                     },
                     {
                         path: "/events/event/:id/invitations",
