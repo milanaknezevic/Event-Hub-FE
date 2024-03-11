@@ -110,4 +110,25 @@
     color: var(--white-color);
 }
 
+.event-form-container .load-btn {
+    border: 2px solid var(--blue-color);
+    color: var(--blue-color);
+}
+
+.event-form-container .load-btn:hover {
+    border: 2px solid var(--blue2-color);
+    color: var(--blue2-color);
+}
+
+.event-form-container .search-container .ant-btn,
+.event-form-container .search-container .ant-input-affix-wrapper {
+    background-color: var(--gray-color);
+}
+.event-form-container .accept-icon:hover{
+    color: green;
+}
+.event-form-container .accepted-icon {
+    color: red;
+}
+
 

@@ -101,7 +101,6 @@ const FirstStepForm = ({formik}) => {
     );
 };
 FirstStepForm.propTypes = {
-    handleNextPage: PropTypes.func.isRequired,
     formik: PropTypes.object.isRequired,
 };
 

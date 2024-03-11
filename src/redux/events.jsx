@@ -192,7 +192,7 @@ export const addEvent = createAsyncThunk(
     }
 )
 export const uploadEventImages = createAsyncThunk(
-    'events/uploadImages', async (formData, {rejectWithValue}) => {
+    'events/uploadImages', async (formData, {dispatch,rejectWithValue}) => {
         try {
             const response = await axios.post('/api/eventImages/upload_images', formData, {
                 headers: {
@@ -201,6 +201,11 @@ export const uploadEventImages = createAsyncThunk(
             });
             return response.data;
         } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Error while saving event images!!",
+                title: "Event"
+            }))
             return rejectWithValue(error.response.data);
         }
     }
@@ -294,12 +299,12 @@ export const eventSlice = createSlice({
                 state.form.formSubmitting = false
                 state.form.backendErrors = action.payload
             })
-            .addCase(addEvent.fulfilled, () => {
-                // state.form.formSubmitting = false
-                // state.form.modalOpen = false
-                // state.form.eventObj = {}
-                // state.form.mode = ""
-                // state.form.backendErrors = {}
+            .addCase(addEvent.fulfilled, (state) => {
+                state.form.formSubmitting = false
+                state.form.modalOpen = false
+                state.form.eventObj = {}
+                state.form.mode = ""
+                state.form.backendErrors = {}
             })
     }
 })

@@ -10,12 +10,14 @@ import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErro
 import {uploadAvatar, userRegister} from "../../redux/auth.jsx";
 import {registrationSchema} from "../../schemas/index.jsx";
 import {auth, user} from "../../redux/selectors.jsx";
+import CustomUpload from "../FormComponents/CustomUpload.jsx";
 
 const Register = () => {
     const dispatch = useDispatch()
     const {backendErrors} = useSelector(auth)
     const {userRoles} = useSelector(user);
     const [avatarValue, setAvatarValue] = useState("");
+    const [images, setImages] = useState([]);
 
     useEffect(() => {
         dispatch(getUserRoles({}))
@@ -23,21 +25,27 @@ const Register = () => {
 
     const onSubmit = async (values) => {
         let updatedValues = {...values}
+        let formData;
+        let uid;
         if (avatarValue) {
-            const formData = new FormData();
-            formData.append("file", avatarValue)
-            const {payload} = await dispatch(uploadAvatar(formData));
-
-            if (payload && payload.imageName && payload.buffer) {
-                updatedValues = {...values, avatar: payload.imageName, buffer: payload.buffer};
-            }
+            formData = new FormData();
+            formData.append("file", avatarValue.originFileObj)
+            uid = avatarValue.uid
+            updatedValues = {...values, avatar: avatarValue.uid};
         }
-        await dispatch(userRegister(updatedValues));
+        let res = await dispatch(userRegister(updatedValues));
+        if (res && avatarValue && !res.error) {
+            await dispatch(uploadAvatar({formData, uid}));
+        }
     };
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setAvatarValue(file)
+    const handleChangeImage = ({fileList: newFileList}) => {
+        if (newFileList.length === 0) {
+            formik.setFieldValue("avatar", "")
+        } else {
+            formik.setFieldValue("avatar", newFileList[0])
+        }
+        setImages(newFileList);
+        setAvatarValue(newFileList[0]);
     };
 
     const formik = useFormik({
@@ -178,13 +186,16 @@ const Register = () => {
                                 />
                             </div>
                             <div className={"col-12 "}>
-                                <CustomInput label="Avatar" name="avatar" type="file" value={formik.values.avatar}
-                                             onChange={handleFileChange}/>
+                                <CustomUpload name={"avatar"} fileList={images} handleChangeImage={handleChangeImage}
+                                              maxCount={1} buttonText={"Upload Avatar"}/>
+
+
                             </div>
 
 
                             <div className={"col-12 d-flex justify-content-center pb-3"}>
-                                <Button className="register-btn btn col-12 col-md-6" htmlType="submit" type="submit">Sign up
+                                <Button className="register-btn btn col-12 col-md-6" htmlType="submit" type="submit">Sign
+                                    up
                                 </Button>
                             </div>
                             <div className={"col-12 d-flex justify-content-center pb-3"}>

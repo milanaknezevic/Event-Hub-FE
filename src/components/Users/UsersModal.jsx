@@ -81,7 +81,6 @@ const UsersModal = () => {
 
             if (form.userObj.avatar) {
                 const img = new URL(`../../assets/users/${form.userObj.avatar}.png`, import.meta.url).href
-                console.log("img ", img)
                 setImages([
                     {
                         uid: '-1',
@@ -106,7 +105,7 @@ const UsersModal = () => {
         if (newFileList.length === 0) {
             formik.setFieldValue("avatar", "")
         } else {
-            formik.setFieldValue("avatar ", newFileList[0])
+            formik.setFieldValue("avatar", newFileList[0])
         }
         setImages(newFileList);
         setAvatarValue(newFileList[0]);

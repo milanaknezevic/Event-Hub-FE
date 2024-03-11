@@ -41,12 +41,12 @@ const ProtectedRoute = ({children, path}) => {
         return <Spinner/>
     }
 
-    // if (!isAuthenticated && !token && getProtectedRoutes()?.includes(path)) {
-    //     return <Page404/>;
-    // }
-    // if (isAuthenticated && token && !getProtectedRoutes()?.includes(path)) {
-    //     return <Page404/>;
-    // }
+    if (!isAuthenticated && !token && getProtectedRoutes()?.includes(path)) {
+        return <Page404/>;
+    }
+    if (isAuthenticated && token && !getProtectedRoutes()?.includes(path)) {
+        return <Page404/>;
+    }
 
     return children;
 };

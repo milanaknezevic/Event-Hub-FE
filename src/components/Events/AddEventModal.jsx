@@ -37,9 +37,9 @@ const AddEventModal = () => {
         onSubmit: () => handleNextPage(),
     });
 
-    const onSubmit = async () => {
+    const onSubmit = async (invitations) => {
+
         let data = formik1.values;
-        console.log("data ", data)
         let formData;
         let eventImagesName = [];
         if (images) {
@@ -50,26 +50,26 @@ const AddEventModal = () => {
                 eventImagesName[index] = image.uid;
             });
         }
+
         data = {
             ...data,
-            eventImagesName: eventImagesName
+            eventImagesName: eventImagesName,
+            invitations
         };
-        console.log("formData ", formData)
+
         const res = await dispatch(addEvent(data));
-        console.log("res ", res)
+
         if (res && images && !res.error) {
             await dispatch(uploadEventImages(formData));
         }
     };
     const forms = [
-        <FirstStepForm key="firstStep" handleNextPage={handleNextPage} formik={formik1}/>,
-        <SecondStepForm key="secondStep" handleNextPage={handleNextPage} images={images}
-                        handleSubmit={formik1.handleSubmit} onImagesChange={handleImagesChange}/>,
+        <FirstStepForm key="firstStep" formik={formik1}/>,
+        <SecondStepForm key="secondStep" images={images} handleSubmit={formik1.handleSubmit} onImagesChange={handleImagesChange}/>,
         <ThirdStepForm key="thirdStep" onSubmit={onSubmit}/>,
     ];
 
-    // console.log("!formik1.dirty ", !formik1.dirty)
-    // console.log("!formik1.isValid ", !formik1.isValid)
+
     return (
         <>
             <Modal maskClosable={false} size={"large"} className={"event-form-container"}
@@ -77,10 +77,8 @@ const AddEventModal = () => {
                    open={form.modalOpen && form.mode === 'create'} onCancel={handleCancel}>
                 <Steps onChange={setCurrentPage} current={currentPage}>
                     <Steps.Step title='General'></Steps.Step>
-                    <Steps.Step title='Images'></Steps.Step>
-                    {/*disabled={!formik1.dirty || !formik1.isValid}*/}
-                    <Steps.Step title='Invitations'></Steps.Step>
-                    <Steps.Step title='Final'></Steps.Step>
+                    <Steps.Step disabled={!formik1.dirty || !formik1.isValid} title='Images' ></Steps.Step>
+                    <Steps.Step disabled={!formik1.dirty || !formik1.isValid} title='Invitations'></Steps.Step>
                 </Steps>
                 {forms[currentPage]}
             </Modal>

@@ -10,6 +10,7 @@ export const initialState = {
     userAdminRoles: [],
     userStatus: [],
     users: [],
+    clients: [],
     pagination: {
         total: 0,
         current: 1,
@@ -62,6 +63,17 @@ export const getAllUsers = createAsyncThunk(
     'users', async ({page = 1, size = 10, search}, {rejectWithValue}) => {
         try {
             const response = await api.get(`/api/users?page=${page}&size=${size}&search=${search}`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const getAllClients = createAsyncThunk(
+    'users/clients', async ( {rejectWithValue}) => {
+        try {
+            const response = await api.get(`/api/users/organizer/clients/`);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -188,6 +200,17 @@ export const userSlice = createSlice({
                     current,
                     pageSize
                 }
+            })
+            .addCase(getAllClients.pending, state => {
+                state.loading = true;
+            })
+            .addCase(getAllClients.rejected, (state) => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addCase(getAllClients.fulfilled, (state, action) => {
+                state.loading = false;
+                state.clients = action.payload.clients;
             })
             .addCase(getUserById.fulfilled, (state, action) => {
                 state.form.userObj = action.payload
