@@ -1,7 +1,6 @@
-import React from "react";
-import { Form, Select } from "antd";
+import {Form, Select} from "antd";
 
-const CustomSelect = ({ label, name, options, onChange, errorMessage, value="" }) => {
+const CustomSelect = ({label, name, options, onChange, errorMessage, value = ""}) => {
     return (
         <Form.Item label={label} validateStatus={errorMessage ? 'error' : ''} help={errorMessage}>
             <Select

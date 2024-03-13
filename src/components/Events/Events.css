@@ -130,5 +130,13 @@
 .event-form-container .accepted-icon {
     color: red;
 }
+.event-container .slick-slide{
+    height: 50vh;
+}
+.carousel-img {
+    height: 50vh;
+    object-fit: contain;
+}
+
 
 

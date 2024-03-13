@@ -16,7 +16,6 @@ const CustomDatePicker = ({label, name, onChange, errorMessage, showTime, value,
         return current && dayjs(current).isBefore(tomorrow, 'day');
     };
 
-
     return (
         <Form.Item
             label={label}
@@ -25,7 +24,7 @@ const CustomDatePicker = ({label, name, onChange, errorMessage, showTime, value,
         >
             <DatePicker
                 name={name}
-                defaultValue={value}
+                value={value}
                 onChange={onChange}
                 format={dateTimeFormat}
                 disabledDate={disabledDate}
