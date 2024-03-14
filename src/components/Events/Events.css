@@ -138,5 +138,13 @@
     object-fit: contain;
 }
 
+.event-container .ant-carousel .slick-dots li.slick-active button {
+    background: black;
+}
+.event-container .ant-carousel .slick-dots li {
+    background: white;
+    border: 2px solid black;
+}
+
 
 

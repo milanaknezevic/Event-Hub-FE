@@ -3,6 +3,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {event} from "../../redux/selectors.jsx";
 import {
     addEvent,
+    editEvent,
+    getEventById,
     getEventLocations,
     getEventTypes,
     setEventModalState,
@@ -15,19 +17,33 @@ import {useFormik} from "formik";
 import ThirdStepForm from "../MultistepForm/ThirdStepForm.jsx";
 import {addGeneralEvent} from "../../schemas/index.jsx";
 
-const AddEventModal = () => {
+const AddEventModal = ({eventId}) => {
     const dispatch = useDispatch()
     const {form} = useSelector(event)
     const [currentPage, setCurrentPage] = useState(0);
     const [images, setImages] = useState([]);
+    const [removedImages, setRemovedImages] = useState([]);
+    const [newImages, setNewImages] = useState([]);
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
     };
-    const handleImagesChange = (newImages) => {
-        setImages(newImages);
+    const handleImagesChange = ({file, fileList}) => {
+        if (form.mode === 'edit') {
+            if (file.status === 'removed') {
+                if (!newImages.some(value => value.uid === file.uid)) {
+                    setRemovedImages(prevNewImages => [...prevNewImages, file]);
+                }
+            } else {
+                setNewImages(prevNewImages => [...prevNewImages, file]);
+            }
+        }
+        setImages(fileList);
     };
     const handleCancel = () => {
         dispatch(setEventModalState({modalOpen: false, mode: ''}));
+        if (form.mode === 'edit') {
+            dispatch(getEventById(eventId))
+        }
         formik1.resetForm(formik1.initialValues)
     };
 
@@ -47,7 +63,7 @@ const AddEventModal = () => {
         dispatch(getEventTypes({}))
         dispatch(getEventLocations({}))
         if (form.mode === 'edit') {
-            const {EventType,Location,creator_id,eventComments,eventImages,status, ...rest } = form?.eventObj;
+            const {EventType, Location, creator_id, eventComments, eventImages, status, ...rest} = form?.eventObj;
             const updatedValues = {
                 ...rest,
                 eventType_id: form?.eventObj?.EventType?.id,
@@ -58,7 +74,7 @@ const AddEventModal = () => {
             if (form?.eventObj?.eventImages) {
 
                 const imagesWithUid = form.eventObj.eventImages.map((image, index) => {
-                const img = new URL(`../../assets/events/${form?.eventObj?.eventImages[index].image}.png`, import.meta.url).href
+                    const img = new URL(`../../assets/events/${form?.eventObj?.eventImages[index].image}.png`, import.meta.url).href
                     const imageNameWithoutExtension = image.image.replace('.png', '');
                     return {
                         uid: `${imageNameWithoutExtension}`,
@@ -77,29 +93,54 @@ const AddEventModal = () => {
         }
     }, [form.mode, form.eventObj]);
     const onSubmit = async (invitations) => {
-
         let data = formik1.values;
         let formData;
         let eventImagesName = [];
-        if (images) {
-            formData = new FormData();
-            images.forEach((image, index) => {
-                formData.append("images", image.originFileObj);
-                formData.append(`uids[${index}]`, image.uid);
-                eventImagesName[index] = image.uid;
-            });
+        if (form.mode === 'edit') {
+            let addedImages = images.filter(value => newImages.some(value2 => value.uid === value2.uid))
+            if (addedImages) {
+                formData = new FormData();
+                addedImages.forEach((image, index) => {
+                    formData.append("images", image.originFileObj);
+                    formData.append(`uids[${index}]`, image.uid);
+                    eventImagesName[index] = image.uid;
+                });
+            }
+            data = {
+                ...data,
+                addedImages: eventImagesName,
+                removedImages: removedImages,
+            };
+            const res = await dispatch(editEvent(data));
+            if (res && addedImages && !res.error) {
+                await dispatch(uploadEventImages(formData));
+            }
         }
 
-        data = {
-            ...data,
-            eventImagesName: eventImagesName,
-            invitations
-        };
+        if (form.mode === 'create') {
+            let data = formik1.values;
+            let formData;
+            let eventImagesName = [];
+            if (images) {
+                formData = new FormData();
+                images.forEach((image, index) => {
+                    formData.append("images", image.originFileObj);
+                    formData.append(`uids[${index}]`, image.uid);
+                    eventImagesName[index] = image.uid;
+                });
+            }
 
-        const res = await dispatch(addEvent(data));
+            data = {
+                ...data,
+                eventImagesName: eventImagesName,
+                invitations
+            };
 
-        if (res && images && !res.error) {
-            await dispatch(uploadEventImages(formData));
+            const res = await dispatch(addEvent(data));
+
+            if (res && images && !res.error) {
+                await dispatch(uploadEventImages(formData));
+            }
         }
     };
     const forms = [

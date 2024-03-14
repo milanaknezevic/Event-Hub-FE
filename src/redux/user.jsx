@@ -71,9 +71,20 @@ export const getAllUsers = createAsyncThunk(
 );
 
 export const getAllClients = createAsyncThunk(
-    'users/clients', async ( {rejectWithValue}) => {
+    'users/clients', async ({rejectWithValue}) => {
         try {
             const response = await api.get(`/api/users/organizer/clients/`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const getAllClientsForInvitation = createAsyncThunk(
+    'invitations/clients', async (id,{rejectWithValue}) => {
+        try {
+            const response = await api.get(`/api/invitations//organizer/active/${id}/`);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -209,6 +220,17 @@ export const userSlice = createSlice({
                 state.error = true;
             })
             .addCase(getAllClients.fulfilled, (state, action) => {
+                state.loading = false;
+                state.clients = action.payload.clients;
+            })
+            .addCase(getAllClientsForInvitation.pending, state => {
+                state.loading = true;
+            })
+            .addCase(getAllClientsForInvitation.rejected, (state) => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addCase(getAllClientsForInvitation.fulfilled, (state, action) => {
                 state.loading = false;
                 state.clients = action.payload.clients;
             })

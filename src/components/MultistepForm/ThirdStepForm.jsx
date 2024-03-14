@@ -1,8 +1,8 @@
 import {Avatar, Button, Input, List, Skeleton, Tooltip} from "antd";
 import {useEffect, useState} from "react";
-import {getAllClients} from "../../redux/user.jsx";
+import {getAllClients, getAllClientsForInvitation} from "../../redux/user.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {user} from "../../redux/selectors.jsx";
+import {event, user} from "../../redux/selectors.jsx";
 import {FaCheck} from "react-icons/fa";
 
 const {Search} = Input;
@@ -14,11 +14,18 @@ const ThirdStepForm = ({onSubmit}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchValue, setSearchValue] = useState("");
     const [selectedClients, setSelectedClients] = useState([]);
+    const {form} = useSelector(event)
+
 
     const pageSize = 5;
 
     useEffect(() => {
-        dispatch(getAllClients({}))
+        if (form.mode === 'edit') {
+            dispatch(getAllClientsForInvitation(form.eventObj.id))
+        }
+        if (form.mode === 'create') {
+            dispatch(getAllClients({}))
+        }
     }, []);
 
     useEffect(() => {
@@ -88,7 +95,7 @@ const ThirdStepForm = ({onSubmit}) => {
                             actions={[
                                 <Tooltip key={'accept'} placement={'top'}
                                          title={isSelected ? 'Remove invitation' : 'Send invitation'}>
-                                    {isSelected ? (
+                                    {isSelected || item?.invitationStatus ? (
                                         <FaCheck
                                             className={'accepted-icon'}
                                             onClick={() => handleSendInvitation(item.id)}

@@ -8,10 +8,10 @@ import {useEffect} from "react";
 
 const Event = () => {
     const {form} = useSelector(event)
-
     const {id} = useParams();
     const dispatch = useDispatch()
     useEffect(() => {
+        console.log("use effect")
         dispatch(getEventById(id))
     }, []);
     const handleEditEvent = () => {
@@ -57,7 +57,7 @@ const Event = () => {
 
 
             </div>
-            <AddEventModal/>
+            <AddEventModal eventId={id}/>
         </div>
     );
 };

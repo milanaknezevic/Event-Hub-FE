@@ -25,8 +25,8 @@ const SecondStepForm = ({onImagesChange, handleSubmit, images}) => {
         setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
     };
 
-    const handleChange = ({fileList: newFileList}) => {
-        onImagesChange(newFileList);
+    const handleChange = ({file, fileList}) => {
+        onImagesChange({file, fileList});
     };
 
     return (

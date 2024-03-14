@@ -191,8 +191,27 @@ export const addEvent = createAsyncThunk(
         }
     }
 )
+
+export const editEvent = createAsyncThunk(
+    "event/edit",
+    async (data, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.patch(`/api/events/${data.id}/`, (data));
+            dispatch(getEventById(`${data.id}`))
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "Event edited successfully!",
+                title: "Event"
+            }))
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
 export const uploadEventImages = createAsyncThunk(
-    'events/uploadImages', async (formData, {dispatch,rejectWithValue}) => {
+    'events/uploadImages', async (formData, {dispatch, rejectWithValue}) => {
         try {
             const response = await axios.post('/api/eventImages/upload_images', formData, {
                 headers: {
@@ -300,6 +319,20 @@ export const eventSlice = createSlice({
                 state.form.backendErrors = action.payload
             })
             .addCase(addEvent.fulfilled, (state) => {
+                state.form.formSubmitting = false
+                state.form.modalOpen = false
+                state.form.eventObj = {}
+                state.form.mode = ""
+                state.form.backendErrors = {}
+            })
+            .addCase(editEvent.pending, (state) => {
+                state.form.formSubmitting = true
+            })
+            .addCase(editEvent.rejected, (state, action) => {
+                state.form.formSubmitting = false
+                state.form.backendErrors = action.payload
+            })
+            .addCase(editEvent.fulfilled, (state) => {
                 state.form.formSubmitting = false
                 state.form.modalOpen = false
                 state.form.eventObj = {}
