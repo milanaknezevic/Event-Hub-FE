@@ -11,7 +11,6 @@ const Event = () => {
     const {id} = useParams();
     const dispatch = useDispatch()
     useEffect(() => {
-        console.log("use effect")
         dispatch(getEventById(id))
     }, []);
     const handleEditEvent = () => {

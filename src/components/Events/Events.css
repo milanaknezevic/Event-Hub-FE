@@ -38,10 +38,7 @@
     background-color: white;
 
 }
-.event-form-container .ant-modal-header .ant-modal-title {
-    color: var(--blue-color);
-    font-size: 1.5em;
-}
+
 .event-container .ant-card-cover {
     border: 2px solid var(--gray2-color);
     display: flex;
@@ -100,36 +97,6 @@
     cursor: pointer;
 }
 
-.event-form-container .event-btn {
-    background-color: var(--blue-color);
-    color: var(--white-color);
-}
-
-.event-form-container .event-btn:hover {
-    background-color: var(--blue2-color);
-    color: var(--white-color);
-}
-
-.event-form-container .load-btn {
-    border: 2px solid var(--blue-color);
-    color: var(--blue-color);
-}
-
-.event-form-container .load-btn:hover {
-    border: 2px solid var(--blue2-color);
-    color: var(--blue2-color);
-}
-
-.event-form-container .search-container .ant-btn,
-.event-form-container .search-container .ant-input-affix-wrapper {
-    background-color: var(--gray-color);
-}
-.event-form-container .accept-icon:hover{
-    color: green;
-}
-.event-form-container .accepted-icon {
-    color: red;
-}
 .event-container .slick-slide{
     height: 50vh;
 }
@@ -138,13 +105,11 @@
     object-fit: contain;
 }
 
-.event-container .ant-carousel .slick-dots li.slick-active button {
-    background: black;
+.event-container .ant-carousel .slick-dots li{
+    background: var(--blue2-color);
 }
-.event-container .ant-carousel .slick-dots li {
-    background: white;
-    border: 2px solid black;
+.event-container .ant-carousel .slick-dots li.slick-active button{
+    background: var(--blue-color);
 }
-
 
 

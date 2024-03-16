@@ -177,9 +177,16 @@ export const deleteEvent = createAsyncThunk(
 )
 export const addEvent = createAsyncThunk(
     "events/add",
-    async (data, {dispatch, rejectWithValue}) => {
+    async ({data, pagination, filters}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.post(`/api/events/`, (data));
+            dispatch(getAllEvents({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: filters.search,
+                locationId: filters.selectedLocation,
+                eventTypeId: filters.selectedEvent
+            }))
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "Event added successfully!",
@@ -241,7 +248,7 @@ export const eventSlice = createSlice({
             state.form.backendErrors = {};
             state.form.eventObj = {};
             state.form.mode = mode;
-        }
+        },
     },
     extraReducers: builder => {
         builder
@@ -319,11 +326,11 @@ export const eventSlice = createSlice({
                 state.form.backendErrors = action.payload
             })
             .addCase(addEvent.fulfilled, (state) => {
-                state.form.formSubmitting = false
-                state.form.modalOpen = false
-                state.form.eventObj = {}
-                state.form.mode = ""
-                state.form.backendErrors = {}
+                // state.form.formSubmitting = false
+                // state.form.modalOpen = false
+                // state.form.eventObj = {}
+                // state.form.mode = ""
+                // state.form.backendErrors = {}
             })
             .addCase(editEvent.pending, (state) => {
                 state.form.formSubmitting = true

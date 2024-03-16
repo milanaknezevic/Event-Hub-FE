@@ -10,21 +10,40 @@ import {
     setEventModalState,
     uploadEventImages
 } from "../../redux/events.jsx";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import FirstStepForm from "../MultistepForm/FirstStepForm.jsx";
 import SecondStepForm from "../MultistepForm/SecondStepForm.jsx";
-import {useFormik} from "formik";
 import ThirdStepForm from "../MultistepForm/ThirdStepForm.jsx";
-import {addGeneralEvent} from "../../schemas/index.jsx";
 
 const AddEventModal = ({eventId}) => {
+    const formikRef = useRef();
     const dispatch = useDispatch()
-    const {form} = useSelector(event)
+    const {pagination, form, filters} = useSelector(event);
     const [currentPage, setCurrentPage] = useState(0);
     const [images, setImages] = useState([]);
+    const [invitations, setInvitations] = useState([]);
     const [removedImages, setRemovedImages] = useState([]);
     const [newImages, setNewImages] = useState([]);
+    const [values, setValues] = useState([{
+        name: '',
+        description: '',
+        startTime: '',
+        endTime: '',
+        eventType_id: '',
+        location_id: ''
+    }]);
+    const handleNextPageFirst = (values) => {
+        if (values) {
+            // formikRef.current = formikRefData;
+            setValues(values)
+        }
+
+        setCurrentPage(currentPage + 1);
+    };
+
+
     const handleNextPage = () => {
+
         setCurrentPage(currentPage + 1);
     };
     const handleImagesChange = ({file, fileList}) => {
@@ -44,21 +63,21 @@ const AddEventModal = ({eventId}) => {
         if (form.mode === 'edit') {
             dispatch(getEventById(eventId))
         }
-        formik1.resetForm(formik1.initialValues)
+        formikRef.current?.resetForm(formikRef.current?.initialValues)
     };
 
-    const formik1 = useFormik({
-        initialValues: {
-            name: '',
-            description: '',
-            startTime: '',
-            endTime: '',
-            eventType_id: '',
-            location_id: ''
-        },
-        validationSchema: addGeneralEvent,
-        onSubmit: () => handleNextPage(),
-    });
+    // const formik1 = useFormik({
+    //     initialValues: {
+    //         name: '',
+    //         description: '',
+    //         startTime: '',
+    //         endTime: '',
+    //         eventType_id: '',
+    //         location_id: ''
+    //     },
+    //     validationSchema: addGeneralEvent,
+    //     onSubmit: () => handleNextPage(),
+    // });
     useEffect(() => {
         dispatch(getEventTypes({}))
         dispatch(getEventLocations({}))
@@ -69,8 +88,8 @@ const AddEventModal = ({eventId}) => {
                 eventType_id: form?.eventObj?.EventType?.id,
                 location_id: form?.eventObj?.EventType?.id,
             };
-
-            formik1.setValues(updatedValues)
+            setValues(updatedValues)
+            // formikRef.current?.setValues(updatedValues)
             if (form?.eventObj?.eventImages) {
 
                 const imagesWithUid = form.eventObj.eventImages.map((image, index) => {
@@ -88,14 +107,17 @@ const AddEventModal = ({eventId}) => {
             }
         }
         if (form.mode === 'create') {
-            formik1.resetForm(formik1.initialValues);
+            formikRef.current?.resetForm(formikRef.current?.initialValues);
             setImages([])
         }
     }, [form.mode, form.eventObj]);
-    const onSubmit = async (invitations) => {
-        let data = formik1.values;
+    const onSubmit = async () => {
+        // console.log("submit ", invitations)
+        // let data = formikRef.current?.values;
+        let data = values
         let formData;
         let eventImagesName = [];
+
         if (form.mode === 'edit') {
             let addedImages = images.filter(value => newImages.some(value2 => value.uid === value2.uid))
             if (addedImages) {
@@ -118,9 +140,6 @@ const AddEventModal = ({eventId}) => {
         }
 
         if (form.mode === 'create') {
-            let data = formik1.values;
-            let formData;
-            let eventImagesName = [];
             if (images) {
                 formData = new FormData();
                 images.forEach((image, index) => {
@@ -136,7 +155,7 @@ const AddEventModal = ({eventId}) => {
                 invitations
             };
 
-            const res = await dispatch(addEvent(data));
+            const res = await dispatch(addEvent({data: data, pagination: pagination, filters: filters}));
 
             if (res && images && !res.error) {
                 await dispatch(uploadEventImages(formData));
@@ -144,22 +163,24 @@ const AddEventModal = ({eventId}) => {
         }
     };
     const forms = [
-        <FirstStepForm key="firstStep" formik={formik1}/>,
-        <SecondStepForm key="secondStep" images={images} handleSubmit={formik1.handleSubmit}
+        <FirstStepForm key="firstStep" handleSubmit={handleNextPageFirst} formikRef={formikRef} values={values}/>,
+        <SecondStepForm key="secondStep" images={images} handleSubmit={handleNextPage} formikRef={formikRef}
                         onImagesChange={handleImagesChange}/>,
-        <ThirdStepForm key="thirdStep" onSubmit={onSubmit}/>,
+        <ThirdStepForm key="thirdStep" onSubmit={onSubmit} invitations={invitations} setInvitations={setInvitations}/>,
     ];
 
 
     return (
         <>
-            <Modal maskClosable={false} size={"large"} className={"event-form-container"}
+            <Modal size={"large"} className={"form-container"}
                    title={form.mode === "create" ? 'Add new event' : 'Edit event'} footer={[]}
                    open={form.modalOpen && (form.mode === 'create' || form.mode === 'edit')} onCancel={handleCancel}>
-                <Steps onChange={setCurrentPage} current={currentPage}>
+                <Steps onChange={setCurrentPage} current={currentPage} className={"pb-3"}>
                     <Steps.Step title='General'></Steps.Step>
-                    <Steps.Step disabled={!formik1.dirty || !formik1.isValid} title='Images'></Steps.Step>
-                    <Steps.Step disabled={!formik1.dirty || !formik1.isValid} title='Invitations'></Steps.Step>
+                    <Steps.Step
+                        title='Images'></Steps.Step>
+                    <Steps.Step
+                        title='Invitations'></Steps.Step>
                 </Steps>
                 {forms[currentPage]}
             </Modal>

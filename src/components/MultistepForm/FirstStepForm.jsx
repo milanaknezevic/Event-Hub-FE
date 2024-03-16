@@ -1,107 +1,108 @@
 import CustomInput from "../FormComponents/CustomInput.jsx";
-import {Button} from "antd";
-import CustomDatePicker from "../FormComponents/CustomDatePicker.jsx";
+import {Form} from "antd";
 import CustomSelect from "../FormComponents/CustomSelect.jsx";
 import {useSelector} from "react-redux";
 import {event} from "../../redux/selectors.jsx";
-import PropTypes from 'prop-types';
+import {Formik} from "formik";
+import CustomDatePicker from "../FormComponents/CustomDatePicker.jsx";
 import dayjs from "dayjs";
+import CustomButton from "../FormComponents/CustomButton.jsx";
+import {useEffect} from "react";
+import {addGeneralEvent} from "../../schemas/index.jsx";
 
-const FirstStepForm = ({formik}) => {
+const FirstStepForm = ({handleSubmit, formikRef, values}) => {
     const {eventTypes, locations} = useSelector(event)
+    useEffect(() => {
 
+        if (formikRef?.current) {
+            formikRef?.current?.setValues(values);
+        }
+    }, [values]);
 
     return (
-        <form className={"row justify-content-center login"}>
-            <div className={"col-12 col-md-6"}>
-                <CustomInput
-                    label="Name"
-                    name="name"
-                    type="text"
-                    onChange={formik.handleChange}
-                    value={formik.values.name}
-                    errorMessage={
-                        formik.errors.name && formik.touched.name
-                            ? formik.errors.name
-                            : ""
-                    }
-                />
-            </div>
-            <div className={"col-12 col-md-6"}>
-                <CustomInput
-                    label="Description"
-                    name="description"
-                    type="text"
-                    onChange={formik.handleChange}
-                    value={formik.values.description}
-                    errorMessage={
-                        formik.errors.description && formik.touched.description
-                            ? formik.errors.description
-                            : ""
-                    }
-                />
-            </div>
-            <div className={"col-12 col-md-6"}>
-                <CustomDatePicker
-                    label="Start time"
-                    name="startTime"
-                    value={formik.values.startTime ? dayjs(formik.values.startTime, 'DD.MM.YYYY. HH:mm') : null}
-                    showTime={true}
-                    onChange={(fieldName, value) => formik.setFieldValue("startTime", value)}
-                    errorMessage={
-                        formik.errors.startTime && formik.touched.startTime
-                            ? formik.errors.startTime
-                            : ""
-                    }
-                />
-            </div>
-            <div className={"col-12 col-md-6"}>
-                <CustomDatePicker
-                    label="End time"
-                    showTime={true}
-                    name="endTime"
-                    disableDate={formik.values.startTime ? dayjs(formik.values.startTime, 'DD.MM.YYYY. HH:mm') : null}
-                    value={formik.values.endTime ? dayjs(formik.values.endTime, 'DD.MM.YYYY. HH:mm') : null}
-                    onChange={(fieldName, value) => formik.setFieldValue("endTime", value)}
-                    errorMessage={
-                        formik.errors.endTime && formik.touched.endTime
-                            ? formik.errors.endTime
-                            : ""
-                    }
-                />
-            </div>
-            <div className={"col-12 col-md-6"}>
-                <CustomSelect
-                    label="Event type"
-                    name="eventType_id"
-                    options={eventTypes}
-                    onChange={(fieldName, value) => formik.setFieldValue(fieldName, value)}
-                    errorMessage={formik.errors.eventType_id && formik.touched.eventType_id ? formik.errors.eventType_id : ""}
-                    value={formik.values.eventType_id}
-                />
-            </div>
-            <div className={"col-12 col-md-6"}>
-                <CustomSelect
-                    label="Location"
-                    name="location_id"
-                    options={locations}
-                    onChange={(fieldName, value) => formik.setFieldValue(fieldName, value)}
-                    errorMessage={formik.errors.location_id && formik.touched.location_id ? formik.errors.location_id : ""}
-                    value={formik.values.location_id}
-                />
-            </div>
-            <div className={"col-12 d-flex justify-content-md-end "}>
-                <Button
-                    className="event-btn btn col-12 col-md-4 d-flex justify-content-center align-items-center"
-                    type="submit" onClick={formik.handleSubmit}>Continue
-                </Button>
-            </div>
-        </form>
+        <Formik
+            innerRef={formikRef}
+            initialValues={{
+                name: '',
+                description: '',
+                startTime: '',
+                endTime: '',
+                eventType_id: '',
+                location_id: ''
+            }}
+            validationSchema={addGeneralEvent}
+            onSubmit={(values) => {
+                handleSubmit(values)
+            }}
+        >
+            {({handleSubmit, values, setFieldValue}) => (
+                <Form onSubmit={handleSubmit} className={"row"}>
+                    <div className={"col-12 col-md-6"}>
+                        <CustomInput
+                            label="Name"
+                            name="name"
+                            type="text"
+                        />
+                    </div>
+                    <div className={"col-12 col-md-6"}>
+                        <CustomInput
+                            label="Description"
+                            name="description"
+                            type="text"
+                        />
+                    </div>
+
+                    <div className={"col-12 col-md-6"}>
+                        <CustomDatePicker
+                            label="Start time"
+                            name="startTime"
+                            value={values.startTime ? dayjs(values.startTime, 'DD.MM.YYYY. HH:mm') : null}
+                            showTime={true}
+                            onChange={(fieldName, value) => {
+                                setFieldValue("startTime", value)
+                            }}
+                        />
+                    </div>
+                    <div className={"col-12 col-md-6"}>
+                        <CustomDatePicker
+                            label="End time"
+                            name="endTime"
+                            value={values.endTime ? dayjs(values.endTime, 'DD.MM.YYYY. HH:mm') : null}
+                            disableDate={values.startTime ? dayjs(values.startTime, 'DD.MM.YYYY. HH:mm') : null}
+                            showTime={true}
+                            onChange={(fieldName, value) => {
+                                setFieldValue("endTime", value)
+                            }}
+                        />
+                    </div>
+
+                    <div className={"col-12 col-md-6"}>
+                        <CustomSelect
+                            label="Event type"
+                            name="eventType_id"
+                            options={eventTypes}
+                        />
+                    </div>
+                    <div className={"col-12 col-md-6"}>
+                        <CustomSelect
+                            label="Location"
+                            name="location_id"
+                            options={locations}
+                        />
+                    </div>
+                    <div className={"col-12 pt-3 d-flex justify-content-md-end "}>
+                        <CustomButton onCLick={handleSubmit} text={"Continue"}/>
+                        {/*<Button*/}
+                        {/*    className="event-btn btn col-12 col-md-4 d-flex justify-content-center align-items-center"*/}
+                        {/*    type="submit" onClick={handleSubmit}>Continue*/}
+                        {/*</Button>*/}
+                    </div>
+                </Form>
+            )}
+        </Formik>
 
     );
 };
-FirstStepForm.propTypes = {
-    formik: PropTypes.object.isRequired,
-};
+
 
 export default FirstStepForm;

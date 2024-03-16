@@ -1,14 +1,13 @@
-import {DatePicker, Form} from "antd";
+import { DatePicker } from "antd";
 import dayjs from "dayjs";
-import PropTypes from 'prop-types';
+import { ErrorMessage, Field } from "formik";
 
-const CustomDatePicker = ({label, name, onChange, errorMessage, showTime, value, disableDate = null}) => {
-    const dateFormat = 'DD.MM.YYYY.';
+const CustomDatePicker = ({ label, name, onChange, showTime, value, disableDate = null }) => {
+    const dateFormat = 'DD.MM.YYYY';
     const timeFormat = 'HH:mm';
     const dateTimeFormat = `${dateFormat} ${timeFormat}`;
 
     const tomorrow = dayjs().add(1, 'day').startOf('day');
-
     const disabledDate = current => {
         if (disableDate) {
             return current && dayjs(current).isBefore(disableDate, 'day');
@@ -17,31 +16,23 @@ const CustomDatePicker = ({label, name, onChange, errorMessage, showTime, value,
     };
 
     return (
-        <Form.Item
-            label={label}
-            validateStatus={errorMessage ? "error" : ""}
-            help={errorMessage}
-        >
-            <DatePicker
-                name={name}
-                value={value}
-                onChange={onChange}
-                format={dateTimeFormat}
-                disabledDate={disabledDate}
-                showTime={showTime}
-            />
-        </Form.Item>
+        <div>
+            <label htmlFor={name}>{label}</label>
+            <Field name={name}>
+                {({ field }) => (
+                    <DatePicker
+                        name={name}
+                        value={value}
+                        onChange={onChange}
+                        format={dateTimeFormat}
+                        disabledDate={disabledDate}
+                        showTime={showTime}
+                    />
+                )}
+            </Field>
+            <ErrorMessage name={name} component="div" className="error" />
+        </div>
     );
-};
-
-CustomDatePicker.propTypes = {
-    label: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    errorMessage: PropTypes.string,
-    showTime: PropTypes.bool.isRequired,
-    value: PropTypes.object,
-    disableDate: PropTypes.object
 };
 
 export default CustomDatePicker;

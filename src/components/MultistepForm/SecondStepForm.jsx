@@ -1,7 +1,7 @@
 import {useState} from 'react';
-import {Button, Modal} from 'antd';
-import PropTypes from 'prop-types';
+import {Modal} from 'antd';
 import CustomUpload from "../FormComponents/CustomUpload.jsx";
+import CustomButton from "../FormComponents/CustomButton.jsx";
 
 const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -11,11 +11,12 @@ const getBase64 = (file) =>
         reader.onerror = (error) => reject(error);
     });
 
-const SecondStepForm = ({onImagesChange, handleSubmit, images}) => {
+const SecondStepForm = ({onImagesChange, handleSubmit, images,formikRef}) => {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const handleCancel = () => setPreviewOpen(false);
+
     const handlePreview = async (file) => {
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj);
@@ -47,17 +48,16 @@ const SecondStepForm = ({onImagesChange, handleSubmit, images}) => {
                 />
             </Modal>
             <div className={"col-12 d-flex justify-content-md-end "}>
-                <Button
-                    className="event-btn btn col-12 col-md-4 d-flex justify-content-center align-items-center"
-                    type="submit" onClick={handleSubmit}>Continue
-                </Button>
+                <CustomButton onCLick={handleSubmit} text={"Continue"}/>
+                {/*<CustomButton onClick={() => handleSubmit()} text="Continue" />*/}
+
+                {/*<Button*/}
+                {/*    className="event-btn pt-3 btn col-12 col-md-4 d-flex justify-content-center align-items-center"*/}
+                {/*    type="submit" onClick={handleSubmit}>Continue*/}
+                {/*</Button>*/}
             </div>
         </>
     );
 };
-SecondStepForm.propTypes = {
-    onImagesChange: PropTypes.func.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
-    images: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
+
 export default SecondStepForm;

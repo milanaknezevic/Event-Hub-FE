@@ -51,3 +51,54 @@
  border: 0;
 background: none;
 }
+.ant-picker,
+.ant-select{
+    width: 100%;
+}
+
+
+
+.form-container .ant-modal-header .ant-modal-title {
+    color: var(--blue-color);
+    font-size: 1.5em;
+}
+.form-container .event-btn {
+    background-color: var(--blue-color);
+    color: var(--white-color);
+}
+
+.form-container .event-btn:hover {
+    background-color: var(--blue2-color);
+    color: var(--white-color);
+}
+
+.form-container .load-btn {
+    border: 2px solid var(--blue-color);
+    color: var(--blue-color);
+}
+
+.form-container .load-btn:hover {
+    border: 2px solid var(--blue2-color);
+    color: var(--blue2-color);
+}
+
+.form-container .search-container .ant-btn,
+.form-container .search-container .ant-input-affix-wrapper {
+    background-color: var(--gray-color);
+}
+.form-container .accept-icon:hover{
+    color: green;
+}
+.form-container .accepted-icon {
+    color: red;
+}
+
+.form-container .custom_button {
+    background-color: var(--blue-color);
+    color: var(--white-color);
+}
+
+.form-container .custom_button:hover {
+    background-color: var(--blue2-color);
+    color: var(--white-color);
+}

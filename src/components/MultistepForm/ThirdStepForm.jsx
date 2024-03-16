@@ -7,13 +7,12 @@ import {FaCheck} from "react-icons/fa";
 
 const {Search} = Input;
 
-const ThirdStepForm = ({onSubmit}) => {
+const ThirdStepForm = ({onSubmit,invitations,setInvitations}) => {
     const dispatch = useDispatch();
     const {clients} = useSelector(user);
     const [list, setList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchValue, setSearchValue] = useState("");
-    const [selectedClients, setSelectedClients] = useState([]);
     const {form} = useSelector(event)
 
 
@@ -47,13 +46,13 @@ const ThirdStepForm = ({onSubmit}) => {
 
     const handleSendInvitation = (id) => {
         const invitedClient = clients.find(client => client.id === id);
-        const isSelected = selectedClients.some(client => client.id === id);
+        const isSelected = invitations?.some(client => client.id === id);
 
         if (isSelected) {
-            const updatedClients = selectedClients.filter(client => client.id !== id);
-            setSelectedClients(updatedClients);
+            const updatedClients = invitations?.filter(client => client.id !== id);
+            setInvitations(updatedClients)
         } else {
-            setSelectedClients([...selectedClients, invitedClient]);
+            setInvitations([...invitations, invitedClient]);
         }
     };
 
@@ -68,7 +67,7 @@ const ThirdStepForm = ({onSubmit}) => {
         ) : null;
 
     const handleSubmit = () => {
-        onSubmit(selectedClients);
+        onSubmit();
     };
 
     return (
@@ -89,7 +88,7 @@ const ThirdStepForm = ({onSubmit}) => {
                 loadMore={loadMore}
                 dataSource={list}
                 renderItem={(item) => {
-                    const isSelected = selectedClients.some(client => client.id === item.id);
+                    const isSelected = invitations?.some(client => client.id === item.id);
                     return (
                         <List.Item
                             actions={[

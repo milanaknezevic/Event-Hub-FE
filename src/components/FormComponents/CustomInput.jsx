@@ -1,37 +1,29 @@
-import { Form, Input } from "antd";
-
-const CustomInput = ({ label, name, type, onChange, value, errorMessage,disabled=false }) => {
-    const inputComponent =
-        type === "password" ? (
-            <Input.Password
-                id={name}
-                name={name}
-                onChange={onChange}
-                value={value}
-                disabled={disabled}
-            />
-        ) : type === "file" ? (
-            <input type="file" accept=".jpg,.jpeg,.png" id={name} name={name} onChange={onChange} />
+import {ErrorMessage, Field} from "formik";
+import { Input } from "antd";
+const CustomInput = ({ disabled=false,label, type, ...props }) => (
+    <div className="form-group">
+        <label htmlFor={props.name}>{label}</label>
+        {type === "password" ? (
+            <Field name={props.name}>
+                {({ field }) => (
+                    <Input.Password {...field} id={props.name}  disabled={disabled}/>
+                    )}
+            </Field>
         ) : (
-            <Input
-                id={name}
-                name={name}
-                type={type}
-                onChange={onChange}
-                value={value}
-                disabled={disabled}
-            />
-        );
-
-    return (
-        <Form.Item
-            label={label}
-            validateStatus={errorMessage ? "error" : ""}
-            help={errorMessage}
-        >
-            {inputComponent}
-        </Form.Item>
-    );
-};
+            <Field name={props.name}>
+                {({ field }) => (
+                    <Input {...field} id={props.name}  disabled={disabled}/>
+                )}
+                {/*{...props}*/}
+                {/*className="form-control"*/}
+                {/*type={type}*/}
+                {/*id={props.name}*/}
+                {/*name={props.name}*/}
+                {/*disabled={disabled}*/}
+            </Field>
+        )}
+        <ErrorMessage name={props.name} component="div" className="error" />
+    </div>
+);
 
 export default CustomInput;

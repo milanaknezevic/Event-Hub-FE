@@ -1,16 +1,20 @@
-import { Form, Input } from "antd";
+import { Field, ErrorMessage } from 'formik';
+import { Input } from 'antd';
 
 const { TextArea } = Input;
 
-const CustomTextArea = ({ label, name, errorMessage, ...rest }) => {
+const CustomTextArea = ({ label, name, ...rest }) => {
     return (
-        <Form.Item
-            label={label}
-            validateStatus={errorMessage ? "error" : ""}
-            help={errorMessage}
-        >
-            <TextArea name={name} {...rest} />
-        </Form.Item>
+        <div className="form-item">
+            <label htmlFor={name}>{label}</label>
+            <Field
+                as={TextArea}
+                id={name}
+                name={name}
+                {...rest}
+            />
+            <ErrorMessage name={name} component="div" className="error-message" />
+        </div>
     );
 };
 
