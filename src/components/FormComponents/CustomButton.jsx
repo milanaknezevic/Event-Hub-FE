@@ -1,12 +1,12 @@
 import {Button} from "antd";
 
-const CustomButton = ({onCLick, text}) => {
+const CustomButton = ({onCLick, text, className, htmlType, type}) => {
 
 
     return (
         <Button
-            className="custom_button btn col-12 col-md-4 d-flex justify-content-center align-items-center"
-            type="submit" onClick={onCLick}>{text}
+            className={` ${className} d-flex justify-content-center align-items-center`}
+            type={type} onClick={onCLick} htmlType={htmlType}>{text}
         </Button>
     );
 };

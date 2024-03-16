@@ -6,6 +6,7 @@ import {user} from "../../redux/selectors.jsx";
 import {FaCircle, FaEdit, FaTrash} from 'react-icons/fa';
 import UsersModal from "./UsersModal.jsx";
 import DeleteUserModal from "./DeleteUserModal.jsx";
+import CustomButton from "../FormComponents/CustomButton.jsx";
 
 const {Search} = Input;
 
@@ -16,11 +17,11 @@ const Users = () => {
 
 
     useEffect(() => {
-        dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize,search:""}))
+        dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize, search: ""}))
     }, [])
 
     const handleEdit = (user) => {
-       dispatch(getUserById(user.id))
+        dispatch(getUserById(user.id))
     }
     const confirmUserDelete = () => {
         dispatch(deleteUser({id: userId, pagination: pagination}));
@@ -108,11 +109,11 @@ const Users = () => {
         },
     ];
     const handleChange = (newPagination) => {
-        dispatch(getAllUsers({page: newPagination.current, size: newPagination.pageSize,search:""}))
+        dispatch(getAllUsers({page: newPagination.current, size: newPagination.pageSize, search: ""}))
     }
 
     const onSearch = (data) => {
-        dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize, search:data}))
+        dispatch(getAllUsers({page: pagination.current, size: pagination.pageSize, search: data}))
     }
 
     return (
@@ -134,10 +135,14 @@ const Users = () => {
                             />
                         </div>
                         <div className="col-12 col-md-2 d-flex justify-content-end pt-2 pt-md-0">
-                            <Button onClick={handleAddUser}
-                                    className="login-btn btn col-12 d-flex justify-content-center align-items-center"
-                                    htmlType="submit" type="submit">Add user
-                            </Button>
+                            {/*<Button onClick={handleAddUser}*/}
+                            {/*        className="login-btn btn col-12 d-flex justify-content-center align-items-center"*/}
+                            {/*        htmlType="submit" type="submit">Add user*/}
+                            {/*</Button>*/}
+                            <CustomButton className={"login-btn btn col-12"} onCLick={handleAddUser} text={"Add user"}
+                                          htmlType="submit" type="submit"/>
+
+
                         </div>
                     </div>
                     <div className={"row"}>

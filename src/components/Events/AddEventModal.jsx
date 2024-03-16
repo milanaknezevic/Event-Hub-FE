@@ -178,6 +178,7 @@ const AddEventModal = ({eventId}) => {
                 <Steps onChange={setCurrentPage} current={currentPage} className={"pb-3"}>
                     <Steps.Step title='General'></Steps.Step>
                     <Steps.Step
+                        // disabled={!formik1.dirty || !formik1.isValid}
                         title='Images'></Steps.Step>
                     <Steps.Step
                         title='Invitations'></Steps.Step>

@@ -4,6 +4,7 @@ import {getAllClients, getAllClientsForInvitation} from "../../redux/user.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {event, user} from "../../redux/selectors.jsx";
 import {FaCheck} from "react-icons/fa";
+import CustomButton from "../FormComponents/CustomButton.jsx";
 
 const {Search} = Input;
 
@@ -118,10 +119,14 @@ const ThirdStepForm = ({onSubmit,invitations,setInvitations}) => {
                 }}
             />
             <div className={"col-12 d-flex justify-content-md-end mt-3"}>
-                <Button
-                    className="event-btn btn col-12 col-md-4 d-flex justify-content-center align-items-center"
-                    type="submit" onClick={handleSubmit}>Submit
-                </Button>
+                <CustomButton className={"event-btn btn col-12 col-md-4"} onCLick={handleSubmit}
+                              text={"Submit"}
+                              type="submit"/>
+
+                {/*<Button*/}
+                {/*    className="event-btn btn col-12 col-md-4 d-flex justify-content-center align-items-center"*/}
+                {/*    type="submit" onClick={handleSubmit}>Submit*/}
+                {/*</Button>*/}
             </div>
         </div>
     );

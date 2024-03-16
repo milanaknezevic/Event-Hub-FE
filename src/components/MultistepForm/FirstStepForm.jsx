@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import CustomButton from "../FormComponents/CustomButton.jsx";
 import {useEffect} from "react";
 import {addGeneralEvent} from "../../schemas/index.jsx";
+import CustomTextArea from "../FormComponents/CustomTextArea.jsx";
 
 const FirstStepForm = ({handleSubmit, formikRef, values}) => {
     const {eventTypes, locations} = useSelector(event)
@@ -45,11 +46,16 @@ const FirstStepForm = ({handleSubmit, formikRef, values}) => {
                         />
                     </div>
                     <div className={"col-12 col-md-6"}>
-                        <CustomInput
+                        <CustomTextArea
                             label="Description"
                             name="description"
-                            type="text"
+                            rows={2}
                         />
+                        {/*<CustomInput*/}
+                        {/*    label="Description"*/}
+                        {/*    name="description"*/}
+                        {/*    type="text"*/}
+                        {/*/>*/}
                     </div>
 
                     <div className={"col-12 col-md-6"}>
@@ -91,7 +97,10 @@ const FirstStepForm = ({handleSubmit, formikRef, values}) => {
                         />
                     </div>
                     <div className={"col-12 pt-3 d-flex justify-content-md-end "}>
-                        <CustomButton onCLick={handleSubmit} text={"Continue"}/>
+                        <CustomButton className={"event-btn btn col-12 col-md-4"} onCLick={handleSubmit}
+                                      text={"Continue"}
+                                      type="submit"/>
+
                         {/*<Button*/}
                         {/*    className="event-btn btn col-12 col-md-4 d-flex justify-content-center align-items-center"*/}
                         {/*    type="submit" onClick={handleSubmit}>Continue*/}

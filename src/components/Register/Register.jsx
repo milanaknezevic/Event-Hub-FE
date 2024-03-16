@@ -1,6 +1,5 @@
 import {Form, Formik} from "formik";
 import CustomInput from "../FormComponents/CustomInput.jsx";
-import {Button} from "antd";
 import {NavLink} from "react-router-dom";
 import CustomSelect from "../FormComponents/CustomSelect.jsx";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,6 +10,7 @@ import {uploadAvatar, userRegister} from "../../redux/auth.jsx";
 import {registrationSchema} from "../../schemas/index.jsx";
 import {auth, user} from "../../redux/selectors.jsx";
 import CustomUpload from "../FormComponents/CustomUpload.jsx";
+import CustomButton from "../FormComponents/CustomButton.jsx";
 
 const Register = () => {
     const formikRef = useRef();
@@ -149,9 +149,14 @@ const Register = () => {
                                     </div>
 
                                     <div className={"col-12 d-flex justify-content-center pb-3"}>
-                                        <Button className="register-btn btn col-12 col-md-6" htmlType="submit"
-                                                type="submit">Sign up
-                                        </Button>
+                                        {/*<Button className="register-btn btn col-12 col-md-6" htmlType="submit"*/}
+                                        {/*        type="submit">Sign up*/}
+                                        {/*</Button>*/}
+
+                                        <CustomButton className={"register-btn btn col-12 col-md-6"}
+                                                      htmlType="submit"
+                                                      type="submit"
+                                                      text={"Sign up"}/>
                                     </div>
                                     <div className={"col-12 d-flex justify-content-center pb-3"}>
                                         <div>

@@ -10,6 +10,7 @@ import {MailOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
 import DeleteEventModal from "./DeleteEventModal.jsx";
 import AddEventModal from "./AddEventModal.jsx";
+import CustomButton from "../FormComponents/CustomButton.jsx";
 
 
 const {Header, Footer, Sider, Content} = Layout;
@@ -117,10 +118,14 @@ const Events = () => {
                                 <h1>Events</h1>
                             </div>
                             <div className={"col-12 col-md-6 d-flex justify-content-end align-items-center"}>
-                                <Button onClick={handleAddEvent}
-                                        className="add-btn btn col-12 col-md-5 d-flex justify-content-center align-items-center"
-                                        htmlType="submit" type="submit">Add event
-                                </Button>
+                                <CustomButton className={"add-btn btn col-12 col-md-5"} onCLick={handleAddEvent}
+                                              text={"Add event"}
+                                              htmlType="submit" type="submit"/>
+
+                                {/*<Button onClick={handleAddEvent}*/}
+                                {/*        className="add-btn btn col-12 col-md-5 d-flex justify-content-center align-items-center"*/}
+                                {/*        htmlType="submit" type="submit">Add event*/}
+                                {/*</Button>*/}
                             </div>
                         </div>
 

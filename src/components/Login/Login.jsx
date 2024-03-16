@@ -1,6 +1,5 @@
 import {useEffect, useRef} from 'react';
 import {Form, Formik} from 'formik';
-import {Button} from "antd";
 import {NavLink, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {auth} from "../../redux/selectors.jsx";
@@ -8,6 +7,7 @@ import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErro
 import {userLogin} from "../../redux/auth.jsx";
 import CustomInput from "../FormComponents/CustomInput.jsx";
 import {loginSchema} from "../../schemas/index.jsx";
+import CustomButton from "../FormComponents/CustomButton.jsx";
 
 const Login = () => {
 
@@ -59,9 +59,16 @@ const Login = () => {
                                     <CustomInput label="Password" name="password" type="password"/>
 
                                     <div className={"col-12 p-2 d-flex justify-content-center pb-3"}>
-                                        <Button className="login-btn btn col-12 col-md-6" htmlType="submit"
-                                                type="submit">Login
-                                        </Button>
+                                        {/*<Button className="login-btn btn col-12 col-md-6" htmlType="submit"*/}
+                                        {/*        type="submit">Login*/}
+                                        {/*</Button>*/}
+
+                                        <CustomButton className={"login-btn btn col-12 col-md-6"}
+                                                      htmlType="submit"
+                                                      type="submit"
+                                                      text={"Login"}/>
+
+
                                     </div>
                                     <div className={"col-12 d-flex justify-content-center pb-3"}>
                                         <div>

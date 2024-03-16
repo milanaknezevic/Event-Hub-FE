@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {Button} from "antd";
 import {useSelector} from "react-redux";
 import {auth} from "../../redux/selectors.jsx";
+import CustomButton from "../FormComponents/CustomButton.jsx";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -23,10 +24,11 @@ const Home = () => {
                         {!isAuthenticated &&
                             <div className={"row justify-content-center justify-content-md-end"}>
                                 <div className={"col-12 col-md-4"}>
-                                    <Button
-                                        className="login-btn btn col-12 d-flex justify-content-center align-items-center"
-                                        type="submit" onClick={handleLogin}>Login
-                                    </Button>
+                                    <CustomButton className={"login-btn btn col-12"} onCLick={handleLogin} text={"Login"}/>
+                                    {/*<Button*/}
+                                    {/*    className="login-btn btn col-12 d-flex justify-content-center align-items-center"*/}
+                                    {/*    type="submit" onClick={handleLogin}>Login*/}
+                                    {/*</Button>*/}
                                 </div>
                             </div>
                         }

@@ -48,8 +48,10 @@ const SecondStepForm = ({onImagesChange, handleSubmit, images,formikRef}) => {
                 />
             </Modal>
             <div className={"col-12 d-flex justify-content-md-end "}>
-                <CustomButton onCLick={handleSubmit} text={"Continue"}/>
-                {/*<CustomButton onClick={() => handleSubmit()} text="Continue" />*/}
+                {/*<CustomButton onCLick={handleSubmit} text={"Continue"}/>*/}
+                <CustomButton className={"event-btn btn col-12 col-md-4"} onCLick={handleSubmit}
+                              text={"Continue"}
+                              type="submit"/>
 
                 {/*<Button*/}
                 {/*    className="event-btn pt-3 btn col-12 col-md-4 d-flex justify-content-center align-items-center"*/}
