@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {event} from "../../redux/selectors.jsx";
 import {deleteEvent, getAllEvents, getEventLocations, getEventTypes, setEventModalState} from "../../redux/events.jsx";
-import {Button, Card, Flex, Layout, Pagination, Tooltip} from 'antd';
+import {Card, Flex, Layout, Pagination, Tooltip} from 'antd';
 import defImg from "../../assets/noImage.png"
 import {FaEye, FaTrash} from 'react-icons/fa';
 import CustomSidebar from "../FormComponents/CustomSidebar.jsx";
@@ -137,18 +137,22 @@ const Events = () => {
                                     <Card
                                         cover={
 
-                                        <img alt="example" src={event?.eventImages?.length > 0 ? new URL(`../../assets/events/${event.eventImages[0].image}.png`, import.meta.url).href : defImg} />
+                                            <img alt="example"
+                                                 src={event?.eventImages?.length > 0 ? new URL(`../../assets/events/${event.eventImages[0].image}.png`, import.meta.url).href : defImg}/>
 
-                                    }
+                                        }
                                         actions={[
                                             <Tooltip key="watch" placement="top" title="Watch">
-                                                <FaEye className="cursor-button" onClick={() => handleWatchEvent(event.id)} />
+                                                <FaEye className="cursor-button"
+                                                       onClick={() => handleWatchEvent(event.id)}/>
                                             </Tooltip>,
                                             <Tooltip key="invitations" placement="top" title="Invitations">
-                                                <MailOutlined className="cursor-button" onClick={() => handleInvitations(event.id)} />
+                                                <MailOutlined className="cursor-button"
+                                                              onClick={() => handleInvitations(event.id)}/>
                                             </Tooltip>,
                                             <Tooltip key="delete" placement="top" title="Delete">
-                                                <FaTrash color="red" className="cursor-button" onClick={() => handleDeleteEvent(event.id)} />
+                                                <FaTrash color="red" className="cursor-button"
+                                                         onClick={() => handleDeleteEvent(event.id)}/>
                                             </Tooltip>,
                                         ]}
                                     >

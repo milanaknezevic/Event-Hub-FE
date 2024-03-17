@@ -6,6 +6,7 @@ import AddEventModal from "./AddEventModal.jsx";
 import {event} from "../../redux/selectors.jsx";
 import {useEffect} from "react";
 import CustomButton from "../FormComponents/CustomButton.jsx";
+import defImg from "../../assets/noImage.png"
 
 const Event = () => {
     const {form} = useSelector(event)
@@ -42,16 +43,22 @@ const Event = () => {
                         <div className={"col-12 p-3"}>
 
                             <Carousel>
-                                {form?.eventObj?.eventImages?.map((image, index) => {
-                                    return (
+                                {form?.eventObj?.eventImages?.length > 0 ? (
+                                    form?.eventObj?.eventImages?.map((image, index) => (
                                         <img
                                             className="carousel-img"
                                             key={index}
                                             alt="example"
                                             src={new URL(`../../assets/events/${image?.image}.png`, import.meta.url).href}
                                         />
-                                    );
-                                })}
+                                    ))
+                                ) : (
+                                    <img
+                                        className="carousel-img"
+                                        alt="default example"
+                                        src={defImg}
+                                    />
+                                )}
                             </Carousel>
                         </div>
 
