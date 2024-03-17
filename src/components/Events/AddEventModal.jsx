@@ -32,6 +32,8 @@ const AddEventModal = ({eventId}) => {
         eventType_id: '',
         location_id: ''
     }]);
+    const [newAdded, setNewAdded] = useState([]);
+    const [removedInvitations, setRemovedInvitations] = useState([]);
     const handleNextPageFirst = (values) => {
         if (values) {
             // formikRef.current = formikRefData;
@@ -102,8 +104,11 @@ const AddEventModal = ({eventId}) => {
                         url: img
                     };
                 });
-
                 setImages(imagesWithUid);
+
+            }
+            if (form?.eventObj?.attendingUsers) {
+                setInvitations(form?.eventObj?.attendingUsers)
             }
         }
         if (form.mode === 'create') {
@@ -112,7 +117,6 @@ const AddEventModal = ({eventId}) => {
         }
     }, [form.mode, form.eventObj]);
     const onSubmit = async () => {
-        // console.log("submit ", invitations)
         // let data = formikRef.current?.values;
         let data = values
         let formData;
@@ -120,6 +124,7 @@ const AddEventModal = ({eventId}) => {
 
         if (form.mode === 'edit') {
             let addedImages = images.filter(value => newImages.some(value2 => value.uid === value2.uid))
+            let addedInvitations = invitations.filter(value => newAdded.some(value2 => value.id === value2.id))
             if (addedImages) {
                 formData = new FormData();
                 addedImages.forEach((image, index) => {
@@ -132,7 +137,10 @@ const AddEventModal = ({eventId}) => {
                 ...data,
                 addedImages: eventImagesName,
                 removedImages: removedImages,
+                addedInvitations: addedInvitations,
+                removedInvitations: removedInvitations,
             };
+
             const res = await dispatch(editEvent(data));
             if (res && addedImages && !res.error) {
                 await dispatch(uploadEventImages(formData));
@@ -166,7 +174,9 @@ const AddEventModal = ({eventId}) => {
         <FirstStepForm key="firstStep" handleSubmit={handleNextPageFirst} formikRef={formikRef} values={values}/>,
         <SecondStepForm key="secondStep" images={images} handleSubmit={handleNextPage} formikRef={formikRef}
                         onImagesChange={handleImagesChange}/>,
-        <ThirdStepForm key="thirdStep" onSubmit={onSubmit} invitations={invitations} setInvitations={setInvitations}/>,
+        <ThirdStepForm key="thirdStep" onSubmit={onSubmit} invitations={invitations} setInvitations={setInvitations}
+                       newAdded={newAdded} setNewAdded={setNewAdded} removedInvitations={removedInvitations}
+                       setRemovedInvitations={setRemovedInvitations}/>,
     ];
 
 
@@ -178,9 +188,10 @@ const AddEventModal = ({eventId}) => {
                 <Steps onChange={setCurrentPage} current={currentPage} className={"pb-3"}>
                     <Steps.Step title='General'></Steps.Step>
                     <Steps.Step
-                        // disabled={!formik1.dirty || !formik1.isValid}
+                        disabled={!formikRef?.current?.dirty || !formikRef?.current?.isValid}
                         title='Images'></Steps.Step>
                     <Steps.Step
+                        disabled={!formikRef?.current?.dirty || !formikRef?.current?.isValid}
                         title='Invitations'></Steps.Step>
                 </Steps>
                 {forms[currentPage]}

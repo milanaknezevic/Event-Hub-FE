@@ -8,13 +8,16 @@ import CustomButton from "../FormComponents/CustomButton.jsx";
 
 const {Search} = Input;
 
-const ThirdStepForm = ({onSubmit,invitations,setInvitations}) => {
+const ThirdStepForm = ({onSubmit, invitations, setInvitations,newAdded, setNewAdded,removedInvitations,setRemovedInvitations}) => {
     const dispatch = useDispatch();
     const {clients} = useSelector(user);
     const [list, setList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchValue, setSearchValue] = useState("");
     const {form} = useSelector(event)
+    // const [removedInvitations, setRemovedInvitations] = useState([]);
+    // const [newAdded, setNewAdded] = useState([]);
+
 
 
     const pageSize = 5;
@@ -52,8 +55,13 @@ const ThirdStepForm = ({onSubmit,invitations,setInvitations}) => {
         if (isSelected) {
             const updatedClients = invitations?.filter(client => client.id !== id);
             setInvitations(updatedClients)
+            if (!newAdded.some(client => client.id === id)) {
+                setRemovedInvitations([...removedInvitations, invitedClient]);
+            }
+
         } else {
             setInvitations([...invitations, invitedClient]);
+            setNewAdded([...newAdded, invitedClient]);
         }
     };
 
@@ -95,7 +103,7 @@ const ThirdStepForm = ({onSubmit,invitations,setInvitations}) => {
                             actions={[
                                 <Tooltip key={'accept'} placement={'top'}
                                          title={isSelected ? 'Remove invitation' : 'Send invitation'}>
-                                    {isSelected || item?.invitationStatus ? (
+                                    {isSelected ? (
                                         <FaCheck
                                             className={'accepted-icon'}
                                             onClick={() => handleSendInvitation(item.id)}

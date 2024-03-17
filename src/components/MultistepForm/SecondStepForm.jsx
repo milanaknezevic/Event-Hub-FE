@@ -11,7 +11,7 @@ const getBase64 = (file) =>
         reader.onerror = (error) => reject(error);
     });
 
-const SecondStepForm = ({onImagesChange, handleSubmit, images,formikRef}) => {
+const SecondStepForm = ({onImagesChange, handleSubmit, images}) => {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
