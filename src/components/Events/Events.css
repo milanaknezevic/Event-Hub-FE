@@ -50,6 +50,11 @@
     height: 25vh;
 }
 
+
+
+
+
+
 .event-container img {
     object-fit: contain;
 }
@@ -105,11 +110,32 @@
     object-fit: contain;
 }
 
+.event-container .event-carousel{
+    border: 2px solid var(--gray2-color)
+}
+.event-container .event-card{
+    border: 2px solid var(--gray2-color);
+    background:var(--gray-color)
+}
+.event-container .ant-layout-sider {
+    background: var(--gray2-color)
+}
 .event-container .ant-carousel .slick-dots li{
     background: var(--blue2-color);
 }
 .event-container .ant-carousel .slick-dots li.slick-active button{
     background: var(--blue-color);
 }
-
+.event-container .details {
+    display: flex;
+    align-items: center;
+    width: 30%;
+    border: 2px solid var(--gray2-color);
+    border-radius: 5px;
+    height: 5vh;
+    background: white;
+}
+.event-container .details:hover {
+   background: var(--gray2-color);
+}
 
