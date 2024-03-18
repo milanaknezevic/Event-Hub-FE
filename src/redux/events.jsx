@@ -326,11 +326,11 @@ export const eventSlice = createSlice({
                 state.form.backendErrors = action.payload
             })
             .addCase(addEvent.fulfilled, (state) => {
-                // state.form.formSubmitting = false
-                // state.form.modalOpen = false
-                // state.form.eventObj = {}
-                // state.form.mode = ""
-                // state.form.backendErrors = {}
+                state.form.formSubmitting = false
+                state.form.modalOpen = false
+                state.form.eventObj = {}
+                state.form.mode = ""
+                state.form.backendErrors = {}
             })
             .addCase(editEvent.pending, (state) => {
                 state.form.formSubmitting = true

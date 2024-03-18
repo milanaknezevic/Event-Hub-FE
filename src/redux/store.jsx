@@ -4,6 +4,7 @@ import {userReducer} from "./user.jsx";
 import {notificationReducer} from "./notification.jsx";
 import {ticketReducer} from "./tickets.jsx";
 import {eventReducer} from "./events.jsx";
+import {invitationReducer} from "./invitation.jsx";
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
         user: userReducer,
         notification: notificationReducer,
         ticket: ticketReducer,
-        events: eventReducer
+        events: eventReducer,
+        invitation:invitationReducer
     }
 });

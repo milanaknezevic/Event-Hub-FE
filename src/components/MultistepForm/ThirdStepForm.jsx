@@ -80,7 +80,7 @@ const ThirdStepForm = ({onSubmit, invitations, setInvitations,newAdded, setNewAd
     };
 
     return (
-        <div className={"row mt-3"}>
+        <div className={"row mt-3 third-step"}>
             <div className={"row justify-content-center search-container"}>
                 <div className={"col-6"}>
                     <Search
@@ -91,41 +91,42 @@ const ThirdStepForm = ({onSubmit, invitations, setInvitations,newAdded, setNewAd
                 </div>
             </div>
 
-            <List
-                className="demo-loadmore-list mt-3"
-                itemLayout="horizontal"
-                loadMore={loadMore}
-                dataSource={list}
-                renderItem={(item) => {
-                    const isSelected = invitations?.some(client => client.id === item.id);
-                    return (
-                        <List.Item
-                            actions={[
-                                <Tooltip key={'accept'} placement={'top'}
-                                         title={isSelected ? 'Remove invitation' : 'Send invitation'}>
-                                    {isSelected ? (
-                                        <FaCheck
-                                            className={'accepted-icon'}
-                                            onClick={() => handleSendInvitation(item.id)}
-                                        />
-                                    ) : (
-                                        <FaCheck
-                                            className={'accept-icon'}
-                                            onClick={() => handleSendInvitation(item.id)}
-                                        />
-                                    )}
-                                </Tooltip>,
-                            ]}>
-                            <Skeleton avatar title={false} loading={item.loading} active>
-                                <List.Item.Meta
-                                    avatar={<Avatar src={item?.avatar}/>}
-                                    title={`${item?.name} ${item?.lastname}`}
-                                />
-                            </Skeleton>
-                        </List.Item>
-                    );
-                }}
-            />
+
+               <List
+                   className="demo-loadmore-list mt-3"
+                   itemLayout="horizontal"
+                   loadMore={loadMore}
+                   dataSource={list}
+                   renderItem={(item) => {
+                       const isSelected = invitations?.some(client => client.id === item.id);
+                       return (
+                           <List.Item
+                               actions={[
+                                   <Tooltip key={'accept'} placement={'top'}
+                                            title={isSelected ? 'Remove invitation' : 'Send invitation'}>
+                                       {isSelected ? (
+                                           <FaCheck
+                                               className={'accepted-icon'}
+                                               onClick={() => handleSendInvitation(item.id)}
+                                           />
+                                       ) : (
+                                           <FaCheck
+                                               className={'accept-icon'}
+                                               onClick={() => handleSendInvitation(item.id)}
+                                           />
+                                       )}
+                                   </Tooltip>,
+                               ]}>
+                               <Skeleton avatar title={false} loading={item.loading} active>
+                                   <List.Item.Meta
+                                       avatar={<Avatar src={item?.avatar}/>}
+                                       title={`${item?.name} ${item?.lastname}`}
+                                   />
+                               </Skeleton>
+                           </List.Item>
+                       );
+                   }}
+               />
             <div className={"col-12 d-flex justify-content-md-end mt-3"}>
                 <CustomButton className={"event-btn btn col-12 col-md-4"} onCLick={handleSubmit}
                               text={"Submit"}
