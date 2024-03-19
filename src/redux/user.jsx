@@ -81,16 +81,16 @@ export const getAllClients = createAsyncThunk(
     }
 );
 
-export const getAllNotInvitedClients = createAsyncThunk(
-    'users/not_invited', async (id,{rejectWithValue}) => {
-        try {
-            const response = await api.get(`/api/users/organizer/not_invited/${id}`);
-            return response.data;
-        } catch (error) {
-            return rejectWithValue(error.response.data);
-        }
-    }
-);
+// export const getAllNotInvitedClients = createAsyncThunk(
+//     'users/not_invited', async ({page = 1, size = 10,id},{rejectWithValue}) => {
+//         try {
+//             const response = await api.get(`/api/users/organizer/not_invited/${id}/?page=${page}&size=${size}`);
+//             return response.data;
+//         } catch (error) {
+//             return rejectWithValue(error.response.data);
+//         }
+//     }
+// );
 
 export const getAllClientsForInvitation = createAsyncThunk(
     'invitations/clients', async (id,{rejectWithValue}) => {
@@ -245,17 +245,17 @@ export const userSlice = createSlice({
                 state.loading = false;
                 state.clients = action.payload.clients;
             })
-            .addCase(getAllNotInvitedClients.pending, state => {
-                state.loading = true;
-            })
-            .addCase(getAllNotInvitedClients.rejected, (state) => {
-                state.loading = false;
-                state.error = true;
-            })
-            .addCase(getAllNotInvitedClients.fulfilled, (state, action) => {
-                state.loading = false;
-                state.users = action.payload.users;
-            })
+            // .addCase(getAllNotInvitedClients.pending, state => {
+            //     state.loading = true;
+            // })
+            // .addCase(getAllNotInvitedClients.rejected, (state) => {
+            //     state.loading = false;
+            //     state.error = true;
+            // })
+            // .addCase(getAllNotInvitedClients.fulfilled, (state, action) => {
+            //     state.loading = false;
+            //     state.users = action.payload.users;
+            // })
             .addCase(getUserById.fulfilled, (state, action) => {
                 state.form.userObj = action.payload
                 state.form.modalOpen = true

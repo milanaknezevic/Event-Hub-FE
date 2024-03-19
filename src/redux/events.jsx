@@ -6,6 +6,7 @@ import axios from "axios";
 
 const api = base.service(true);
 export const initialState = {
+    notInvitedUsers: [],
     eventData: {
         invitations: [],
         status: true,
@@ -33,10 +34,10 @@ export const initialState = {
 
 }
 export const replyToInvitation = createAsyncThunk(
-    'invitation/organizator_reply', async ({eventId, userId, accept}, {dispatch, rejectWithValue}) => {
+    'invitation/organizator_reply', async ({eventId, userId, accept, pagination}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.put(`/api/invitations/creator/accept/${eventId}/${userId}/?accept=${accept}`);
-            dispatch(getInvitationsByEventId(eventId))
+            dispatch(getInvitationsByEventId({page: pagination.current, size: pagination.pageSize, id: eventId}))
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "Invitation edited successfully!",
@@ -85,9 +86,9 @@ export const getEventById = createAsyncThunk(
 )
 export const getAllGuestsForEvent = createAsyncThunk(
     "events/guests",
-    async ({id, status}, {dispatch, rejectWithValue}) => {
+    async ({page = 1, size = 10, id, status}, {dispatch, rejectWithValue}) => {
         try {
-            const response = await api.get(`/api/users/guests/${id}/?status=${status}`);
+            const response = await api.get(`/api/users/guests/${id}/?status=${status}&page=${page}&size=${size}`);
             return response.data;
         } catch (error) {
             dispatch(displayNotification({
@@ -101,9 +102,9 @@ export const getAllGuestsForEvent = createAsyncThunk(
 )
 export const getInvitationsByEventId = createAsyncThunk(
     "events/invitations",
-    async (id, {dispatch, rejectWithValue}) => {
+    async ({page = 1, size = 10, id}, {dispatch, rejectWithValue}) => {
         try {
-            const response = await api.get(`/api/invitations/event/${id}/`);
+            const response = await api.get(`/api/invitations/event/${id}/?page=${page}&size=${size}`);
             return response.data;
         } catch (error) {
             dispatch(displayNotification({
@@ -237,6 +238,18 @@ export const uploadEventImages = createAsyncThunk(
     }
 );
 
+export const getAllNotInvitedClients = createAsyncThunk(
+    'users/not_invited', async ({page = 1, size = 10, id}, {rejectWithValue}) => {
+        try {
+            const response = await api.get(`/api/users/organizer/not_invited/${id}/?page=${page}&size=${size}`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
 export const eventSlice = createSlice({
     name: "events",
     initialState,
@@ -295,6 +308,13 @@ export const eventSlice = createSlice({
                 state.error = true;
             })
             .addCase(getAllGuestsForEvent.fulfilled, (state, action) => {
+                let current = action.meta.arg.page
+                let pageSize = action.meta.arg.size
+                state.pagination = {
+                    total: action.payload.total,
+                    current,
+                    pageSize
+                }
                 state.eventData.invitations = action.payload.invitations
                 state.eventData.status = action.meta.arg.status
             })
@@ -306,7 +326,14 @@ export const eventSlice = createSlice({
                 state.error = true;
             })
             .addCase(getInvitationsByEventId.fulfilled, (state, action) => {
+                let current = action.meta.arg.page
+                let pageSize = action.meta.arg.size
                 state.eventData.invitations = action.payload.invitations
+                state.pagination = {
+                    total: action.payload.total,
+                    current,
+                    pageSize
+                }
             })
             .addCase(getEventById.fulfilled, (state, action) => {
                 state.form.eventObj = action.payload
@@ -345,6 +372,24 @@ export const eventSlice = createSlice({
                 state.form.eventObj = {}
                 state.form.mode = ""
                 state.form.backendErrors = {}
+            })
+            .addCase(getAllNotInvitedClients.pending, state => {
+                state.loading = true;
+            })
+            .addCase(getAllNotInvitedClients.rejected, (state) => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addCase(getAllNotInvitedClients.fulfilled, (state, action) => {
+                let current = action.meta.arg.page
+                let pageSize = action.meta.arg.size
+                state.loading = false;
+                state.notInvitedUsers = action.payload.users;
+                state.pagination = {
+                    total: action.payload.total,
+                    current,
+                    pageSize
+                }
             })
     }
 })

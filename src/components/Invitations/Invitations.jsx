@@ -1,12 +1,18 @@
 import {Avatar, Flex, Layout, List, Pagination, Radio, Skeleton, Tooltip} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import {event, user} from "../../redux/selectors.jsx";
+import {event} from "../../redux/selectors.jsx";
 import {useEffect, useState} from "react";
-import {getAllGuestsForEvent, getEventById, getInvitationsByEventId, replyToInvitation} from "../../redux/events.jsx";
+import {
+    getAllGuestsForEvent,
+    getAllNotInvitedClients,
+    getEventById,
+    getInvitationsByEventId,
+    replyToInvitation
+} from "../../redux/events.jsx";
 import {useParams} from "react-router-dom";
 import {FaCheck, FaTimes} from 'react-icons/fa';
-import {getAllNotInvitedClients} from "../../redux/user.jsx";
-import {createInvitation} from "../../redux/invitation.jsx";
+// import {getAllNotInvitedClients} from "../../redux/user.jsx";
+import {createInvitation, organizerUnsendInvitation} from "../../redux/invitation.jsx";
 
 const {Header, Footer, Content} = Layout;
 
@@ -14,51 +20,69 @@ const {Header, Footer, Content} = Layout;
 const Invitations = () => {
     const {id} = useParams();
     const dispatch = useDispatch()
-    const {pagination, eventData, form} = useSelector(event);
-    const {users} = useSelector(user);
+    const {pagination, eventData, form, notInvitedUsers} = useSelector(event);
+    // const {users} = useSelector(user);
     const [selectedRadio, setSelectedRadio] = useState(0);
 
     useEffect(() => {
         dispatch(getEventById(id))
     }, []);
 
-    console.log("users ", users)
+
     const onChange = (e) => {
         if (e.target.value === 0) {
             setSelectedRadio(0)
-            dispatch(getAllGuestsForEvent({id: id, status: true}))
+            dispatch(getAllGuestsForEvent({page: pagination.current, size: pagination.pageSize, id: id, status: true}))
         } else if (e.target.value === 1) {
             setSelectedRadio(1)
-            dispatch(getAllGuestsForEvent({id: id, status: false}))
+            dispatch(getAllGuestsForEvent({page: pagination.current, size: pagination.pageSize, id: id, status: false}))
         } else if (e.target.value === 2) {
             setSelectedRadio(2)
-            dispatch(getInvitationsByEventId(id))
+            dispatch(getInvitationsByEventId({page: pagination.current, size: pagination.pageSize, id: id}))
         } else if (e.target.value === 3) {
             setSelectedRadio(3)
-            dispatch(getAllNotInvitedClients(id))
+            dispatch(getAllNotInvitedClients({page: pagination.current, size: pagination.pageSize, id}))
         }
 
     };
     const handleAccept = (eventId, userId) => {
-        dispatch(replyToInvitation({eventId: eventId, userId: userId, accept: true}))
+        dispatch(replyToInvitation({eventId: eventId, userId: userId, accept: true, pagination: pagination}));
     };
 
     const handleDecline = (eventId, userId) => {
-        dispatch(replyToInvitation({eventId: eventId, userId: userId, accept: false}))
+        console.log("selected radio ", selectedRadio, " event id ", eventId, "user id ", userId)
+        if (selectedRadio === 1) {
+            dispatch(organizerUnsendInvitation({eventId: eventId, userId: userId, pagination: pagination}));
+        } else {
+            dispatch(replyToInvitation({eventId: eventId, userId: userId, accept: false, pagination: pagination}));
+        }
     };
 
     useEffect(() => {
-        dispatch(getAllGuestsForEvent({id: id, status: eventData.status}))
+        dispatch(getAllGuestsForEvent({
+            page: pagination.current,
+            size: pagination.pageSize,
+            id: id,
+            status: eventData.status
+        }))
     }, []);
 
     const handleChange = (page, pageSize) => {
         //TODO
         console.log("paginacija ", page, " pageSize ", pageSize)
+        if (selectedRadio === 0) {
+            dispatch(getAllGuestsForEvent({page: page, size: pageSize, id: id, status: true}))
+        } else if (selectedRadio === 1) {
+            dispatch(getAllGuestsForEvent({page: page, size: pageSize, id: id, status: false}))
+        } else if (selectedRadio === 2) {
+            dispatch(getInvitationsByEventId({page: page, size: pageSize, id: id}))
+        } else if (selectedRadio === 3) {
+            dispatch(getAllNotInvitedClients({page: page, size: pageSize, id}))
+        }
     };
 
     const handleSendInvitation = (userId) => {
-        console.log("send invitation ", userId)
-        dispatch(createInvitation({id, userId}))
+        dispatch(createInvitation({id, userId, pagination: pagination}));
     };
     return (
         <Flex className={"flex-grow-1 invitations-container"}>
@@ -85,16 +109,16 @@ const Invitations = () => {
                                 {selectedRadio === 3 ?
                                     <List
                                         itemLayout="horizontal"
-                                        dataSource={users}
+                                        dataSource={notInvitedUsers}
                                         renderItem={(item) => (
                                             <List.Item
                                                 actions={[
                                                     <Tooltip key={'accept'} placement={'top'}
                                                              title={'Send invitation'}>
-                                                            <FaCheck
-                                                                className={'accept-icon'}
-                                                                onClick={() => handleSendInvitation(item.id)}
-                                                            />
+                                                        <FaCheck
+                                                            className={'accept-icon'}
+                                                            onClick={() => handleSendInvitation(item.id)}
+                                                        />
                                                     </Tooltip>,
                                                 ]}
                                             >
@@ -113,30 +137,28 @@ const Invitations = () => {
                                         renderItem={(item) => (
                                             <List.Item
                                                 actions={
-                                                    !item?.statusCreator &&
-                                                    item?.statusGuest &&
-                                                    new Date(item?.event?.startTime) > new Date() ? (
+                                                    (!item?.statusCreator && item?.statusGuest && new Date(item?.event?.startTime) > new Date() && selectedRadio !== 2) ? (
                                                         [
                                                             <Tooltip key={'accept'} placement={'top'} title={'Accept'}>
                                                                 <FaCheck
                                                                     className={'accept-icon'}
                                                                     onClick={() => handleAccept(item.event_id, item.user_id)}
                                                                 />
-                                                            </Tooltip>,
-                                                            <Tooltip
-                                                                key={'decline'}
-                                                                placement={'top'}
-                                                                title={'Decline'}
-                                                            >
-                                                                <FaTimes
-                                                                    className={'decline-icon'}
-                                                                    onClick={() => handleDecline(item.event_id, item.user_id)}
-                                                                />
                                                             </Tooltip>
                                                         ]
-                                                    ) : null
-                                                }
-                                            >
+                                                    ) : (
+                                                        (!item?.statusCreator && item?.statusGuest && new Date(item?.event?.startTime) > new Date()) || selectedRadio === 1 ? (
+                                                            [
+                                                                <Tooltip key={'decline'} placement={'top'}
+                                                                         title={'Decline'}>
+                                                                    <FaTimes
+                                                                        className={'decline-icon'}
+                                                                        onClick={() => handleDecline(item.event_id, item.user_id)}
+                                                                    />
+                                                                </Tooltip>
+                                                            ]
+                                                        ) : null
+                                                    )}>
                                                 <Skeleton avatar title={false} loading={item?.loading} active>
                                                     <List.Item.Meta
                                                         avatar={<Avatar src={item?.invitedUser?.avatar}/>}
