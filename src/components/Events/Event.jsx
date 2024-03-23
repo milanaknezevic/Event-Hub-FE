@@ -10,6 +10,7 @@ import defImg from "../../assets/noImage.png"
 import {FaClock} from "react-icons/fa";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMapMarkerAlt} from "@fortawesome/free-solid-svg-icons";
+import Comment from "./Comment.jsx";
 
 const {Header, Sider, Content} = Layout;
 
@@ -27,9 +28,6 @@ const Event = () => {
     return (
         <Flex className={"flex-grow-1 event-container"}>
             <Layout>
-                <Sider breakpoint="lg" width='25%' collapsedWidth="0">
-                    aaaa
-                </Sider>
                 <Layout>
                     <Header>
                         <div className={"row p-md-4"}>
@@ -73,29 +71,42 @@ const Event = () => {
                                 <p>{form?.eventObj?.description}</p>
                                 <br/>
                                 <br/>
-                                <h2>Description</h2>
+                                <h2>Details</h2>
                                 <hr/>
                                 <br/>
                                 <div className={"row justify-content-between"}>
-                                    <div className={"m-2 details"}>
+                                    <div className={"my-2 m-md-2 details col-12 col-md-3"}>
                                         <FaClock style={{marginRight: "5px"}}/>
                                         {`Start time: ${form?.eventObj?.startTime}`}
                                     </div>
-                                    <div className={"m-2 details"}>
+                                    <div className={"my-2 m-md-2 details col-12 col-md-3"}>
                                         <FaClock style={{marginRight: "5px"}}/>
                                         {`End time: ${form?.eventObj?.endTime}`}
                                     </div>
 
-                                    <div className={"m-2 details"}>
+                                    <div className={"my-2 m-md-2 details col-12 col-md-3"}>
                                         <FontAwesomeIcon style={{marginRight: "5px"}} icon={faMapMarkerAlt}/>
                                         {`Location: ${form?.eventObj?.Location?.name}`}
                                     </div>
-                                    <div className={"m-2 details"}>
-                                        {/*<FontAwesomeIcon style={{marginRight: "5px"}} icon={faTag}/>*/}
+                                    <div className={"my-2 m-md-2 details col-12 col-md-3"}>
                                         {`Type: ${form?.eventObj?.EventType?.name}`}
                                     </div>
                                 </div>
                             </div>
+
+                            <div className={"col-9 mt-3 event-card"}>
+                                <h2>Comments</h2>
+                                <hr/>
+                                <br/>
+                                {form?.eventObj?.eventComments && form.eventObj.eventComments.length > 0 ? (
+                                    form.eventObj.eventComments.map((comment, index) => (
+                                        <Comment key={index} comment={comment}/>
+                                    ))
+                                ) : (
+                                    <p>No comments available.</p>
+                                )}
+                            </div>
+
                         </div>
                     </Content>
                 </Layout>

@@ -66,14 +66,14 @@ const ThirdStepForm = ({onSubmit, invitations, setInvitations,newAdded, setNewAd
     };
 
     const loadMore =
-        clients.length > list.length && searchValue === "" ? (
+        clients.length > list.length && searchValue === "" && (
             <div className={"row justify-content-center mt-3"}>
                 <Button
                     className="load-btn btn col-4 d-flex justify-content-center align-items-center"
                     type="submit" onClick={onLoadMore}>Load more
                 </Button>
             </div>
-        ) : null;
+        );
 
     const handleSubmit = () => {
         onSubmit();

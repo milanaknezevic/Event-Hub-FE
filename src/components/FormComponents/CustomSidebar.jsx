@@ -1,22 +1,32 @@
-import {Button, Input, Tree} from "antd";
+import {Button, Input} from "antd";
 import {MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
 import {useState} from "react";
-import {useSelector} from "react-redux";
-import {event} from "../../redux/selectors.jsx";
 import CustomTree from "./CustomTree.jsx";
 
 const {Search} = Input;
 
-const CustomSidebar = ({collapsed, onSearch, setCollapsed, eventTypes, locations, handleSelectEvent, selectedKeysEvents,handleSelectLocation,selectedKeysLocation}) => {
+const CustomSidebar = ({
+                           collapsed,
+                           onSearch,
+                           setCollapsed,
+                           eventTypes,
+                           locations,
+                           handleSelectEvent,
+                           selectedKeysEvents,
+                           handleSelectLocation,
+                           selectedKeysLocation,
+                           selectedKeysStatus,
+                           handleSelectStatus
+                       }) => {
 
     const eventTypesData = [
         {
-            title:<b>Event types</b>,
+            title: <b>Event types</b>,
             key: 'event',
             selectable: false,
             children: eventTypes.map((eventType) => ({
                 title: eventType.name,
-                key:eventType.id,
+                key: eventType.id,
             })),
         },
     ];
@@ -27,10 +37,32 @@ const CustomSidebar = ({collapsed, onSearch, setCollapsed, eventTypes, locations
             selectable: false,
             children: locations.map((location) => ({
                 title: location.name,
-                key:location.id,
+                key: location.id,
             })),
         },
     ];
+    const statusData = [
+        {
+            title: <b>Events status</b>,
+            key: 'status',
+            selectable: false,
+            children: [
+                {
+                    title: 'Upcoming',
+                    key: 2,
+                },
+                {
+                    title: 'In progress',
+                    key: 1,
+                },
+                {
+                    title: 'Finished',
+                    key: 0,
+                },
+            ],
+        },
+    ];
+
     const [expandedKeys, setExpandedKeys] = useState([]);
     const onExpand = (newExpandedKeys) => {
         setExpandedKeys(newExpandedKeys);
@@ -58,6 +90,9 @@ const CustomSidebar = ({collapsed, onSearch, setCollapsed, eventTypes, locations
 
                     <CustomTree onExpand={onExpand} expandedKeys={expandedKeys} handleSelect={handleSelectLocation}
                                 selectedKeys={selectedKeysLocation} treeData={locationsData}/>
+
+                    <CustomTree onExpand={onExpand} expandedKeys={expandedKeys} handleSelect={handleSelectStatus}
+                                selectedKeys={selectedKeysStatus} treeData={statusData}/>
                 </div>
             </div>}
 

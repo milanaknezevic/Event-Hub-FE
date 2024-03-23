@@ -1,10 +1,10 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {auth} from "../redux/selectors.jsx";
 import Page404 from "../constants/ErrorPages/Page404.jsx";
-import Spinner from "../constants/Spinner.jsx";
 import {useEffect} from "react";
 import {jwtDecode} from "jwt-decode";
 import {getLoggedUser, logout} from "../redux/auth.jsx";
+import Spinner from "../constants/Spinner.jsx";
 
 const ProtectedRoute = ({children, path}) => {
     const {isAuthenticated, loggedUser, loading} = useSelector(auth);
@@ -25,19 +25,17 @@ const ProtectedRoute = ({children, path}) => {
 
     const getProtectedRoutes = () => {
         switch (loggedUser?.role) {
-            case 1:
-                return ["/users", "/tickets", "/", "/my_profile"];
             case 0:
-                return ["/events", "/events/event/:id/invitations","/events/event/:id", "/", "/my_profile"];
+                return ["/events", "/events/event/:id/invitations", "/events/event/:id", "/", "/my_profile", "/change_password", "/test"];
+            case 1:
+                return ["/users", "/tickets", "/", "/my_profile", "/change_password", "/test"];
             case 2:
-                return ["/", "/my_profile"];
+                return ["/", "/my_profile", "/events", "/change_password", "/test"];
             default:
-                return ["/users", "/tickets", "/events", "/events/event/:id/invitations","/events/event/:id", '/my_profile'];
+                return ["/test", "/users", "/tickets", "/events", "/events/event/:id/invitations", "/events/event/:id", '/my_profile', "/change_password"];
         }
     };
-
-
-    if (loading) {
+    if (loading && !loggedUser) {
         return <Spinner/>
     }
 

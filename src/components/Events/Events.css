@@ -19,7 +19,7 @@
 }
 
 .event-container .ant-tree-list {
-    background-color: var(--gray-color);
+    background-color: var(--gray2-color);
 }
 
 .invitations-container .ant-layout-footer,
@@ -129,13 +129,31 @@
 .event-container .details {
     display: flex;
     align-items: center;
-    width: 30%;
+    /*width: 30%;*/
     border: 2px solid var(--gray2-color);
     border-radius: 5px;
-    height: 5vh;
+    min-height: 5vh;
     background: white;
 }
 .event-container .details:hover {
    background: var(--gray2-color);
 }
-
+.event-container .ant-input-outlined.ant-input-disabled{
+    background: white;
+}
+.event-container .comment-container .cancel-btn{
+    color: var(--white-color);
+    background-color: red;
+}
+.event-container .comment-container .cancel-btn:hover{
+    color: var(--white-color);
+    background-color: #ea1f1f;
+}
+.event-container .comment-container .submit-btn{
+    background-color: var(--blue-color);
+    color: var(--white-color);
+}
+.event-container .comment-container .submit-btn:hover{
+    background-color: var(--blue2-color);
+    color: var(--white-color);
+}

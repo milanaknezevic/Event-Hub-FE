@@ -23,6 +23,7 @@ export const initialState = {
         search: "",
         selectedEvent: "",
         selectedLocation: "",
+        status: "",
     },
     form: {
         modalOpen: false,
@@ -51,12 +52,12 @@ export const replyToInvitation = createAsyncThunk(
 );
 
 export const getAllEvents = createAsyncThunk(
-    'events', async ({page = 1, size = 10, search = "", locationId = "", eventTypeId = ""}, {
+    'events', async ({page = 1, size = 10, search = "", locationId = "", eventTypeId = "", status = ""}, {
         dispatch,
         rejectWithValue
     }) => {
         try {
-            const response = await api.get(`/api/users/organizer_events/?page=${page}&size=${size}&search=${search}&locationId=${locationId}&eventTypeId=${eventTypeId}`);
+            const response = await api.get(`/api/users/organizer_events/?page=${page}&size=${size}&search=${search}&locationId=${locationId}&eventTypeId=${eventTypeId}&status=${status}`);
             return response.data;
         } catch (error) {
             dispatch(displayNotification({
@@ -158,7 +159,8 @@ export const deleteEvent = createAsyncThunk(
                 size: pagination.pageSize,
                 search: filters.search,
                 locationId: filters.selectedLocation,
-                eventTypeId: filters.selectedEvent
+                eventTypeId: filters.selectedEvent,
+                status: filters.status
             }))
             dispatch(displayNotification({
                 notificationType: "success",
@@ -186,7 +188,8 @@ export const addEvent = createAsyncThunk(
                 size: pagination.pageSize,
                 search: filters.search,
                 locationId: filters.selectedLocation,
-                eventTypeId: filters.selectedEvent
+                eventTypeId: filters.selectedEvent,
+                status: filters.status
             }))
             dispatch(displayNotification({
                 notificationType: "success",
@@ -195,6 +198,29 @@ export const addEvent = createAsyncThunk(
             }))
             return response.data;
         } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
+
+export const addCommentOnEvent = createAsyncThunk(
+    "comment/add",
+    async ({id, data}, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.patch(`/api/comments/reply/${id}`, (data));
+            dispatch(getEventById(data.event_id))
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "Comment added successfully!",
+                title: "Event"
+            }))
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Error while commenting event!",
+                title: "Event"
+            }))
             return rejectWithValue(error.response.data);
         }
     }
@@ -278,6 +304,7 @@ export const eventSlice = createSlice({
                 let search = action.meta.arg.search
                 let selectedEvent = action.meta.arg.eventTypeId
                 let selectedLocation = action.meta.arg.locationId
+                let status = action.meta.arg.status
                 state.loading = false;
                 state.events = action.payload.events;
                 state.pagination = {
@@ -289,6 +316,7 @@ export const eventSlice = createSlice({
                     search,
                     selectedEvent,
                     selectedLocation,
+                    status
                 }
 
             })
@@ -371,6 +399,17 @@ export const eventSlice = createSlice({
                 state.form.modalOpen = false
                 state.form.eventObj = {}
                 state.form.mode = ""
+                state.form.backendErrors = {}
+            })
+            .addCase(addCommentOnEvent.pending, (state) => {
+                state.form.formSubmitting = true
+            })
+            .addCase(addCommentOnEvent.rejected, (state, action) => {
+                state.form.formSubmitting = false
+                state.form.backendErrors = action.payload
+            })
+            .addCase(addCommentOnEvent.fulfilled, (state) => {
+                state.form.formSubmitting = false
                 state.form.backendErrors = {}
             })
             .addCase(getAllNotInvitedClients.pending, state => {

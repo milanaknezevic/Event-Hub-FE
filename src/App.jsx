@@ -12,6 +12,7 @@ import MyProfile from "./components/ManageUser/MyProfile.jsx";
 import Events from "./components/Events/Events.jsx";
 import Invitations from "./components/Invitations/Invitations.jsx";
 import Event from "./components/Events/Event.jsx";
+import ChangePassword from "./components/ManageUser/ChangePassword.jsx";
 
 
 const App = () => {
@@ -53,6 +54,14 @@ const App = () => {
                         element: (
                             <ProtectedRoute path={"/my_profile"}>
                                 <MyProfile/>
+                            </ProtectedRoute>
+                        ),
+                    },
+                    {
+                        path: "/change_password",
+                        element: (
+                            <ProtectedRoute path={"/change_password"}>
+                                <ChangePassword/>
                             </ProtectedRoute>
                         ),
                     },

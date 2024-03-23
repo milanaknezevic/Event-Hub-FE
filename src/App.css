@@ -107,3 +107,8 @@ background: none;
    max-height: 40vh;
     overflow: auto;
 }
+
+.my-profile .avatarImg{
+    height: 25vh;
+    width: 25vh;
+}

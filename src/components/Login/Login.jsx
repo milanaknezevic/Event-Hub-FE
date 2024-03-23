@@ -25,7 +25,7 @@ const Login = () => {
             if (loggedUser?.role === 1) {
 
                 navigate("/users")
-            } else if (loggedUser?.role === 0) {
+            } else if (loggedUser?.role === 0 || loggedUser?.role ===2) {
                 navigate("/events")
             }
         }
@@ -39,7 +39,7 @@ const Login = () => {
 
                 <div className={"col-10 col-md-3 login-container"}>
                     <div className={"row"}>
-                        <div className={"col-12 d-flex justify-content-center title"}>
+                        <div className={"col-12 d-flex justify-content-center title my-2"}>
                             <h1>Login</h1>
                         </div>
 
@@ -59,11 +59,8 @@ const Login = () => {
                                     <CustomInput label="Password" name="password" type="password"/>
 
                                     <div className={"col-12 p-2 d-flex justify-content-center pb-3"}>
-                                        {/*<Button className="login-btn btn col-12 col-md-6" htmlType="submit"*/}
-                                        {/*        type="submit">Login*/}
-                                        {/*</Button>*/}
 
-                                        <CustomButton className={"login-btn btn col-12 col-md-6"}
+                                        <CustomButton className={"login-btn btn col-12 col-md-6 mt-2"}
                                                       htmlType="submit"
                                                       type="submit"
                                                       text={"Login"}/>

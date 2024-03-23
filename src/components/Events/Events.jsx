@@ -26,6 +26,7 @@ const Events = () => {
 
     const initialLocation = filters.selectedLocation ? [filters.selectedLocation] : [];
     const [selectedKeysLocation, setSelectedKeysLocation] = useState(initialLocation);
+    const [selectedKeysStatus, setSelectedKeysStatus] = useState(initialLocation);
     // const [selectedKeysEvents, setSelectedKeysEvents] = useState([]);
     // const [selectedKeysLocation, setSelectedKeysLocation] = useState([]);
     const [eventId, setEventId] = useState(null)
@@ -38,7 +39,8 @@ const Events = () => {
             size: pagination.pageSize,
             search: filters.search,
             locationId: filters.selectedLocation,
-            eventTypeId: filters.selectedEvent
+            eventTypeId: filters.selectedEvent,
+            status:filters.status
         }))
         dispatch(getEventTypes({}))
         dispatch(getEventLocations({}))
@@ -49,7 +51,8 @@ const Events = () => {
             size: pageSize,
             search: filters.search,
             locationId: filters.selectedLocation,
-            eventTypeId: filters.selectedEvent
+            eventTypeId: filters.selectedEvent,
+            status:filters.status
         }))
     };
     const handleAddEvent = () => {
@@ -61,17 +64,32 @@ const Events = () => {
             size: pagination.pageSize,
             search: value,
             locationId: filters.selectedLocation,
-            eventTypeId: filters.selectedEvent
+            eventTypeId: filters.selectedEvent,
+            status:filters.status
         }))
     }
     const handleSelectEvent = (selectedKeys) => {
+        console.log("event ", selectedKeys)
         setSelectedKeysEvents(selectedKeys);
         dispatch(getAllEvents({
             page: pagination.current,
             size: pagination.pageSize,
             search: filters.search,
             locationId: filters.selectedLocation,
-            eventTypeId: selectedKeys[0]
+            eventTypeId: selectedKeys[0],
+            status:filters.status
+        }))
+    };
+    const handleSelectStatus = (selectedKeys) => {
+        setSelectedKeysStatus(selectedKeys);
+        dispatch(getAllEvents({
+            page: pagination.current,
+            size: pagination.pageSize,
+            search: filters.search,
+            locationId: filters.selectedLocation,
+            eventTypeId: filters.selectedEvent,
+            status:selectedKeys[0]
+
         }))
     };
     const handleSelectLocation = (selectedKeys) => {
@@ -81,7 +99,8 @@ const Events = () => {
             size: pagination.pageSize,
             search: filters.search,
             locationId: selectedKeys[0],
-            eventTypeId: filters.selectedEvent
+            eventTypeId: filters.selectedEvent,
+            status:filters.status
         }))
 
     };
@@ -108,8 +127,8 @@ const Events = () => {
                 <Sider trigger={null} collapsible collapsed={collapsed} collapsedWidth={50}>
                     <CustomSidebar collapsed={collapsed} setCollapsed={setCollapsed} onSearch={onSearch}
                                    eventTypes={eventTypes} locations={locations}
-                                   handleSelectLocation={handleSelectLocation} handleSelectEvent={handleSelectEvent}
-                                   selectedKeysLocation={selectedKeysLocation} selectedKeysEvents={selectedKeysEvents}/>
+                                   handleSelectLocation={handleSelectLocation} handleSelectEvent={handleSelectEvent} handleSelectStatus={handleSelectStatus}
+                                   selectedKeysLocation={selectedKeysLocation} selectedKeysEvents={selectedKeysEvents} selectedKeysStatus={selectedKeysStatus}/>
                 </Sider>
                 <Layout>
                     <Header>

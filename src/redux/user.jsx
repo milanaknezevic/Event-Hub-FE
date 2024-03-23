@@ -172,6 +172,11 @@ export const addUser = createAsyncThunk(
             }))
             return response.data;
         } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Error while updating user!",
+                title: "User"
+            }))
             return rejectWithValue(error.response.data);
         }
     }

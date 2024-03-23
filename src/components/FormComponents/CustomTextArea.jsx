@@ -13,7 +13,7 @@ const CustomTextArea = ({ label, name, ...rest }) => {
                 name={name}
                 {...rest}
             />
-            <ErrorMessage name={name} component="div" className="error-message" />
+            <ErrorMessage name={name} component="div" className="error" />
         </div>
     );
 };

@@ -35,6 +35,27 @@ export const userLogin = createAsyncThunk(
         }
     }
 );
+export const changePassword = createAsyncThunk(
+    'auth/change_password', async ({data}, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.put('/api/users/change_password', data);
+            dispatch(getLoggedUser({}))
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "Password changed successfully!",
+                title: "Change password"
+            }))
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Change password failed. Please try again.",
+                title: "Change password"
+            }))
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
 
 
 export const getLoggedUser = createAsyncThunk(
@@ -82,6 +103,23 @@ export const userRegister = createAsyncThunk(
         }
     }
 );
+
+export const updateUser = createAsyncThunk(
+    "users/update",
+    async ({data}, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.patch(`/api/users/update/profile`, (data));
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "User updated successfully!",
+                title: "User"
+            }))
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
 
 
 export const authSlice = createSlice({
@@ -134,6 +172,31 @@ export const authSlice = createSlice({
                 state.loading = false;
                 state.isAuthenticated = true;
                 state.loggedUser = action.payload
+                state.backendErrors = {};
+            })
+            .addCase(updateUser.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(updateUser.rejected, (state, action) => {
+                state.backendErrors = action.payload
+                state.loading = false;
+            })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isAuthenticated = true;
+                state.loggedUser = action.payload.user
+                state.backendErrors = {};
+            })
+            .addCase(changePassword.pending, state => {
+                state.loading = true;
+            })
+            .addCase(changePassword.rejected, (state, action) => {
+                state.backendErrors = action.payload
+                state.isAuthenticated = false;
+                state.loading = false;
+            })
+            .addCase(changePassword.fulfilled, (state) => {
+                state.loading = false;
                 state.backendErrors = {};
             })
     }
