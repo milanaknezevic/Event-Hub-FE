@@ -109,6 +109,7 @@ export const updateUser = createAsyncThunk(
     async ({data}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.patch(`/api/users/update/profile`, (data));
+            dispatch(getLoggedUser({}))
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "User updated successfully!",
@@ -181,10 +182,8 @@ export const authSlice = createSlice({
                 state.backendErrors = action.payload
                 state.loading = false;
             })
-            .addCase(updateUser.fulfilled, (state, action) => {
+            .addCase(updateUser.fulfilled, (state) => {
                 state.loading = false;
-                state.isAuthenticated = true;
-                state.loggedUser = action.payload.user
                 state.backendErrors = {};
             })
             .addCase(changePassword.pending, state => {
@@ -192,7 +191,6 @@ export const authSlice = createSlice({
             })
             .addCase(changePassword.rejected, (state, action) => {
                 state.backendErrors = action.payload
-                state.isAuthenticated = false;
                 state.loading = false;
             })
             .addCase(changePassword.fulfilled, (state) => {

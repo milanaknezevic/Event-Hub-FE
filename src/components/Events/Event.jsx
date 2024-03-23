@@ -1,21 +1,27 @@
 import {useParams} from "react-router-dom";
-import {Carousel, Flex, Layout} from "antd";
-import {getEventById, setEventModalState} from "../../redux/events.jsx";
+import {Button, Carousel, Flex, Layout} from "antd";
+import {replyOnComment, getEventById, setEventModalState, addComment} from "../../redux/events.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import AddEventModal from "./AddEventModal.jsx";
-import {event} from "../../redux/selectors.jsx";
-import {useEffect} from "react";
+import {auth, event} from "../../redux/selectors.jsx";
+import {useEffect, useRef} from "react";
 import CustomButton from "../FormComponents/CustomButton.jsx";
 import defImg from "../../assets/noImage.png"
 import {FaClock} from "react-icons/fa";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMapMarkerAlt} from "@fortawesome/free-solid-svg-icons";
-import Comment from "./Comment.jsx";
+import Comments from "./Comments.jsx";
+import CommentSection from "./CommentSection.jsx";
+import {Form, Formik} from "formik";
+import {commentSchema, leaveCommentSchema} from "../../schemas/index.jsx";
+import CustomTextArea from "../FormComponents/CustomTextArea.jsx";
 
 const {Header, Sider, Content} = Layout;
 
 const Event = () => {
+    const formikRef = useRef();
     const {form} = useSelector(event)
+    const {loggedUser} = useSelector(auth);
     const {id} = useParams();
     const dispatch = useDispatch()
     useEffect(() => {
@@ -25,6 +31,19 @@ const Event = () => {
         dispatch(getEventById(id))
         dispatch(setEventModalState({modalOpen: true, mode: 'edit'}));
     };
+
+    const onSubmit = async (values) => {
+        const commentData = {
+            question: values?.question,
+            event_id: id,
+        };
+        dispatch(addComment({data: commentData}));
+        formikRef.current?.resetForm(formikRef.current?.initialValues)
+    };
+    const handleCancel = () => {
+        formikRef.current?.resetForm(formikRef.current?.initialValues)
+    }
+
     return (
         <Flex className={"flex-grow-1 event-container"}>
             <Layout>
@@ -34,11 +53,13 @@ const Event = () => {
                             <div className={"col-12 col-md-10"}>
                                 <h1>{form?.eventObj?.name}</h1>
                             </div>
-                            <div className={"col-12 col-md-2 d-flex justify-content-end align-items-center"}>
-                                <CustomButton className={"add-btn btn col-12"} onCLick={handleEditEvent}
-                                              text={"Edit event"}
-                                              htmlType="submit" type="submit"/>
-                            </div>
+                            {loggedUser?.role === 0 &&
+                                <div className={"col-12 col-md-2 d-flex justify-content-end align-items-center"}>
+                                    <CustomButton className={"add-btn btn col-12"} onCLick={handleEditEvent}
+                                                  text={"Edit event"}
+                                                  htmlType="submit" type="submit"/>
+                                </div>
+                            }
                         </div>
 
                     </Header>
@@ -94,13 +115,65 @@ const Event = () => {
                                 </div>
                             </div>
 
-                            <div className={"col-9 mt-3 event-card"}>
+                            <div className={"col-9 mt-3 event-card comment-container"}>
                                 <h2>Comments</h2>
                                 <hr/>
                                 <br/>
+                                {loggedUser?.role === 2  &&
+                                    <div className="bg-light p-2">
+                                        <div className="d-flex flex-row">
+                                            <img
+                                                className="rounded-circle shadow-1-strong me-3"
+                                                src={loggedUser?.avatar ? new URL(`../../assets/users/${loggedUser?.avatar}.png`, import.meta.url).href : defImg}
+                                                alt="avatar"
+                                                width="50"
+                                                height="50"
+                                            />
+                                            <Formik
+                                                innerRef={formikRef}
+                                                initialValues={{
+                                                    question: "",
+                                                }}
+                                                validationSchema={leaveCommentSchema}
+                                                onSubmit={onSubmit}
+                                            >
+                                                {({handleSubmit}) => (
+                                                    <Form onSubmit={handleSubmit} className="w-100">
+                                                        <div className="col-12">
+                                                            <CustomTextArea
+                                                                name="question"
+                                                                rows={2}
+                                                                disabled={false}
+                                                            />
+                                                        </div>
+
+                                                            <div className="row m-2 gap-2 d-flex justify-content-end">
+                                                                <Button
+                                                                    className="cancel-btn col-12 col-md-3 d-flex justify-content-center align-items-center"
+                                                                    onClick={handleCancel}
+                                                                    type="button"
+                                                                >
+                                                                    Cancel
+                                                                </Button>
+
+                                                                <Button
+                                                                    className="submit-btn col-12 col-md-3 d-flex justify-content-center align-items-center"
+                                                                    htmlType="submit"
+                                                                    type="submit"
+                                                                >
+                                                                    Save
+                                                                </Button>
+                                                            </div>
+                                                    </Form>
+                                                )}
+                                            </Formik>
+                                        </div>
+                                    </div>
+                                }
+                                <hr/>
                                 {form?.eventObj?.eventComments && form.eventObj.eventComments.length > 0 ? (
                                     form.eventObj.eventComments.map((comment, index) => (
-                                        <Comment key={index} comment={comment}/>
+                                        <Comments key={index} comment={comment}/>
                                     ))
                                 ) : (
                                     <p>No comments available.</p>

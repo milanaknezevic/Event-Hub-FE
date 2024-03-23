@@ -25,7 +25,12 @@ export const changePasswordSchema = yup.object().shape({
 export const commentSchema = yup.object().shape({
     answer: yup
         .string()
-        .required("Answer is required"),
+        .required("Answer is required!"),
+});
+export const leaveCommentSchema = yup.object().shape({
+    question: yup
+        .string()
+        .required("Question is required!"),
 });
 export const addUserSchema = yup.object().shape({
     name: yup.string().required('Name is required'),

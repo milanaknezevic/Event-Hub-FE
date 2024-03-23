@@ -11,7 +11,9 @@ const ProtectedRoute = ({children, path}) => {
     const dispatch = useDispatch()
     const token = localStorage.getItem('token');
 
+
     useEffect(() => {
+
         if (token) {
             const decodedToken = jwtDecode(token);
             if (decodedToken.exp * 1000 < Date.now()) {
@@ -30,7 +32,7 @@ const ProtectedRoute = ({children, path}) => {
             case 1:
                 return ["/users", "/tickets", "/", "/my_profile", "/change_password", "/test"];
             case 2:
-                return ["/", "/my_profile", "/events", "/change_password", "/test"];
+                return ["/", "/my_profile", "/events", "/change_password", "/events/event/:id", "/test"];
             default:
                 return ["/test", "/users", "/tickets", "/events", "/events/event/:id/invitations", "/events/event/:id", '/my_profile', "/change_password"];
         }

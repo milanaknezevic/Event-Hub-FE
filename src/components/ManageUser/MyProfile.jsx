@@ -17,7 +17,6 @@ const MyProfile = () => {
     const {loggedUser} = useSelector(auth);
     const [avatarValue, setAvatarValue] = useState("");
     const [images, setImages] = useState([]);
-    console.log("logged user ", loggedUser)
     const [isDisabled, setIsDisabled] = useState(true)
 
     useEffect(() => {
@@ -39,7 +38,6 @@ const MyProfile = () => {
         formikRef.current?.setValues(updatedValues);
     }, []);
     const onSubmit = async (values) => {
-        console.log("values ", values);
         let updatedValues = {...values}
         let formData;
         let uid;
@@ -53,7 +51,8 @@ const MyProfile = () => {
         if (res && avatarValue && !res.error) {
             await dispatch(uploadAvatar({formData, uid}));
         }
-        // dispatch(updateUser())
+
+        //setIsDisabled(true) //da ;o otsaviti ili ne ovo???
     };
 
     const handleEdit = async () => {

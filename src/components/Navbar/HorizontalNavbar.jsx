@@ -31,7 +31,6 @@ const HorizontalNavbar = () => {
         {linkPath: '/change_password', routeTitle: 'Change password'},
     ];
     const isDropdownItemActive = dropdown.some(item => item.linkPath === pathname);
-
     return (
         <div className={"d-flex flex-column min-vh-100"}>
             <div className="container-fluid nav-container">
@@ -47,7 +46,7 @@ const HorizontalNavbar = () => {
                         <ul className="navbar-nav d-flex align-items-end justify-content-md-center align-items-md-center">
 
                             {routes.map((route) => {
-                                    return ((
+                                return ((
                                         (route.public || (isAuthenticated && route.allowedRoles?.includes(loggedUser?.role))) && (
                                             <Link key={route.linkPath}
                                                   className={`nav-link  ${route.linkPath === pathname ? 'active' : ""} `}

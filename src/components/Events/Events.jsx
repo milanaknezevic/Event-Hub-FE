@@ -1,16 +1,24 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {event} from "../../redux/selectors.jsx";
-import {deleteEvent, getAllEvents, getEventLocations, getEventTypes, setEventModalState} from "../../redux/events.jsx";
+import {auth, event} from "../../redux/selectors.jsx";
+import {
+    deleteEvent,
+    getAllEvents,
+    getAllEventsForCLients,
+    getEventLocations,
+    getEventTypes,
+    setEventModalState
+} from "../../redux/events.jsx";
 import {Card, Flex, Layout, Pagination, Tooltip} from 'antd';
 import defImg from "../../assets/noImage.png"
 import {FaEye, FaTrash} from 'react-icons/fa';
 import CustomSidebar from "../FormComponents/CustomSidebar.jsx";
 import {MailOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
-import DeleteEventModal from "./DeleteEventModal.jsx";
+import EventActionModal from "./EventActionModal.jsx";
 import AddEventModal from "./AddEventModal.jsx";
 import CustomButton from "../FormComponents/CustomButton.jsx";
+import {createInvitation} from "../../redux/invitation.jsx";
 
 
 const {Header, Footer, Sider, Content} = Layout;
@@ -19,7 +27,8 @@ const {Header, Footer, Sider, Content} = Layout;
 const {Meta} = Card;
 const Events = () => {
     const dispatch = useDispatch()
-    const {events, eventTypes, locations, pagination, filters} = useSelector(event);
+    const {loggedUser} = useSelector(auth);
+    const {events, eventTypes, locations, pagination, filters, form} = useSelector(event);
     const [collapsed, setCollapsed] = useState(true);
     const initialEvent = filters.selectedEvent ? [filters.selectedEvent] : [];
     const [selectedKeysEvents, setSelectedKeysEvents] = useState(initialEvent);
@@ -34,75 +43,140 @@ const Events = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        dispatch(getAllEvents({
-            page: pagination.current,
-            size: pagination.pageSize,
-            search: filters.search,
-            locationId: filters.selectedLocation,
-            eventTypeId: filters.selectedEvent,
-            status:filters.status
-        }))
+        if (loggedUser?.role === 2) {
+            dispatch(getAllEventsForCLients({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: filters.search,
+                locationId: filters.selectedLocation,
+                eventTypeId: filters.selectedEvent,
+                status: filters.status
+            }))
+        } else if (loggedUser?.role === 0) {
+            dispatch(getAllEvents({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: filters.search,
+                locationId: filters.selectedLocation,
+                eventTypeId: filters.selectedEvent,
+                status: filters.status
+            }))
+        }
         dispatch(getEventTypes({}))
         dispatch(getEventLocations({}))
     }, [])
     const handleChange = (page, pageSize) => {
-        dispatch(getAllEvents({
-            page: page,
-            size: pageSize,
-            search: filters.search,
-            locationId: filters.selectedLocation,
-            eventTypeId: filters.selectedEvent,
-            status:filters.status
-        }))
+        if (loggedUser?.role === 2) {
+            dispatch(getAllEventsForCLients({
+                page: page,
+                size: pageSize,
+                search: filters.search,
+                locationId: filters.selectedLocation,
+                eventTypeId: filters.selectedEvent,
+                status: filters.status
+            }))
+        } else if (loggedUser?.role === 0) {
+            dispatch(getAllEvents({
+                page: page,
+                size: pageSize,
+                search: filters.search,
+                locationId: filters.selectedLocation,
+                eventTypeId: filters.selectedEvent,
+                status: filters.status
+            }))
+        }
     };
     const handleAddEvent = () => {
         dispatch(setEventModalState({modalOpen: true, mode: 'create'}));
     };
     const onSearch = (value) => {
-        dispatch(getAllEvents({
-            page: pagination.current,
-            size: pagination.pageSize,
-            search: value,
-            locationId: filters.selectedLocation,
-            eventTypeId: filters.selectedEvent,
-            status:filters.status
-        }))
+        if (loggedUser?.role === 2) {
+            dispatch(getAllEventsForCLients({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: value,
+                locationId: filters.selectedLocation,
+                eventTypeId: filters.selectedEvent,
+                status: filters.status
+            }))
+        } else if (loggedUser?.role === 0) {
+            dispatch(getAllEvents({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: value,
+                locationId: filters.selectedLocation,
+                eventTypeId: filters.selectedEvent,
+                status: filters.status
+            }))
+        }
     }
     const handleSelectEvent = (selectedKeys) => {
-        console.log("event ", selectedKeys)
         setSelectedKeysEvents(selectedKeys);
-        dispatch(getAllEvents({
-            page: pagination.current,
-            size: pagination.pageSize,
-            search: filters.search,
-            locationId: filters.selectedLocation,
-            eventTypeId: selectedKeys[0],
-            status:filters.status
-        }))
+        if (loggedUser?.role === 2) {
+            dispatch(getAllEventsForCLients({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: filters.search,
+                locationId: filters.selectedLocation,
+                eventTypeId: selectedKeys[0],
+                status: filters.status
+            }))
+        } else if (loggedUser?.role === 0) {
+            dispatch(getAllEvents({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: filters.search,
+                locationId: filters.selectedLocation,
+                eventTypeId: selectedKeys[0],
+                status: filters.status
+            }))
+        }
     };
     const handleSelectStatus = (selectedKeys) => {
         setSelectedKeysStatus(selectedKeys);
-        dispatch(getAllEvents({
-            page: pagination.current,
-            size: pagination.pageSize,
-            search: filters.search,
-            locationId: filters.selectedLocation,
-            eventTypeId: filters.selectedEvent,
-            status:selectedKeys[0]
+        if (loggedUser?.role === 2) {
+            dispatch(getAllEventsForCLients({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: filters.search,
+                locationId: filters.selectedLocation,
+                eventTypeId: filters.selectedEvent,
+                status: selectedKeys[0]
+            }))
+        } else if (loggedUser?.role === 0) {
+            dispatch(getAllEvents({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: filters.search,
+                locationId: filters.selectedLocation,
+                eventTypeId: filters.selectedEvent,
+                status: selectedKeys[0]
 
-        }))
+            }))
+        }
     };
     const handleSelectLocation = (selectedKeys) => {
         setSelectedKeysLocation(selectedKeys);
-        dispatch(getAllEvents({
-            page: pagination.current,
-            size: pagination.pageSize,
-            search: filters.search,
-            locationId: selectedKeys[0],
-            eventTypeId: filters.selectedEvent,
-            status:filters.status
-        }))
+        if (loggedUser?.role === 2) {
+            dispatch(getAllEventsForCLients({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: filters.search,
+                locationId: selectedKeys[0],
+                eventTypeId: filters.selectedEvent,
+                status: filters.status
+            }))
+        } else if (loggedUser?.role === 0) {
+            dispatch(getAllEvents({
+                page: pagination.current,
+                size: pagination.pageSize,
+                search: filters.search,
+                locationId: selectedKeys[0],
+                eventTypeId: filters.selectedEvent,
+                status: filters.status
+            }))
 
+        }
     };
     const handleWatchEvent = (id) => {
         navigate(`/events/event/${id}`);
@@ -111,14 +185,24 @@ const Events = () => {
     const handleInvitations = (id) => {
         navigate(`/events/event/${id}/invitations`);
     };
+    const handleSendInvitations = (id) => {
+        setEventId(id)
+        dispatch(setEventModalState({modalOpen: true, mode: 'sendInvitation'}));
+    }
 
-    const confirmEventDelete = () => {
-        dispatch(deleteEvent({id: eventId, pagination: pagination, filters: filters}));
+    const confirmEventAction = () => {
+        if (loggedUser?.role === 0 && form?.mode === 'delete') {
+            dispatch(deleteEvent({id: eventId, pagination: pagination, filters: filters}));
+        } else if (loggedUser?.role === 2 && form?.mode === 'sendInvitation') {
+            dispatch(createInvitation({id: eventId, userId:loggedUser?.id, pagination: pagination,loggedUser:loggedUser,filters:filters}));
+
+        }
     }
     const handleDeleteEvent = (id) => {
         setEventId(id)
         dispatch(setEventModalState({modalOpen: true, mode: 'delete'}));
     };
+    console.log("events ", events)
 
 
     return (
@@ -127,8 +211,10 @@ const Events = () => {
                 <Sider trigger={null} collapsible collapsed={collapsed} collapsedWidth={50}>
                     <CustomSidebar collapsed={collapsed} setCollapsed={setCollapsed} onSearch={onSearch}
                                    eventTypes={eventTypes} locations={locations}
-                                   handleSelectLocation={handleSelectLocation} handleSelectEvent={handleSelectEvent} handleSelectStatus={handleSelectStatus}
-                                   selectedKeysLocation={selectedKeysLocation} selectedKeysEvents={selectedKeysEvents} selectedKeysStatus={selectedKeysStatus}/>
+                                   handleSelectLocation={handleSelectLocation} handleSelectEvent={handleSelectEvent}
+                                   handleSelectStatus={handleSelectStatus}
+                                   selectedKeysLocation={selectedKeysLocation} selectedKeysEvents={selectedKeysEvents}
+                                   selectedKeysStatus={selectedKeysStatus}/>
                 </Sider>
                 <Layout>
                     <Header>
@@ -136,16 +222,12 @@ const Events = () => {
                             <div className={"col-12 col-md-6"}>
                                 <h1>Events</h1>
                             </div>
-                            <div className={"col-12 col-md-6 d-flex justify-content-end align-items-center"}>
-                                <CustomButton className={"add-btn btn col-12 col-md-5"} onCLick={handleAddEvent}
-                                              text={"Add event"}
-                                              htmlType="submit" type="submit"/>
-
-                                {/*<Button onClick={handleAddEvent}*/}
-                                {/*        className="add-btn btn col-12 col-md-5 d-flex justify-content-center align-items-center"*/}
-                                {/*        htmlType="submit" type="submit">Add event*/}
-                                {/*</Button>*/}
-                            </div>
+                            {loggedUser?.role === 0 &&
+                                <div className={"col-12 col-md-6 d-flex justify-content-end align-items-center"}>
+                                    <CustomButton className={"add-btn btn col-12 col-md-5"} onCLick={handleAddEvent}
+                                                  text={"Add event"}
+                                                  htmlType="submit" type="submit"/>
+                                </div>}
                         </div>
 
                     </Header>
@@ -160,20 +242,32 @@ const Events = () => {
                                                  src={event?.eventImages?.length > 0 ? new URL(`../../assets/events/${event.eventImages[0].image}.png`, import.meta.url).href : defImg}/>
 
                                         }
-                                        actions={[
-                                            <Tooltip key="watch" placement="top" title="Watch">
-                                                <FaEye className="cursor-button"
-                                                       onClick={() => handleWatchEvent(event.id)}/>
-                                            </Tooltip>,
-                                            <Tooltip key="invitations" placement="top" title="Invitations">
-                                                <MailOutlined className="cursor-button"
-                                                              onClick={() => handleInvitations(event.id)}/>
-                                            </Tooltip>,
-                                            <Tooltip key="delete" placement="top" title="Delete">
-                                                <FaTrash color="red" className="cursor-button"
-                                                         onClick={() => handleDeleteEvent(event.id)}/>
-                                            </Tooltip>,
-                                        ]}
+                                        actions={
+                                            loggedUser?.role === 0
+                                                ? [
+                                                    <Tooltip key="watch" placement="top" title="Watch">
+                                                        <FaEye className="cursor-button" onClick={() => handleWatchEvent(event.id)} />
+                                                    </Tooltip>,
+                                                    <Tooltip key="invitations" placement="top" title="Invitations">
+                                                        <MailOutlined className="cursor-button" onClick={() => handleInvitations(event.id)} />
+                                                    </Tooltip>,
+                                                    <Tooltip key="delete" placement="top" title="Delete">
+                                                        <FaTrash color="red" className="cursor-button" onClick={() => handleDeleteEvent(event.id)} />
+                                                    </Tooltip>
+                                                ]
+                                                : [
+                                                    <Tooltip key="watch" placement="top" title="Watch">
+                                                        <FaEye className="cursor-button" onClick={() => handleWatchEvent(event.id)} />
+                                                    </Tooltip>,
+                                                    event?.invitationStatus === false && (
+                                                        <Tooltip key="invitations" placement="top" title="Send invitation">
+                                                            <MailOutlined className="cursor-button" onClick={() => handleSendInvitations(event.id)} />
+                                                        </Tooltip>
+                                                    )
+                                                ].filter(Boolean)
+                                        }
+
+
                                     >
                                         <Meta
                                             title={event.name}
@@ -207,7 +301,7 @@ const Events = () => {
                     </Footer>
                 </Layout>
             </Layout>
-            <DeleteEventModal handleOk={confirmEventDelete}/>
+            <EventActionModal handleOk={confirmEventAction}/>
             <AddEventModal/>
         </Flex>
     );

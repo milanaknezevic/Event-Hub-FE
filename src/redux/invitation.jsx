@@ -1,7 +1,13 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {displayNotification} from "./notification.jsx";
 import base from '../api/baseService.jsx';
-import {getAllGuestsForEvent, getAllNotInvitedClients} from "./events.jsx";
+import {
+    getAllEvents,
+    getAllEventsForCLients,
+    getAllGuestsForEvent,
+    getAllNotInvitedClients,
+    setEventModalState
+} from "./events.jsx";
 
 const api = base.service(true);
 export const initialState = {
@@ -39,11 +45,23 @@ export const organizerUnsendInvitation = createAsyncThunk(
 )
 export const createInvitation = createAsyncThunk(
     "invitation/create",
-    async ({id, userId, pagination}, {dispatch, rejectWithValue}) => {
+    async ({id, userId, pagination, loggedUser,filters}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.post(`/api/invitations/${id}/${userId}`);
             //dispatch(getAllNotInvitedClients(id))
-            dispatch(getAllNotInvitedClients({page: pagination.current, size: pagination.pageSize, id}))
+            if (loggedUser?.role === 0) {
+                dispatch(getAllNotInvitedClients({page: pagination.current, size: pagination.pageSize, id}))
+            } else if ((loggedUser?.role === 2)) {
+                dispatch(setEventModalState({modalOpen: false, mode: ''}));
+                dispatch(getAllEventsForCLients({
+                    page: pagination.current,
+                    size: pagination.pageSize,
+                    search: filters.search,
+                    locationId: filters.selectedLocation,
+                    eventTypeId: filters.selectedEvent,
+                    status: filters.status
+                }))
+            }
             dispatch(displayNotification({
                 notificationType: "success",
                 message: "Invitation sent successfully!",

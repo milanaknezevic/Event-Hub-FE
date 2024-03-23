@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {event} from "../../redux/selectors.jsx";
 import {setEventModalState} from "../../redux/events.jsx";
 
-const DeleteEventModal = ({handleOk}) => {
+const EventActionModal = ({handleOk}) => {
     const dispatch = useDispatch()
     const {form} = useSelector(event)
 
@@ -13,14 +13,17 @@ const DeleteEventModal = ({handleOk}) => {
 
     return (
         <>
-            <Modal className={"user-modal"} size={"lg"} title={'Delete event'}
-                   open={form.modalOpen && form.mode === 'delete'}
+            <Modal className={"user-modal"} size={"lg"}
+                   title={form.mode === "delete" ? 'Delete event' : 'Send invitation'}
+                   open={form.modalOpen && (form.mode === 'delete' || form.mode === 'sendInvitation')}
                    onOk={handleOk} onCancel={handleCancel}>
-                <div>
+                {form.mode === 'delete' ? (<div>
+
                     Are you sure you want to delete event?
-                </div>
+                </div>) : (<div>Are you sure you want to send invitation</div>)
+                }
             </Modal>
         </>
     );
 };
-export default DeleteEventModal;
+export default EventActionModal;

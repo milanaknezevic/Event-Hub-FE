@@ -1,6 +1,6 @@
 import {Avatar, Flex, Layout, List, Pagination, Radio, Skeleton, Tooltip} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import {event} from "../../redux/selectors.jsx";
+import {auth, event} from "../../redux/selectors.jsx";
 import {useEffect, useState} from "react";
 import {
     getAllGuestsForEvent,
@@ -19,8 +19,9 @@ const {Header, Footer, Content} = Layout;
 
 const Invitations = () => {
     const {id} = useParams();
+    const {loggedUser} = useSelector(auth);
     const dispatch = useDispatch()
-    const {pagination, eventData, form, notInvitedUsers} = useSelector(event);
+    const {pagination, eventData, form, notInvitedUsers, filters} = useSelector(event);
     // const {users} = useSelector(user);
     const [selectedRadio, setSelectedRadio] = useState(0);
 
@@ -82,7 +83,7 @@ const Invitations = () => {
     };
 
     const handleSendInvitation = (userId) => {
-        dispatch(createInvitation({id, userId, pagination: pagination}));
+        dispatch(createInvitation({id, userId, pagination: pagination, loggedUser: loggedUser, filters: filters}));
     };
     return (
         <Flex className={"flex-grow-1 invitations-container"}>
