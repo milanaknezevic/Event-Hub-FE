@@ -32,9 +32,9 @@ const ProtectedRoute = ({children, path}) => {
             case 1:
                 return ["/users", "/tickets", "/", "/my_profile", "/change_password", "/test"];
             case 2:
-                return ["/", "/my_profile", "/events", "/change_password", "/events/event/:id", "/test"];
+                return ["/", "/my_profile","/my_events", "/events", "/change_password", "/events/event/:id", "/test"];
             default:
-                return ["/test", "/users", "/tickets", "/events", "/events/event/:id/invitations", "/events/event/:id", '/my_profile', "/change_password"];
+                return ["/my_events","/test", "/users", "/tickets", "/events", "/events/event/:id/invitations", "/events/event/:id", '/my_profile', "/change_password"];
         }
     };
     if (loading && !loggedUser) {

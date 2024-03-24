@@ -25,7 +25,7 @@ const {Header, Footer, Sider, Content} = Layout;
 
 
 const {Meta} = Card;
-const Events = () => {
+const Events = ({myEvents}) => {
     const dispatch = useDispatch()
     const {loggedUser} = useSelector(auth);
     const {events, eventTypes, locations, pagination, filters, form} = useSelector(event);
@@ -50,7 +50,8 @@ const Events = () => {
                 search: filters.search,
                 locationId: filters.selectedLocation,
                 eventTypeId: filters.selectedEvent,
-                status: filters.status
+                status: filters.status,
+                myEvents: myEvents
             }))
         } else if (loggedUser?.role === 0) {
             dispatch(getAllEvents({
@@ -64,7 +65,7 @@ const Events = () => {
         }
         dispatch(getEventTypes({}))
         dispatch(getEventLocations({}))
-    }, [])
+    }, [myEvents])
     const handleChange = (page, pageSize) => {
         if (loggedUser?.role === 2) {
             dispatch(getAllEventsForCLients({
@@ -73,7 +74,8 @@ const Events = () => {
                 search: filters.search,
                 locationId: filters.selectedLocation,
                 eventTypeId: filters.selectedEvent,
-                status: filters.status
+                status: filters.status,
+                myEvents: myEvents
             }))
         } else if (loggedUser?.role === 0) {
             dispatch(getAllEvents({
@@ -97,7 +99,8 @@ const Events = () => {
                 search: value,
                 locationId: filters.selectedLocation,
                 eventTypeId: filters.selectedEvent,
-                status: filters.status
+                status: filters.status,
+                myEvents: myEvents
             }))
         } else if (loggedUser?.role === 0) {
             dispatch(getAllEvents({
@@ -119,7 +122,8 @@ const Events = () => {
                 search: filters.search,
                 locationId: filters.selectedLocation,
                 eventTypeId: selectedKeys[0],
-                status: filters.status
+                status: filters.status,
+                myEvents: myEvents
             }))
         } else if (loggedUser?.role === 0) {
             dispatch(getAllEvents({
@@ -141,7 +145,8 @@ const Events = () => {
                 search: filters.search,
                 locationId: filters.selectedLocation,
                 eventTypeId: filters.selectedEvent,
-                status: selectedKeys[0]
+                status: selectedKeys[0],
+                myEvents: myEvents
             }))
         } else if (loggedUser?.role === 0) {
             dispatch(getAllEvents({
@@ -164,7 +169,8 @@ const Events = () => {
                 search: filters.search,
                 locationId: selectedKeys[0],
                 eventTypeId: filters.selectedEvent,
-                status: filters.status
+                status: filters.status,
+                myEvents: myEvents
             }))
         } else if (loggedUser?.role === 0) {
             dispatch(getAllEvents({
@@ -194,7 +200,13 @@ const Events = () => {
         if (loggedUser?.role === 0 && form?.mode === 'delete') {
             dispatch(deleteEvent({id: eventId, pagination: pagination, filters: filters}));
         } else if (loggedUser?.role === 2 && form?.mode === 'sendInvitation') {
-            dispatch(createInvitation({id: eventId, userId:loggedUser?.id, pagination: pagination,loggedUser:loggedUser,filters:filters}));
+            dispatch(createInvitation({
+                id: eventId,
+                userId: loggedUser?.id,
+                pagination: pagination,
+                loggedUser: loggedUser,
+                filters: filters
+            }));
 
         }
     }
@@ -202,8 +214,6 @@ const Events = () => {
         setEventId(id)
         dispatch(setEventModalState({modalOpen: true, mode: 'delete'}));
     };
-    console.log("events ", events)
-
 
     return (
         <Flex className={"flex-grow-1 event-container"}>
@@ -246,22 +256,27 @@ const Events = () => {
                                             loggedUser?.role === 0
                                                 ? [
                                                     <Tooltip key="watch" placement="top" title="Watch">
-                                                        <FaEye className="cursor-button" onClick={() => handleWatchEvent(event.id)} />
+                                                        <FaEye className="cursor-button"
+                                                               onClick={() => handleWatchEvent(event.id)}/>
                                                     </Tooltip>,
                                                     <Tooltip key="invitations" placement="top" title="Invitations">
-                                                        <MailOutlined className="cursor-button" onClick={() => handleInvitations(event.id)} />
+                                                        <MailOutlined className="cursor-button"
+                                                                      onClick={() => handleInvitations(event.id)}/>
                                                     </Tooltip>,
                                                     <Tooltip key="delete" placement="top" title="Delete">
-                                                        <FaTrash color="red" className="cursor-button" onClick={() => handleDeleteEvent(event.id)} />
+                                                        <FaTrash color="red" className="cursor-button"
+                                                                 onClick={() => handleDeleteEvent(event.id)}/>
                                                     </Tooltip>
                                                 ]
                                                 : [
                                                     <Tooltip key="watch" placement="top" title="Watch">
-                                                        <FaEye className="cursor-button" onClick={() => handleWatchEvent(event.id)} />
+                                                        <FaEye className="cursor-button"
+                                                               onClick={() => handleWatchEvent(event.id)}/>
                                                     </Tooltip>,
                                                     event?.invitationStatus === false && (
                                                         <Tooltip key="invitations" placement="top" title="Send invitation">
-                                                            <MailOutlined className="cursor-button" onClick={() => handleSendInvitations(event.id)} />
+                                                            <MailOutlined className="cursor-button"
+                                                                          onClick={() => handleSendInvitations(event.id)}/>
                                                         </Tooltip>
                                                     )
                                                 ].filter(Boolean)

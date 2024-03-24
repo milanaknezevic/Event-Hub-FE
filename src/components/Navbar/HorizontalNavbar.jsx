@@ -24,6 +24,7 @@ const HorizontalNavbar = () => {
         {linkPath: '/users', routeTitle: 'Users', public: false, allowedRoles: [1]},
         {linkPath: '/tickets', routeTitle: 'Tickets', public: false, allowedRoles: [1]},
         {linkPath: '/events', routeTitle: 'Events', public: false, allowedRoles: [0,2]},
+        {linkPath: '/my_events', routeTitle: 'My Events', public: false, allowedRoles: [2]},
     ];
 
     const dropdown = [

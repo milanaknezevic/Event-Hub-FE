@@ -69,7 +69,15 @@ const App = () => {
                         path: "/events",
                         element: (
                             <ProtectedRoute path={"/events"}>
-                                <Events/>
+                                <Events myEvents={false} />
+                            </ProtectedRoute>
+                        ),
+                    },
+                    {
+                        path: "/my_events",
+                        element: (
+                            <ProtectedRoute path={"/my_events"}>
+                                <Events myEvents={true} />
                             </ProtectedRoute>
                         ),
                     },

@@ -51,12 +51,15 @@ export const replyToInvitation = createAsyncThunk(
     }
 );
 export const getAllEventsForCLients = createAsyncThunk(
-    'client_events', async ({page = 1, size = 10, search = "", locationId = "", eventTypeId = "", status = ""}, {
-        dispatch,
-        rejectWithValue
-    }) => {
+    'client_events', async ({page = 1, size = 10, search = "", locationId = "", eventTypeId = "", status = "", myEvents}, {dispatch, rejectWithValue}) => {
         try {
-            const response = await api.get(`/api/events/?page=${page}&size=${size}&search=${search}&locationId=${locationId}&eventTypeId=${eventTypeId}&status=${status}`);
+            let response;
+            if (myEvents) {
+                response = await api.get(`/api/events/user/?page=${page}&size=${size}&search=${search}&locationId=${locationId}&eventTypeId=${eventTypeId}&status=${status}`);
+
+            } else if (!myEvents) {
+                response = await api.get(`/api/events/?page=${page}&size=${size}&search=${search}&locationId=${locationId}&eventTypeId=${eventTypeId}&status=${status}`);
+            }
             return response.data;
         } catch (error) {
             dispatch(displayNotification({
