@@ -1,7 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import base from '../api/baseService.jsx';
 import {displayNotification} from "./notification.jsx";
-import {addUser} from "./user.jsx";
 
 
 const api = base.service(true);
@@ -30,11 +29,44 @@ export const initialState = {
 
 
 export const getAllTickets = createAsyncThunk(
-    'tickets', async ({page = 1, size = 10, status, priority}, {rejectWithValue}) => {
+    'tickets', async ({page = 1, size = 10, status, priority, role}, {rejectWithValue}) => {
         try {
-            const response = await api.get(`/api/tickets?page=${page}&size=${size}&status=${status}&priority=${priority}`);
+            let response;
+            if (role === 1) {
+                response = await api.get(`/api/tickets?page=${page}&size=${size}&status=${status}&priority=${priority}`);
+            } else {
+                response = await api.get(`/api/tickets/my/tickets?page=${page}&size=${size}&status=${status}&priority=${priority}`);
+            }
             return response.data;
         } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const createTicket = createAsyncThunk(
+    'ticket/create', async ({data, pagination, filters, role}, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.post('/api/tickets', data);
+            dispatch(getAllTickets({
+                page: pagination.current,
+                size: pagination.pageSize,
+                status: filters.status,
+                priority: filters.priority,
+                role: role
+            }))
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "Ticket created successfully!",
+                title: "Ticket"
+            }))
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Error while creating the ticket.",
+                title: "Ticket"
+            }))
             return rejectWithValue(error.response.data);
         }
     }
@@ -51,9 +83,10 @@ export const getTicketStatus = createAsyncThunk(
 );
 export const getTicketById = createAsyncThunk(
     "tickets/getTicket",
-    async (id, {rejectWithValue}) => {
+    async (id, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.get(`/api/tickets/${id}/`);
+            dispatch(setTicketModalState({modalOpen: true, mode: "edit", ticketObj: {}}));
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -72,7 +105,7 @@ export const getTicketPriority = createAsyncThunk(
 );
 
 export const assignToTicket = createAsyncThunk(
-    'ticket/assign', async ({id, pagination,filters}, {dispatch,rejectWithValue}) => {
+    'ticket/assign', async ({id, pagination, filters}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.put(`/api/tickets/support/${id}/`);
             dispatch(getAllTickets({
@@ -88,9 +121,9 @@ export const assignToTicket = createAsyncThunk(
     }
 );
 export const replyToTicket = createAsyncThunk(
-    'ticket/reply', async ({id,data, pagination,filters}, {dispatch,rejectWithValue}) => {
+    'ticket/reply', async ({id, data, pagination, filters}, {dispatch, rejectWithValue}) => {
         try {
-            const response = await api.put(`/api/tickets/reply/${id}/`,data);
+            const response = await api.put(`/api/tickets/reply/${id}/`, data);
             dispatch(getAllTickets({
                 page: pagination.current,
                 size: pagination.pageSize,
@@ -115,11 +148,12 @@ export const ticketSlice = createSlice({
     initialState,
     reducers: {
         setTicketModalState: (state, action) => {
-            const {modalOpen} = action.payload;
+            const {modalOpen, mode, ticketObj} = action.payload;
             state.form.modalOpen = modalOpen;
             state.form.formSubmitting = false;
             state.form.backendErrors = {};
-            state.form.ticketObj = {};
+            state.form.ticketObj = ticketObj;
+            state.form.mode = mode
         }
     },
     extraReducers: builder => {
@@ -158,8 +192,8 @@ export const ticketSlice = createSlice({
             })
             .addCase(getTicketById.fulfilled, (state, action) => {
                 state.form.ticketObj = action.payload
-                state.form.modalOpen = true
-                // state.form.mode = "edit"
+                // state.form.modalOpen = true
+                // // state.form.mode = "edit"
             })
             .addCase(assignToTicket.fulfilled, (state, action) => {
                 state.form.ticketObj.status = action.payload.status
@@ -172,6 +206,20 @@ export const ticketSlice = createSlice({
                 state.form.backendErrors = action.payload
             })
             .addCase(replyToTicket.fulfilled, (state) => {
+                state.form.formSubmitting = false
+                state.form.modalOpen = false
+                state.form.ticketObj = {}
+                state.form.mode = ""
+                state.form.backendErrors = {}
+            })
+            .addCase(createTicket.pending, (state) => {
+                state.form.formSubmitting = true
+            })
+            .addCase(createTicket.rejected, (state, action) => {
+                state.form.formSubmitting = false
+                state.form.backendErrors = action.payload
+            })
+            .addCase(createTicket.fulfilled, (state) => {
                 state.form.formSubmitting = false
                 state.form.modalOpen = false
                 state.form.ticketObj = {}

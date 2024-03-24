@@ -112,3 +112,6 @@ background: none;
     height: 25vh;
     width: 25vh;
 }
+body .personal_info{
+    pointer-events: none;
+}

@@ -63,6 +63,9 @@ export const updateUserSchema = yup.object().shape({
 export const replyToTicketSchema = yup.object().shape({
     answer: yup.string().required('Required'),
 });
+export const createTicketSchema = yup.object().shape({
+    question: yup.string().required('Question is required!'),
+});
 export const addGeneralEvent = yup.object().shape({
     name: yup.string().required('Name is required'),
     description: yup.string().required('Description is required'),

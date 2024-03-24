@@ -15,8 +15,6 @@ const ChangePassword = () => {
 
 
     const onSubmit = async (values) => {
-        console.log("values ", values)
-        console.log("formik u usbmitu ", formikRef?.current)
         await dispatch(changePassword({data: values}));
 
     };

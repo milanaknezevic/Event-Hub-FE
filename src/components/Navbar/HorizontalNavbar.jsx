@@ -6,8 +6,9 @@ import {auth} from "../../redux/selectors.jsx";
 import {logout} from "../../redux/auth.jsx";
 import {FaUser} from 'react-icons/fa';
 import {Tooltip} from "antd";
-//import {LogoutOutlined, PlusOutlined, QuestionCircleOutlined, UserOutlined} from '@ant-design/icons';
 import {LogoutOutlined} from '@ant-design/icons';
+import {setTicketModalState} from "../../redux/tickets.jsx";
+import TicketModal from "../Tickets/TicketModal.jsx";
 
 export const history = {
     navigate: null
@@ -17,14 +18,16 @@ const HorizontalNavbar = () => {
     const {isAuthenticated, loggedUser} = useSelector(auth);
     const {pathname} = useLocation();
     const dispatch = useDispatch()
+
     history.navigate = useNavigate()
 
     const routes = [
         {linkPath: '/', routeTitle: 'Home', public: true, allowedRoles: []},
         {linkPath: '/users', routeTitle: 'Users', public: false, allowedRoles: [1]},
-        {linkPath: '/tickets', routeTitle: 'Tickets', public: false, allowedRoles: [1]},
-        {linkPath: '/events', routeTitle: 'Events', public: false, allowedRoles: [0,2]},
+        {linkPath: '/events', routeTitle: 'Events', public: false, allowedRoles: [0, 2]},
         {linkPath: '/my_events', routeTitle: 'My Events', public: false, allowedRoles: [2]},
+        {linkPath: '/invitations', routeTitle: 'Invitations', public: false, allowedRoles: [2]},
+        {linkPath: '/tickets', routeTitle: 'Tickets', public: false, allowedRoles: [0,1,2]},
     ];
 
     const dropdown = [
@@ -32,6 +35,9 @@ const HorizontalNavbar = () => {
         {linkPath: '/change_password', routeTitle: 'Change password'},
     ];
     const isDropdownItemActive = dropdown.some(item => item.linkPath === pathname);
+    const handleTicket = () => {
+        dispatch(setTicketModalState({modalOpen: true, mode: 'open',ticketObj:{}}));
+    }
     return (
         <div className={"d-flex flex-column min-vh-100"}>
             <div className="container-fluid nav-container">
@@ -47,7 +53,7 @@ const HorizontalNavbar = () => {
                         <ul className="navbar-nav d-flex align-items-end justify-content-md-center align-items-md-center">
 
                             {routes.map((route) => {
-                                return ((
+                                    return ((
                                         (route.public || (isAuthenticated && route.allowedRoles?.includes(loggedUser?.role))) && (
                                             <Link key={route.linkPath}
                                                   className={`nav-link  ${route.linkPath === pathname ? 'active' : ""} `}
@@ -70,6 +76,9 @@ const HorizontalNavbar = () => {
                                     </a>
 
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <div
+                                            className="dropdown-item text-black-50 personal_info">{loggedUser?.name} {loggedUser?.lastname}</div>
+                                        <div className="dropdown-divider"></div>
                                         {dropdown.map((route) => {
                                                 return ((
                                                     (
@@ -81,6 +90,10 @@ const HorizontalNavbar = () => {
                                                 ))
                                             }
                                         )}
+                                        {loggedUser?.role !== 1 &&
+                                            <button className="dropdown-item" onClick={handleTicket}>
+                                                Open Ticket
+                                            </button>}
                                         <div className="dropdown-divider"></div>
                                         <button className="dropdown-item" onClick={() => dispatch(logout())}>
                                             <LogoutOutlined/> Logout
@@ -92,6 +105,7 @@ const HorizontalNavbar = () => {
                         </ul>
                     </div>
                 </nav>
+                <TicketModal/>
             </div>
             <Outlet/>
             <Footer/>

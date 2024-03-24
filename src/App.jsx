@@ -13,6 +13,7 @@ import Events from "./components/Events/Events.jsx";
 import Invitations from "./components/Invitations/Invitations.jsx";
 import Event from "./components/Events/Event.jsx";
 import ChangePassword from "./components/ManageUser/ChangePassword.jsx";
+import ClientInvitations from "./components/Invitations/ClientInvitations.jsx";
 
 
 const App = () => {
@@ -91,6 +92,12 @@ const App = () => {
                         path: "/events/event/:id/invitations",
                         element: <ProtectedRoute path={"/events/event/:id/invitations"}>
                             <Invitations/>
+                        </ProtectedRoute>,
+                    },
+                    {
+                        path: "/invitations",
+                        element: <ProtectedRoute path={"/invitations"}>
+                            <ClientInvitations/>
                         </ProtectedRoute>,
                     },
 

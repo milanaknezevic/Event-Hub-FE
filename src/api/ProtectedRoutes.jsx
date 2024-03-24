@@ -28,13 +28,13 @@ const ProtectedRoute = ({children, path}) => {
     const getProtectedRoutes = () => {
         switch (loggedUser?.role) {
             case 0:
-                return ["/events", "/events/event/:id/invitations", "/events/event/:id", "/", "/my_profile", "/change_password", "/test"];
+                return ["/events","/tickets", "/events/event/:id/invitations", "/events/event/:id", "/", "/my_profile", "/change_password", "/test"];
             case 1:
                 return ["/users", "/tickets", "/", "/my_profile", "/change_password", "/test"];
             case 2:
-                return ["/", "/my_profile","/my_events", "/events", "/change_password", "/events/event/:id", "/test"];
+                return ["/","/tickets", "/my_profile","/my_events", "/events", "/change_password", "/events/event/:id", "/test","/invitations"];
             default:
-                return ["/my_events","/test", "/users", "/tickets", "/events", "/events/event/:id/invitations", "/events/event/:id", '/my_profile', "/change_password"];
+                return ["/my_events","/test", "/users", "/tickets", "/events", "/events/event/:id/invitations", "/events/event/:id", '/my_profile', "/change_password","/invitations"];
         }
     };
     if (loading && !loggedUser) {

@@ -1,18 +1,18 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {displayNotification} from "./notification.jsx";
 import base from '../api/baseService.jsx';
-import {
-    getAllEvents,
-    getAllEventsForCLients,
-    getAllGuestsForEvent,
-    getAllNotInvitedClients,
-    setEventModalState
-} from "./events.jsx";
+import {getAllEventsForCLients, getAllGuestsForEvent, getAllNotInvitedClients, setEventModalState} from "./events.jsx";
 
 const api = base.service(true);
 export const initialState = {
-    invitation: {},
+    invitations: [],
+    status:0,
     backendErrors: {},
+    pagination: {
+        total: 0,
+        current: 1,
+        pageSize: 10,
+    },
 }
 
 
@@ -45,7 +45,7 @@ export const organizerUnsendInvitation = createAsyncThunk(
 )
 export const createInvitation = createAsyncThunk(
     "invitation/create",
-    async ({id, userId, pagination, loggedUser,filters}, {dispatch, rejectWithValue}) => {
+    async ({id, userId, pagination, loggedUser, filters}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.post(`/api/invitations/${id}/${userId}`);
             //dispatch(getAllNotInvitedClients(id))
@@ -79,17 +79,63 @@ export const createInvitation = createAsyncThunk(
     }
 )
 
+export const getAllInvitationsForCLient = createAsyncThunk(
+    "events/guests",
+    async ({page = 1, size = 10, status}, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.get(`/api/invitations/?status=${status}&page=${page}&size=${size}`);
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Failed to fetch invitations!",
+                title: "Invitations"
+            }))
+            return rejectWithValue(error.response.data);
+        }
+    }
+)
 
+export const clientUnsendInvitation = createAsyncThunk(
+    'invitation/client_unsend', async ({eventId, pagination,status}, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.delete(`/api/invitations/${eventId}`);
+            dispatch(getAllInvitationsForCLient({page: pagination.current, size: pagination.pageSize, status: status}))
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "Invitation edited successfully!",
+                title: "Invitation"
+            }))
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
 export const invitationSlice = createSlice({
     name: "invitation",
     initialState,
     reducers: {},
     extraReducers: builder => {
         builder
-        // .addCase(createInvitation.fulfilled, (state) => {
-        //     state.invitation = false
-        //     state.backendErrors = {}
-        // })
+            .addCase(getAllInvitationsForCLient.pending, state => {
+                state.loading = true;
+            })
+            .addCase(getAllInvitationsForCLient.rejected, (state) => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addCase(getAllInvitationsForCLient.fulfilled, (state, action) => {
+                let current = action.meta.arg.page
+                let pageSize = action.meta.arg.size
+                state.pagination = {
+                    total: action.payload.total,
+                    current,
+                    pageSize
+                }
+                state.invitations = action.payload.invitations
+                state.status = action.meta.arg.status
+            })
     }
 })
 

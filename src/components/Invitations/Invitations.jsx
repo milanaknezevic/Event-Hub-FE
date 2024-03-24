@@ -50,9 +50,8 @@ const Invitations = () => {
         dispatch(replyToInvitation({eventId: eventId, userId: userId, accept: true, pagination: pagination}));
     };
 
-    const handleDecline = (eventId, userId) => {
-        console.log("selected radio ", selectedRadio, " event id ", eventId, "user id ", userId)
-        if (selectedRadio === 1) {
+    const handleUnsend = (eventId, userId) => {
+        if (selectedRadio === 1 || selectedRadio === 2) {
             dispatch(organizerUnsendInvitation({eventId: eventId, userId: userId, pagination: pagination}));
         } else {
             dispatch(replyToInvitation({eventId: eventId, userId: userId, accept: false, pagination: pagination}));
@@ -69,8 +68,6 @@ const Invitations = () => {
     }, []);
 
     const handleChange = (page, pageSize) => {
-        //TODO
-        console.log("paginacija ", page, " pageSize ", pageSize)
         if (selectedRadio === 0) {
             dispatch(getAllGuestsForEvent({page: page, size: pageSize, id: id, status: true}))
         } else if (selectedRadio === 1) {
@@ -138,12 +135,19 @@ const Invitations = () => {
                                         renderItem={(item) => (
                                             <List.Item
                                                 actions={
-                                                    (!item?.statusCreator && item?.statusGuest && new Date(item?.event?.startTime) > new Date() && selectedRadio !== 2) ? (
+                                                    (!item?.statusCreator && item?.statusGuest && selectedRadio === 2) ? (
                                                         [
                                                             <Tooltip key={'accept'} placement={'top'} title={'Accept'}>
                                                                 <FaCheck
                                                                     className={'accept-icon'}
                                                                     onClick={() => handleAccept(item.event_id, item.user_id)}
+                                                                />
+                                                            </Tooltip>,
+                                                            <Tooltip key={'decline'} placement={'top'}
+                                                                     title={'Decline'}>
+                                                                <FaTimes
+                                                                    className={'decline-icon'}
+                                                                    onClick={() => handleUnsend(item.event_id, item.user_id)}
                                                                 />
                                                             </Tooltip>
                                                         ]
@@ -151,10 +155,10 @@ const Invitations = () => {
                                                         (!item?.statusCreator && item?.statusGuest && new Date(item?.event?.startTime) > new Date()) || selectedRadio === 1 ? (
                                                             [
                                                                 <Tooltip key={'decline'} placement={'top'}
-                                                                         title={'Decline'}>
+                                                                         title={'Unsend invitations'}>
                                                                     <FaTimes
                                                                         className={'decline-icon'}
-                                                                        onClick={() => handleDecline(item.event_id, item.user_id)}
+                                                                        onClick={() => handleUnsend(item.event_id, item.user_id)}
                                                                     />
                                                                 </Tooltip>
                                                             ]

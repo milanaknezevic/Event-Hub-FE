@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import base from '../api/baseService.jsx';
 import {displayNotification} from "./notification.jsx";
 import axios from "axios";
+import {getAllInvitationsForCLient} from "./invitation.jsx";
 
 
 const api = base.service(true);
@@ -34,6 +35,24 @@ export const initialState = {
     }
 
 }
+export const clientReplyToInvitation = createAsyncThunk(
+    'invitation/client_reply', async ({eventId, accept, pagination,status}, {dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.put(`/api/invitations/guest/${eventId}/?accept=${accept}`);
+
+            dispatch(getAllInvitationsForCLient({page: pagination.current, size: pagination.pageSize, status: status}))
+            dispatch(displayNotification({
+                notificationType: "success",
+                message: "Invitation edited successfully!",
+                title: "Invitation"
+            }))
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
 export const replyToInvitation = createAsyncThunk(
     'invitation/organizator_reply', async ({eventId, userId, accept, pagination}, {dispatch, rejectWithValue}) => {
         try {
