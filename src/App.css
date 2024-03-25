@@ -47,21 +47,22 @@
     background-color: var(--lighter-color);
 }
 
-.custom-upload button{
- border: 0;
-background: none;
-}
-.ant-picker,
-.ant-select{
-    width: 100%;
+.custom-upload button {
+    border: 0;
+    background: none;
 }
 
+.ant-picker,
+.ant-select {
+    width: 100%;
+}
 
 
 .form-container .ant-modal-header .ant-modal-title {
     color: var(--blue-color);
     font-size: 1.5em;
 }
+
 .form-container .event-btn {
     background-color: var(--blue-color);
     color: var(--white-color);
@@ -86,9 +87,11 @@ background: none;
 .form-container .search-container .ant-input-affix-wrapper {
     background-color: var(--gray-color);
 }
-.form-container .accept-icon:hover{
+
+.form-container .accept-icon:hover {
     color: green;
 }
+
 .form-container .accepted-icon {
     color: red;
 }
@@ -103,15 +106,23 @@ background: none;
     color: var(--white-color);
 }
 
-.third-step .ant-list-items{
-   max-height: 40vh;
+.third-step .ant-list-items {
+    max-height: 40vh;
     overflow: auto;
 }
 
-.my-profile .avatarImg{
+.my-profile .avatarImg {
     height: 25vh;
     width: 25vh;
 }
-body .personal_info{
+
+body .personal_info {
     pointer-events: none;
+}
+body .unread-icon,
+body .notification-icon {
+    color: red;
+}
+body .blue-read-icon{
+    color: green;
 }

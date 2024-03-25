@@ -7,7 +7,8 @@ import {
     getTicketById,
     getTicketPriority,
     getTicketStatus,
-    setTicketModalState
+    setTicketModalState,
+    updateClosedTicketNotification
 } from "../../redux/tickets.jsx";
 import Ticket from "./Ticket.jsx";
 import {auth, ticket} from '../../redux/selectors.jsx'
@@ -15,27 +16,44 @@ import {auth, ticket} from '../../redux/selectors.jsx'
 
 const Tickets = () => {
     const dispatch = useDispatch()
-    const {tickets, loading, pagination, filters, ticketStatus, ticketPriority} = useSelector(ticket);
+    const {
+        tickets,
+        loading,
+        pagination,
+        filters,
+        ticketStatus,
+        ticketPriority,
+        ticketsNotifications
+    } = useSelector(ticket);
     const {loggedUser} = useSelector(auth);
 
     useEffect(() => {
         dispatch(getTicketStatus({}))
         dispatch(getTicketPriority({}))
-        dispatch(getAllTickets({
-            page: pagination.current,
-            size: pagination.pageSize,
-            status: filters.status,
-            priority: filters.priority,
-            role: loggedUser?.role
-        }))
-    }, [])
+    }, []);
+    useEffect(() => {
+        if (loggedUser) {
+            dispatch(getAllTickets({
+                page: pagination.current,
+                size: pagination.pageSize,
+                status: filters.status,
+                priority: filters.priority,
+                role: loggedUser?.role
+            }))
+        }
+    }, [ticketsNotifications])
 
     const handleWatchTicket = (row) => {
         if (loggedUser?.role === 1) {
             dispatch(getTicketById(row.id))
-        }
-        else{
-            dispatch(setTicketModalState({modalOpen: true, mode: "edit",ticketObj:row}));
+        } else if (loggedUser?.role === 0 || loggedUser?.role === 2) {
+            dispatch(setTicketModalState({modalOpen: true, mode: "edit", ticketObj: row}));
+            dispatch(updateClosedTicketNotification({
+                id: row.id,
+                pagination: pagination,
+                filters: filters,
+                role: loggedUser?.role
+            }))
         }
     }
 
@@ -91,13 +109,16 @@ const Tickets = () => {
         {
             title: 'Action',
             key: 'action',
-            render: (cell, row) => (
+            render: (cell, row) => {
+                console.log("not ", ticketsNotifications)
+                return (
+                    <Tooltip placement={"top"} title={"Watch"}>
+                        <FaEye onClick={handleWatchTicket.bind(this, row)}
+                               className={`cursor-button ${(loggedUser?.role === 0 || loggedUser?.role === 2) && ticketsNotifications?.some(notification => notification.id === row.id) ? 'blue-read-icon' : ''} ${loggedUser?.role === 1 ? (row.read === 0 ? 'unread-icon' : '') : ''}`}/>
+                    </Tooltip>
 
-                <Tooltip placement={"top"} title={"Watch"}>
-                    <FaEye onClick={handleWatchTicket.bind(this, row)} className={"cursor-button"}/>
-                </Tooltip>
-
-            ),
+                )
+            }
         },
     ];
     const handleChange = (newPagination, newFilters) => {

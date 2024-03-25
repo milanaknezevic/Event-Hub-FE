@@ -10,7 +10,6 @@ import {replyToTicketSchema} from "../../schemas/index.jsx";
 import CustomTextArea from "../FormComponents/CustomTextArea.jsx";
 import {useEffect, useRef} from "react";
 import CustomButton from "../FormComponents/CustomButton.jsx";
-import {setEventModalState} from "../../redux/events.jsx";
 
 
 const Ticket = () => {
@@ -20,7 +19,12 @@ const Ticket = () => {
     const dispatch = useDispatch()
     const {loggedUser} = useSelector(auth);
     const handleIconClick = () => {
-        dispatch(assignToTicket({id: form.ticketObj.id, pagination: pagination, filters: filters}));
+        dispatch(assignToTicket({
+            id: form.ticketObj.id,
+            pagination: pagination,
+            filters: filters,
+            role: loggedUser?.role
+        }));
     }
 
     const onSubmit = (value) => {
@@ -66,12 +70,13 @@ const Ticket = () => {
                    onCancel={handleCancel}
                    okButtonProps={{disabled: form.ticketObj.status !== "IN_PROGRESS"}}
                    footer={loggedUser?.role !== 1 ? (
-                    <>
-                        <div className="modal-footer event-container">
-                            <CustomButton className={"add-btn btn col-12 col-md-5"} onCLick={handleClose}
-                                          text={"Close"}
-                                          htmlType="submit" type="submit"/>
-                        </div></>
+                       <>
+                           <div className="modal-footer event-container">
+                               <CustomButton className={"add-btn btn col-12 col-md-5"} onCLick={handleClose}
+                                             text={"Close"}
+                                             htmlType="submit" type="submit"/>
+                           </div>
+                       </>
                    ) : undefined}
             >
                 {
@@ -107,8 +112,8 @@ const Ticket = () => {
 
                             </div>
                             {loggedUser?.role === 1 && <div className={"col-12 d-flex justify-content-end username"}>
-                                    User: {form.ticketObj?.createdTicket?.username}
-                                </div>
+                                User: {form.ticketObj?.createdTicket?.username}
+                            </div>
                             }
                             <div className={"col-6"}>
                                 <CustomInput label="Priority"

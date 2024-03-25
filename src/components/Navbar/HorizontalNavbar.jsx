@@ -1,13 +1,14 @@
-import logoImage from '../../assets/logo.png';
+import {useEffect} from "react";
 import {Link, Outlet, useLocation, useNavigate} from "react-router-dom";
-import Footer from "../Footer/Footer.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {auth} from "../../redux/selectors.jsx";
+import {auth, ticket} from "../../redux/selectors.jsx";
 import {logout} from "../../redux/auth.jsx";
-import {FaUser} from 'react-icons/fa';
+import {getOrganizerTicketNotifications, getTicketNotifications, setTicketModalState} from "../../redux/tickets.jsx";
 import {Tooltip} from "antd";
+import {FaBell, FaUser} from 'react-icons/fa';
 import {LogoutOutlined} from '@ant-design/icons';
-import {setTicketModalState} from "../../redux/tickets.jsx";
+import logoImage from '../../assets/logo.png';
+import Footer from "../Footer/Footer.jsx";
 import TicketModal from "../Tickets/TicketModal.jsx";
 
 export const history = {
@@ -16,6 +17,7 @@ export const history = {
 
 const HorizontalNavbar = () => {
     const {isAuthenticated, loggedUser} = useSelector(auth);
+    const {ticketsNotifications} = useSelector(ticket);
     const {pathname} = useLocation();
     const dispatch = useDispatch()
 
@@ -27,8 +29,29 @@ const HorizontalNavbar = () => {
         {linkPath: '/events', routeTitle: 'Events', public: false, allowedRoles: [0, 2]},
         {linkPath: '/my_events', routeTitle: 'My Events', public: false, allowedRoles: [2]},
         {linkPath: '/invitations', routeTitle: 'Invitations', public: false, allowedRoles: [2]},
-        {linkPath: '/tickets', routeTitle: 'Tickets', public: false, allowedRoles: [0,1,2]},
+        {linkPath: '/tickets', routeTitle: 'Tickets', public: false, allowedRoles: [0, 1, 2]},
     ];
+
+
+    useEffect(() => {
+        if (loggedUser?.role === 1) {
+            dispatch(getTicketNotifications({}));
+        } else if (loggedUser?.role === 0 || loggedUser?.role === 2) {
+            dispatch(getOrganizerTicketNotifications({}));
+        }
+
+        const id = setInterval(() => {
+            if (loggedUser?.role === 1) {
+                dispatch(getTicketNotifications({}));
+            } else if (loggedUser?.role === 0 || loggedUser?.role === 2) {
+                dispatch(getOrganizerTicketNotifications({}));
+            }
+        }, 300000);
+
+
+        return () => clearInterval(id);
+    }, [dispatch, loggedUser]);
+
 
     const dropdown = [
         {linkPath: '/my_profile', routeTitle: 'My Profile'},
@@ -36,7 +59,7 @@ const HorizontalNavbar = () => {
     ];
     const isDropdownItemActive = dropdown.some(item => item.linkPath === pathname);
     const handleTicket = () => {
-        dispatch(setTicketModalState({modalOpen: true, mode: 'open',ticketObj:{}}));
+        dispatch(setTicketModalState({modalOpen: true, mode: 'open', ticketObj: {}}));
     }
     return (
         <div className={"d-flex flex-column min-vh-100"}>
@@ -59,6 +82,9 @@ const HorizontalNavbar = () => {
                                                   className={`nav-link  ${route.linkPath === pathname ? 'active' : ""} `}
                                                   to={route.linkPath}>
                                                 {route.routeTitle}
+                                                {route.routeTitle === 'Tickets' && ticketsNotifications.length > 0 && (
+                                                    <FaBell className="notification-icon mx-1"/>
+                                                )}
                                             </Link>
                                         )
                                     ))

@@ -33,13 +33,14 @@ const AddEventModal = ({eventId}) => {
         location_id: ''
     }]);
     const [newAdded, setNewAdded] = useState([]);
+    const [isEmpty, setIsEmpty] = useState(true);
     const [removedInvitations, setRemovedInvitations] = useState([]);
     const handleNextPageFirst = (values) => {
         if (values) {
             // formikRef.current = formikRefData;
             setValues(values)
         }
-
+        setIsEmpty(false)
         setCurrentPage(currentPage + 1);
     };
 
@@ -188,10 +189,11 @@ const AddEventModal = ({eventId}) => {
                 <Steps onChange={setCurrentPage} current={currentPage} className={"pb-3"}>
                     <Steps.Step title='General'></Steps.Step>
                     <Steps.Step
-                        disabled={!formikRef?.current?.dirty || !formikRef?.current?.isValid}
+                        disabled={isEmpty}
                         title='Images'></Steps.Step>
                     <Steps.Step
-                        disabled={!formikRef?.current?.dirty || !formikRef?.current?.isValid}
+                        // disabled={!formikRef?.current?.dirty || !formikRef?.current?.isValid}
+                        disabled={isEmpty}
                         title='Invitations'></Steps.Step>
                 </Steps>
                 {forms[currentPage]}

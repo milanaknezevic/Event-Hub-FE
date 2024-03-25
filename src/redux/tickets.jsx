@@ -6,6 +6,7 @@ import {displayNotification} from "./notification.jsx";
 const api = base.service(true);
 export const initialState = {
     ticketStatus: [],
+    ticketsNotifications: [],
     ticketPriority: [],
     tickets: [],
     pagination: {
@@ -27,14 +28,33 @@ export const initialState = {
 
 }
 
+export const updateClosedTicketNotification = createAsyncThunk(
+    'tickets/update/notification', async ({id, pagination, filters, role}, {dispatch,rejectWithValue}) => {
+        try {
 
+            const response = await api.put(`/api/tickets/update/notifications/${id}`);
+            dispatch(getAllTickets({
+                page: pagination.current,
+                size: pagination.pageSize,
+                status: filters.status,
+                priority: filters.priority,
+                role: role
+            }))
+            dispatch(getOrganizerTicketNotifications({}));
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
 export const getAllTickets = createAsyncThunk(
     'tickets', async ({page = 1, size = 10, status, priority, role}, {rejectWithValue}) => {
         try {
             let response;
+            console.log("role ", role)
             if (role === 1) {
                 response = await api.get(`/api/tickets?page=${page}&size=${size}&status=${status}&priority=${priority}`);
-            } else {
+            } else if (role === 0 || role === 2) {
                 response = await api.get(`/api/tickets/my/tickets?page=${page}&size=${size}&status=${status}&priority=${priority}`);
             }
             return response.data;
@@ -43,7 +63,36 @@ export const getAllTickets = createAsyncThunk(
         }
     }
 );
-
+export const getTicketNotifications = createAsyncThunk(
+    'support/notifications', async ({dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.get('/api/tickets/support/notifications');
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Error while fetching notifications for tickets.",
+                title: "Ticket"
+            }))
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+export const getOrganizerTicketNotifications = createAsyncThunk(
+    'organizer/notifications', async ({dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.get('/api/tickets/organizer/notifications');
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Error while fetching notifications for tickets.",
+                title: "Ticket"
+            }))
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
 export const createTicket = createAsyncThunk(
     'ticket/create', async ({data, pagination, filters, role}, {dispatch, rejectWithValue}) => {
         try {
@@ -87,6 +136,7 @@ export const getTicketById = createAsyncThunk(
         try {
             const response = await api.get(`/api/tickets/${id}/`);
             dispatch(setTicketModalState({modalOpen: true, mode: "edit", ticketObj: {}}));
+            dispatch(getTicketNotifications({}))
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -105,14 +155,15 @@ export const getTicketPriority = createAsyncThunk(
 );
 
 export const assignToTicket = createAsyncThunk(
-    'ticket/assign', async ({id, pagination, filters}, {dispatch, rejectWithValue}) => {
+    'ticket/assign', async ({id, pagination, filters, role}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.put(`/api/tickets/support/${id}/`);
             dispatch(getAllTickets({
                 page: pagination.current,
                 size: pagination.pageSize,
                 status: filters.status,
-                priority: filters.priority
+                priority: filters.priority,
+                role: role
             }))
             return response.data;
         } catch (error) {
@@ -121,14 +172,15 @@ export const assignToTicket = createAsyncThunk(
     }
 );
 export const replyToTicket = createAsyncThunk(
-    'ticket/reply', async ({id, data, pagination, filters}, {dispatch, rejectWithValue}) => {
+    'ticket/reply', async ({id, data, pagination, filters, role}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.put(`/api/tickets/reply/${id}/`, data);
             dispatch(getAllTickets({
                 page: pagination.current,
                 size: pagination.pageSize,
                 status: filters.status,
-                priority: filters.priority
+                priority: filters.priority,
+                role: role
             }))
             dispatch(displayNotification({
                 notificationType: "success",
@@ -225,6 +277,14 @@ export const ticketSlice = createSlice({
                 state.form.ticketObj = {}
                 state.form.mode = ""
                 state.form.backendErrors = {}
+            })
+            .addCase(getTicketNotifications.fulfilled, (state, action) => {
+                state.loading = false;
+                state.ticketsNotifications = action.payload.ticketNotification
+            })
+            .addCase(getOrganizerTicketNotifications.fulfilled, (state, action) => {
+                state.loading = false;
+                state.ticketsNotifications = action.payload.ticketNotification
             })
 
     }
