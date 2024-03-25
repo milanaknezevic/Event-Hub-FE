@@ -63,7 +63,7 @@ const Invitations = () => {
             page: pagination.current,
             size: pagination.pageSize,
             id: id,
-            status: eventData.status
+            status: true
         }))
     }, []);
 

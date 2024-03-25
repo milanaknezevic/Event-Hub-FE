@@ -11,7 +11,7 @@ import {
 } from "../../redux/events.jsx";
 import {Card, Flex, Layout, Pagination, Tooltip} from 'antd';
 import defImg from "../../assets/noImage.png"
-import {FaEye, FaTrash} from 'react-icons/fa';
+import {FaBell, FaEye, FaTrash} from 'react-icons/fa';
 import CustomSidebar from "../FormComponents/CustomSidebar.jsx";
 import {MailOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
@@ -262,6 +262,8 @@ const Events = ({myEvents}) => {
                                                     <Tooltip key="invitations" placement="top" title="Invitations">
                                                         <MailOutlined className="cursor-button"
                                                                       onClick={() => handleInvitations(event.id)}/>
+                                                        <FaBell className="notification-icon mx-1"/>
+
                                                     </Tooltip>,
                                                     <Tooltip key="delete" placement="top" title="Delete">
                                                         <FaTrash color="red" className="cursor-button"

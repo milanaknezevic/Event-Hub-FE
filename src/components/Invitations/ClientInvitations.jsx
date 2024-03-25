@@ -18,7 +18,7 @@ const ClientInvitations = () => {
     const [selectedRadio, setSelectedRadio] = useState(0);
     const navigate = useNavigate();
     useEffect(() => {
-        dispatch(getAllInvitationsForCLient({page: pagination.current, size: pagination.pageSize, status: status}))
+        dispatch(getAllInvitationsForCLient({page: pagination.current, size: pagination.pageSize, status: 0}))
     }, []);
 
     const onChange = (e) => {
@@ -61,7 +61,8 @@ const ClientInvitations = () => {
                     </Header>
                     <Content className={"event-container"}>
 
-                        <Radio.Group className={"d-flex justify-content-center"} onChange={onChange} defaultValue={status}>
+                        <Radio.Group className={"d-flex justify-content-center"} onChange={onChange}
+                                     defaultValue={status}>
                             <Radio.Button value={0}>Received Invitations</Radio.Button>
                             <Radio.Button value={1}>Sent invitations</Radio.Button>
                         </Radio.Group>
@@ -70,6 +71,7 @@ const ClientInvitations = () => {
                             {invitations.map(invitation => (
                                 <div key={invitation?.event?.id} className="col-12 col-md-3 col-xl-2 pt-2">
                                     <Card
+                                        key={invitation?.event?.id}
                                         cover={
                                             <img alt="example"
                                                  src={invitation?.event?.eventImages?.length > 0 ? new URL(`../../assets/events/${invitation?.event?.eventImages[0].image}.png`, import.meta.url).href : defImg}/>
