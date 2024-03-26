@@ -110,7 +110,6 @@ const Tickets = () => {
             title: 'Action',
             key: 'action',
             render: (cell, row) => {
-                console.log("not ", ticketsNotifications)
                 return (
                     <Tooltip placement={"top"} title={"Watch"}>
                         <FaEye onClick={handleWatchTicket.bind(this, row)}

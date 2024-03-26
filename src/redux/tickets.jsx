@@ -51,7 +51,6 @@ export const getAllTickets = createAsyncThunk(
     'tickets', async ({page = 1, size = 10, status, priority, role}, {rejectWithValue}) => {
         try {
             let response;
-            console.log("role ", role)
             if (role === 1) {
                 response = await api.get(`/api/tickets?page=${page}&size=${size}&status=${status}&priority=${priority}`);
             } else if (role === 0 || role === 2) {

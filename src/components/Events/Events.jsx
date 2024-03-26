@@ -262,7 +262,8 @@ const Events = ({myEvents}) => {
                                                     <Tooltip key="invitations" placement="top" title="Invitations">
                                                         <MailOutlined className="cursor-button"
                                                                       onClick={() => handleInvitations(event.id)}/>
-                                                        <FaBell className="notification-icon mx-1"/>
+                                                        {event?.invitations?.length > 0 && <FaBell className="notification-icon mx-1" />}
+                                                        {/*<FaBell className="notification-icon mx-1"/>*/}
 
                                                     </Tooltip>,
                                                     <Tooltip key="delete" placement="top" title="Delete">

@@ -6,7 +6,8 @@ import {getAllEventsForCLients, getAllGuestsForEvent, getAllNotInvitedClients, s
 const api = base.service(true);
 export const initialState = {
     invitations: [],
-    status:0,
+    invitationNotification: [],
+    status: 0,
     backendErrors: {},
     pagination: {
         total: 0,
@@ -84,6 +85,8 @@ export const getAllInvitationsForCLient = createAsyncThunk(
     async ({page = 1, size = 10, status}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.get(`/api/invitations/?status=${status}&page=${page}&size=${size}`);
+            dispatch(getClientNotifications({}));
+
             return response.data;
         } catch (error) {
             dispatch(displayNotification({
@@ -97,7 +100,7 @@ export const getAllInvitationsForCLient = createAsyncThunk(
 )
 
 export const clientUnsendInvitation = createAsyncThunk(
-    'invitation/client_unsend', async ({eventId, pagination,status}, {dispatch, rejectWithValue}) => {
+    'invitation/client_unsend', async ({eventId, pagination, status}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.delete(`/api/invitations/${eventId}`);
             dispatch(getAllInvitationsForCLient({page: pagination.current, size: pagination.pageSize, status: status}))
@@ -112,6 +115,23 @@ export const clientUnsendInvitation = createAsyncThunk(
         }
     }
 );
+
+export const getClientNotifications = createAsyncThunk(
+    'client/notifications', async ({dispatch, rejectWithValue}) => {
+        try {
+            const response = await api.get('/api/invitations/client/invitations/notifications');
+            return response.data;
+        } catch (error) {
+            dispatch(displayNotification({
+                notificationType: "error",
+                message: "Error while fetching notifications for invitations.",
+                title: "Invitation"
+            }))
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
 export const invitationSlice = createSlice({
     name: "invitation",
     initialState,
@@ -135,6 +155,10 @@ export const invitationSlice = createSlice({
                 }
                 state.invitations = action.payload.invitations
                 state.status = action.meta.arg.status
+            })
+            .addCase(getClientNotifications.fulfilled, (state, action) => {
+                state.loading = false;
+                state.invitationNotification = action.payload.invitationNotification
             })
     }
 })

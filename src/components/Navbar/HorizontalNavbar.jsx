@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import {Link, Outlet, useLocation, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {auth, ticket} from "../../redux/selectors.jsx";
+import {auth, invitation, ticket} from "../../redux/selectors.jsx";
 import {logout} from "../../redux/auth.jsx";
 import {getOrganizerTicketNotifications, getTicketNotifications, setTicketModalState} from "../../redux/tickets.jsx";
 import {Tooltip} from "antd";
@@ -10,6 +10,7 @@ import {LogoutOutlined} from '@ant-design/icons';
 import logoImage from '../../assets/logo.png';
 import Footer from "../Footer/Footer.jsx";
 import TicketModal from "../Tickets/TicketModal.jsx";
+import {getClientNotifications} from "../../redux/invitation.jsx";
 
 export const history = {
     navigate: null
@@ -18,6 +19,7 @@ export const history = {
 const HorizontalNavbar = () => {
     const {isAuthenticated, loggedUser} = useSelector(auth);
     const {ticketsNotifications} = useSelector(ticket);
+    const {invitationNotification} = useSelector(invitation)
     const {pathname} = useLocation();
     const dispatch = useDispatch()
 
@@ -36,15 +38,21 @@ const HorizontalNavbar = () => {
     useEffect(() => {
         if (loggedUser?.role === 1) {
             dispatch(getTicketNotifications({}));
-        } else if (loggedUser?.role === 0 || loggedUser?.role === 2) {
+        } else if (loggedUser?.role === 0) {
             dispatch(getOrganizerTicketNotifications({}));
+        } else if (loggedUser?.role === 2) {
+            dispatch(getOrganizerTicketNotifications({}));
+            dispatch(getClientNotifications({}));
         }
 
         const id = setInterval(() => {
             if (loggedUser?.role === 1) {
                 dispatch(getTicketNotifications({}));
-            } else if (loggedUser?.role === 0 || loggedUser?.role === 2) {
+            } else if (loggedUser?.role === 0) {
                 dispatch(getOrganizerTicketNotifications({}));
+            } else if (loggedUser?.role === 2) {
+                dispatch(getOrganizerTicketNotifications({}));
+                dispatch(getClientNotifications({}));
             }
         }, 300000);
 
@@ -83,6 +91,9 @@ const HorizontalNavbar = () => {
                                                   to={route.linkPath}>
                                                 {route.routeTitle}
                                                 {route.routeTitle === 'Tickets' && ticketsNotifications.length > 0 && (
+                                                    <FaBell className="notification-icon mx-1"/>
+                                                )}
+                                                {route.routeTitle === 'Invitations' && invitationNotification.length > 0 && (
                                                     <FaBell className="notification-icon mx-1"/>
                                                 )}
                                             </Link>
