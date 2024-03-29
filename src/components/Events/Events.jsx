@@ -255,15 +255,13 @@ const Events = ({myEvents}) => {
                                         actions={
                                             loggedUser?.role === 0
                                                 ? [
-                                                    <Tooltip key="watch" placement="top" title="Watch">
+                                                    <Tooltip key="watch" placement="top" title="View">
                                                         <FaEye className="cursor-button"
                                                                onClick={() => handleWatchEvent(event.id)}/>
                                                     </Tooltip>,
-                                                    <Tooltip key="invitations" placement="top" title="Invitations">
-                                                        <MailOutlined className="cursor-button"
-                                                                      onClick={() => handleInvitations(event.id)}/>
+                                                    <Tooltip onClick={() => handleInvitations(event.id)} key="invitations" placement="top" title="Invitations">
+                                                        <MailOutlined className="cursor-button"/>
                                                         {event?.invitations?.length > 0 && <FaBell className="notification-icon mx-1" />}
-                                                        {/*<FaBell className="notification-icon mx-1"/>*/}
 
                                                     </Tooltip>,
                                                     <Tooltip key="delete" placement="top" title="Delete">
@@ -272,7 +270,7 @@ const Events = ({myEvents}) => {
                                                     </Tooltip>
                                                 ]
                                                 : [
-                                                    <Tooltip key="watch" placement="top" title="Watch">
+                                                    <Tooltip key="watch" placement="top" title="View">
                                                         <FaEye className="cursor-button"
                                                                onClick={() => handleWatchEvent(event.id)}/>
                                                     </Tooltip>,

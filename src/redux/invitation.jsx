@@ -1,7 +1,13 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {displayNotification} from "./notification.jsx";
 import base from '../api/baseService.jsx';
-import {getAllEventsForCLients, getAllGuestsForEvent, getAllNotInvitedClients, setEventModalState} from "./events.jsx";
+import {
+    getAllEventsForCLients,
+    getAllGuestsForEvent,
+    getAllNotInvitedClients,
+    getInvitationsByEventId,
+    setEventModalState
+} from "./events.jsx";
 
 const api = base.service(true);
 export const initialState = {
@@ -22,6 +28,8 @@ export const organizerUnsendInvitation = createAsyncThunk(
     async ({eventId, userId, pagination}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.delete(`/api/invitations/${eventId}//${userId}/`);
+           // dispatch(getInvitationsByEventId({page: pagination.current, size: pagination.pageSize, id: eventId}))
+            //getAllGuestsForEvent zovem za amrko maric usera on je organizer
             dispatch(getAllGuestsForEvent({
                 page: pagination.current,
                 size: pagination.pageSize,

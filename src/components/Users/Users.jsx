@@ -34,25 +34,25 @@ const Users = () => {
         dispatch(setUserModalState({modalOpen: true, mode: 'create'}));
     }
 
-    function CheckUserStatus(checkStatus) {
-
-        switch (checkStatus) {
-            case "ACTIVE":
-                return <Tooltip placement={"top"} title={"Active"}>
-                    <FaCircle color="green" size="1em"/>
-                </Tooltip>;
-            case "REQUESTED":
-                return <Tooltip placement={"top"} title={"Requested"}>
-                    <FaCircle color="#000080" size="1em"/>
-                </Tooltip>;
-            case "BLOCKED":
-                return <Tooltip placement={"top"} title={"Blocked"}>
-                    <FaCircle color="red" size="1em"/>
-                </Tooltip>;
-            default:
-                return
-        }
-    }
+    // function CheckUserStatus(checkStatus) {
+    //
+    //     switch (checkStatus) {
+    //         case "ACTIVE":
+    //             return <Tooltip placement={"top"} title={"Active"}>
+    //                 <FaCircle color="green" size="1em"/>
+    //             </Tooltip>;
+    //         case "REQUESTED":
+    //             return <Tooltip placement={"top"} title={"Requested"}>
+    //                 <FaCircle color="#000080" size="1em"/>
+    //             </Tooltip>;
+    //         case "BLOCKED":
+    //             return <Tooltip placement={"top"} title={"Blocked"}>
+    //                 <FaCircle color="red" size="1em"/>
+    //             </Tooltip>;
+    //         default:
+    //             return
+    //     }
+    // }
 
 
     const columns = [
@@ -88,9 +88,9 @@ const Users = () => {
             title: 'Status',
             key: 'status',
             dataIndex: 'status',
-            render: (cell) => {
-                return CheckUserStatus(cell)
-            },
+            // render: (cell) => {
+            //     return CheckUserStatus(cell)
+            // },
         },
         {
             title: 'Action',

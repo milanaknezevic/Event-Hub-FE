@@ -15,7 +15,11 @@
 .users-container .ant-table-wrapper .ant-table-tbody > tr > td {
     /*padding: 10px 10px*/
 }
-
+.users-container .ant-table-expanded-row-fixed
+{
+    max-height: unset!important;
+    height: 40vh;
+}
 .users-container .ant-table-wrapper .ant-table-thead > tr > th {
     color: var(--white-color)
 }

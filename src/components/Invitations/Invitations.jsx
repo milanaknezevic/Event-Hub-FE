@@ -11,7 +11,6 @@ import {
 } from "../../redux/events.jsx";
 import {useParams} from "react-router-dom";
 import {FaCheck, FaTimes} from 'react-icons/fa';
-// import {getAllNotInvitedClients} from "../../redux/user.jsx";
 import {createInvitation, organizerUnsendInvitation} from "../../redux/invitation.jsx";
 
 const {Header, Footer, Content} = Layout;
@@ -22,7 +21,6 @@ const Invitations = () => {
     const {loggedUser} = useSelector(auth);
     const dispatch = useDispatch()
     const {pagination, eventData, form, notInvitedUsers, filters} = useSelector(event);
-    // const {users} = useSelector(user);
     const [selectedRadio, setSelectedRadio] = useState(0);
 
     useEffect(() => {
@@ -82,6 +80,7 @@ const Invitations = () => {
     const handleSendInvitation = (userId) => {
         dispatch(createInvitation({id, userId, pagination: pagination, loggedUser: loggedUser, filters: filters}));
     };
+
     return (
         <Flex className={"flex-grow-1 invitations-container"}>
             <Layout>
@@ -98,8 +97,8 @@ const Invitations = () => {
                         <Radio.Group className={"d-flex justify-content-center"} onChange={onChange} defaultValue={0}>
                             <Radio.Button value={0}>Guests</Radio.Button>
                             <Radio.Button value={1}>Invited Guests</Radio.Button>
-                            <Radio.Button value={2}>Received Invitations</Radio.Button>
                             <Radio.Button value={3}>Send invitations</Radio.Button>
+                            <Radio.Button value={2}>Attendance Requests</Radio.Button>
                         </Radio.Group>
 
                         <div className={"row justify-content-center pt-2"}>
@@ -111,8 +110,7 @@ const Invitations = () => {
                                         renderItem={(item) => (
                                             <List.Item
                                                 actions={[
-                                                    <Tooltip key={'accept'} placement={'top'}
-                                                             title={'Send invitation'}>
+                                                    <Tooltip key={'accept'} placement={'top'} title={'Send invitation'}>
                                                         <FaCheck
                                                             className={'accept-icon'}
                                                             onClick={() => handleSendInvitation(item.id)}
@@ -122,7 +120,8 @@ const Invitations = () => {
                                             >
                                                 <Skeleton avatar title={false} loading={item?.loading} active>
                                                     <List.Item.Meta
-                                                        avatar={<Avatar src={item?.avatar}/>}
+                                                        avatar={<Avatar
+                                                            src={new URL(`../../assets/users/${item?.avatar}.png`, import.meta.url).href}/>}
                                                         title={`${item?.name} ${item?.lastname}`}
                                                     />
                                                 </Skeleton>
@@ -132,46 +131,50 @@ const Invitations = () => {
                                     <List
                                         itemLayout="horizontal"
                                         dataSource={eventData.invitations}
-                                        renderItem={(item) => (
-                                            <List.Item
-                                                actions={
-                                                    (!item?.statusCreator && item?.statusGuest && selectedRadio === 2) ? (
-                                                        [
-                                                            <Tooltip key={'accept'} placement={'top'} title={'Accept'}>
-                                                                <FaCheck
-                                                                    className={'accept-icon'}
-                                                                    onClick={() => handleAccept(item.event_id, item.user_id)}
-                                                                />
-                                                            </Tooltip>,
-                                                            <Tooltip key={'decline'} placement={'top'}
-                                                                     title={'Decline'}>
-                                                                <FaTimes
-                                                                    className={'decline-icon'}
-                                                                    onClick={() => handleUnsend(item.event_id, item.user_id)}
-                                                                />
-                                                            </Tooltip>
-                                                        ]
-                                                    ) : (
-                                                        (!item?.statusCreator && item?.statusGuest && new Date(item?.event?.startTime) > new Date()) || selectedRadio === 1 ? (
+                                        renderItem={(item) =>
+                                            (
+                                                <List.Item
+                                                    actions={
+                                                        (!item?.statusCreator && item?.statusGuest && selectedRadio === 2) ? (
                                                             [
+                                                                <Tooltip key={'accept'} placement={'top'}
+                                                                         title={'Accept'}>
+                                                                    <FaCheck
+                                                                        className={'accept-icon'}
+                                                                        onClick={() => handleAccept(item.event_id, item.user_id)}
+                                                                    />
+                                                                </Tooltip>,
                                                                 <Tooltip key={'decline'} placement={'top'}
-                                                                         title={'Unsend invitations'}>
+                                                                         title={'Decline'}>
                                                                     <FaTimes
                                                                         className={'decline-icon'}
                                                                         onClick={() => handleUnsend(item.event_id, item.user_id)}
                                                                     />
                                                                 </Tooltip>
                                                             ]
-                                                        ) : null
-                                                    )}>
-                                                <Skeleton avatar title={false} loading={item?.loading} active>
-                                                    <List.Item.Meta
-                                                        avatar={<Avatar src={item?.invitedUser?.avatar}/>}
-                                                        title={`${item?.invitedUser?.name} ${item?.invitedUser?.lastname}`}
-                                                    />
-                                                </Skeleton>
-                                            </List.Item>
-                                        )}
+                                                        ) : (
+                                                            (!item?.statusCreator && item?.statusGuest && new Date(item?.event?.startTime) > new Date()) || selectedRadio === 1 ? (
+                                                                [
+                                                                    <Tooltip key={'decline'} placement={'top'}
+                                                                             title={'Unsend invitations'}>
+                                                                        <FaTimes
+                                                                            className={'decline-icon'}
+                                                                            onClick={() => handleUnsend(item.event_id, item.user_id)}
+                                                                        />
+                                                                    </Tooltip>
+                                                                ]
+                                                            ) : null
+                                                        )}>
+                                                    <Skeleton avatar title={false} loading={item?.loading} active>
+                                                        <List.Item.Meta
+                                                            avatar={<Avatar
+                                                                src={new URL(`../../assets/users/${item?.invitedUser?.avatar}.png`, import.meta.url).href}/>}
+                                                            title={`${item?.invitedUser?.name} ${item?.invitedUser?.lastname}`}
+                                                        />
+                                                    </Skeleton>
+                                                </List.Item>
+                                            )
+                                        }
                                     />}
 
                             </div>

@@ -11,7 +11,15 @@ import {registrationSchema} from "../../schemas/index.jsx";
 import {auth, user} from "../../redux/selectors.jsx";
 import CustomUpload from "../FormComponents/CustomUpload.jsx";
 import CustomButton from "../FormComponents/CustomButton.jsx";
+import {Modal} from "antd";
 
+const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+    });
 const Register = () => {
     const formikRef = useRef();
     const dispatch = useDispatch()
@@ -19,6 +27,11 @@ const Register = () => {
     const {userRoles} = useSelector(user);
     const [avatarValue, setAvatarValue] = useState("");
     const [images, setImages] = useState([]);
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
+    const [previewTitle, setPreviewTitle] = useState('');
+    const handleCancel = () => setPreviewOpen(false);
+
 
     useEffect(() => {
         dispatch(getUserRoles({}))
@@ -64,6 +77,15 @@ const Register = () => {
     //     validationSchema: registrationSchema,
     //     onSubmit: onSubmit,
     // });
+
+    const handlePreview = async (file) => {
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj);
+        }
+        setPreviewImage(file.url || file.preview);
+        setPreviewOpen(true);
+        setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+    };
 
     useFormattedBackendErrors(backendErrors, formikRef.current?.setErrors)
 
@@ -142,11 +164,22 @@ const Register = () => {
                                         />
                                     </div>
                                     <div className={"col-12 "}>
-                                        <CustomUpload name={"avatar"} fileList={images}
+                                        <CustomUpload name={"avatar"}
+                                                      fileList={images}
                                                       handleChangeImage={handleChangeImage}
-                                                      maxCount={1} buttonText={"Upload Avatar"}/>
+                                                      onPreview={handlePreview}
+                                                      maxCount={1}
+                                                      buttonText={"Upload Avatar"}/>
 
                                     </div>
+                                    <Modal open={previewOpen} title={previewTitle} footer={null}
+                                           onCancel={handleCancel}>
+                                        <img
+                                            alt="example"
+                                            className={"w-100"}
+                                            src={previewImage}
+                                        />
+                                    </Modal>
 
                                     <div className={"col-12 d-flex justify-content-center pb-3"}>
                                         {/*<Button className="register-btn btn col-12 col-md-6" htmlType="submit"*/}

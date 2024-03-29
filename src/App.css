@@ -126,3 +126,7 @@ body .notification-icon {
 body .blue-read-icon{
     color: green;
 }
+.ant-input-outlined.ant-input-disabled{
+    background-color: var(--gray-color);
+    color: #626161;
+}

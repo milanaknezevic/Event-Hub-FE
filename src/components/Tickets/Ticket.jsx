@@ -29,7 +29,7 @@ const Ticket = () => {
 
     const onSubmit = (value) => {
         if (value !== "") {
-            dispatch(replyToTicket({id: form.ticketObj.id, data: value, pagination: pagination, filters: filters}));
+            dispatch(replyToTicket({id: form.ticketObj.id, data: value, pagination: pagination, filters: filters,role:loggedUser?.role}));
         }
         formikRef.current?.resetForm(formikRef.current?.initialValues)
     };

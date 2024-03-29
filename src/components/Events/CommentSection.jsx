@@ -1,17 +1,13 @@
 import defImg from "../../assets/noImage.png";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {auth} from "../../redux/selectors.jsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faReply} from "@fortawesome/free-solid-svg-icons";
-import {useRef, useState} from "react";
-import dayjs from "dayjs";
+import {useRef} from "react";
 import {commentSchema} from "../../schemas/index.jsx";
 import {Form, Formik} from "formik";
 import CustomTextArea from "../FormComponents/CustomTextArea.jsx";
 import {Button} from "antd";
-import {replyOnComment} from "../../redux/events.jsx";
 
-const CommentSection = ({comment,setIsReply,onSubmit}) => {
+const CommentSection = ({comment, setIsReply, onSubmit}) => {
 
     const formikRef = useRef();
     const {loggedUser} = useSelector(auth);

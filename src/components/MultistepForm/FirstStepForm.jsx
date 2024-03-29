@@ -39,14 +39,14 @@ const FirstStepForm = ({handleSubmit, formikRef, values}) => {
         >
             {({handleSubmit, values, setFieldValue}) => (
                 <Form onSubmit={handleSubmit} className={"row"}>
-                    <div className={"col-12 col-md-6"}>
+                    <div className={"col-12"}>
                         <CustomInput
                             label="Name"
                             name="name"
                             type="text"
                         />
                     </div>
-                    <div className={"col-12 col-md-6"}>
+                    <div className={"col-12"}>
                         <CustomTextArea
                             label="Description"
                             name="description"

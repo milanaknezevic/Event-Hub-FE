@@ -3,19 +3,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {auth} from "../../redux/selectors.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faReply} from "@fortawesome/free-solid-svg-icons";
-import {useRef, useState} from "react";
+import {useState} from "react";
 import dayjs from "dayjs";
-import {commentSchema} from "../../schemas/index.jsx";
-import {Form, Formik} from "formik";
-import CustomTextArea from "../FormComponents/CustomTextArea.jsx";
-import {Button} from "antd";
 import {replyOnComment} from "../../redux/events.jsx";
 import CommentSection from "./CommentSection.jsx";
 
 const Comments = ({comment}) => {
 
 
-    const formikRef = useRef();
     const {loggedUser} = useSelector(auth);
     const [isReply, setIsReply] = useState(false);
     const dispatch = useDispatch()
@@ -72,7 +67,7 @@ const Comments = ({comment}) => {
                             </div>
                         }
 
-                        {((loggedUser?.role === 2 && comment?.answer ) || isReply) &&
+                        {((loggedUser?.role === 2 && comment?.answer) || isReply) &&
                             <CommentSection comment={comment} setIsReply={setIsReply} onSubmit={onSubmit}/>
                         }
 

@@ -20,7 +20,7 @@ const EventActionModal = ({handleOk}) => {
                 {form.mode === 'delete' ? (<div>
 
                     Are you sure you want to delete event?
-                </div>) : (<div>Are you sure you want to send invitation</div>)
+                </div>) : (<div>Are you sure you want to send the invitation?</div>)
                 }
             </Modal>
         </>

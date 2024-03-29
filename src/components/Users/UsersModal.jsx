@@ -12,14 +12,31 @@ import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErro
 import CustomUpload from "../FormComponents/CustomUpload.jsx";
 import {editUserSchema, registrationSchema} from "../../schemas/index.jsx";
 
-
+const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+    });
 const UsersModal = () => {
     const formikRef = useRef();
     const dispatch = useDispatch()
     const {userAdminRoles, userStatus, pagination, form} = useSelector(user);
     const [avatarValue, setAvatarValue] = useState("");
     const [images, setImages] = useState([]);
-
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
+    const [previewTitle, setPreviewTitle] = useState('');
+    const handleCancelAvatar = () => setPreviewOpen(false);
+    const handlePreview = async (file) => {
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj);
+        }
+        setPreviewImage(file.url || file.preview);
+        setPreviewOpen(true);
+        setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+    };
     useEffect(() => {
         dispatch(getAdminUserRoles({}))
         dispatch(getUserStatus({}))
@@ -171,17 +188,24 @@ const UsersModal = () => {
                             </div>
                             {form.mode !== 'create' && <div className={"col-12 col-md-6"}>
                                 <CustomSelect
-                                label="Status"
-                                name="status"
-                                options={userStatus}
-                            />
+                                    label="Status"
+                                    name="status"
+                                    options={userStatus}
+                                />
                             </div>}
                             <div className={"col-12 "}>
                                 <CustomUpload name={"avatar"} fileList={images}
-                                              handleChangeImage={handleChangeImage}
+                                              onPreview={handlePreview} handleChangeImage={handleChangeImage}
                                               maxCount={1} buttonText={"Upload Avatar"}/>
 
                             </div>
+                            <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancelAvatar}>
+                                <img
+                                    alt="example"
+                                    className={"w-100"}
+                                    src={previewImage}
+                                />
+                            </Modal>
 
                         </Form>
                     )}

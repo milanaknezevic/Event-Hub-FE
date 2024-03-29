@@ -57,24 +57,24 @@ const Tickets = () => {
         }
     }
 
-    function checkTicketPriority(priority) {
-        switch (priority) {
-            case "LOW":
-                return <Tooltip placement={"top"} title={"Low"}>
-                    <FaCircle color="green" size="1em"/>
-                </Tooltip>;
-            case "MEDIUM":
-                return <Tooltip placement={"top"} title={"Medium"}>
-                    <FaCircle color="#000080" size="1em"/>
-                </Tooltip>;
-            case "HIGH":
-                return <Tooltip placement={"top"} title={"High"}>
-                    <FaCircle color="red" size="1em"/>
-                </Tooltip>;
-            default:
-                return
-        }
-    }
+    // function checkTicketPriority(priority) {
+    //     switch (priority) {
+    //         case "LOW":
+    //             return <Tooltip placement={"top"} title={"Low"}>
+    //                 <FaCircle color="green" size="1em"/>
+    //             </Tooltip>;
+    //         case "MEDIUM":
+    //             return <Tooltip placement={"top"} title={"Medium"}>
+    //                 <FaCircle color="#000080" size="1em"/>
+    //             </Tooltip>;
+    //         case "HIGH":
+    //             return <Tooltip placement={"top"} title={"High"}>
+    //                 <FaCircle color="red" size="1em"/>
+    //             </Tooltip>;
+    //         default:
+    //             return
+    //     }
+    // }
 
 
     const columns = [
@@ -90,9 +90,9 @@ const Tickets = () => {
             title: 'Priority',
             dataIndex: 'priority',
             key: 'priority',
-            render: (cell) => {
-                return checkTicketPriority(cell)
-            },
+            // render: (cell) => {
+            //     return checkTicketPriority(cell)
+            // },
             filters: ticketPriority.map(option => ({text: option.name, value: option.id})),
             filterMultiple: false,
         },
@@ -111,7 +111,7 @@ const Tickets = () => {
             key: 'action',
             render: (cell, row) => {
                 return (
-                    <Tooltip placement={"top"} title={"Watch"}>
+                    <Tooltip placement={"top"} title={"View"}>
                         <FaEye onClick={handleWatchTicket.bind(this, row)}
                                className={`cursor-button ${(loggedUser?.role === 0 || loggedUser?.role === 2) && ticketsNotifications?.some(notification => notification.id === row.id) ? 'blue-read-icon' : ''} ${loggedUser?.role === 1 ? (row.read === 0 ? 'unread-icon' : '') : ''}`}/>
                     </Tooltip>

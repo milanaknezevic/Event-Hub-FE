@@ -95,7 +95,7 @@ export const getAllClients = createAsyncThunk(
 export const getAllClientsForInvitation = createAsyncThunk(
     'invitations/clients', async (id,{rejectWithValue}) => {
         try {
-            const response = await api.get(`/api/invitations//organizer/active/${id}/`);
+            const response = await api.get(`/api/invitations/organizer/active/${id}/`);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);

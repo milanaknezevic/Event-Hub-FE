@@ -1,5 +1,5 @@
 const Footer = () => {
-    const emailAddress = "support@gmail.com";
+    const emailAddress = "event.support@gmail.com";
 
     return (
         <div className="container-fluid footer-container">

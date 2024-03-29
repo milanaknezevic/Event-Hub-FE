@@ -7,6 +7,7 @@ import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErro
 import CustomInput from "../FormComponents/CustomInput.jsx";
 import CustomButton from "../FormComponents/CustomButton.jsx";
 import {changePassword} from "../../redux/auth.jsx";
+import {changePasswordSchema} from "../../schemas/index.jsx";
 
 const ChangePassword = () => {
     const dispatch = useDispatch()
@@ -38,7 +39,7 @@ const ChangePassword = () => {
                                 new_password: '',
                                 confirm_password: ''
                             }}
-                            //validationSchema={changePasswordSchema}
+                            validationSchema={changePasswordSchema}
                             onSubmit={onSubmit}
                         >
                             {({handleSubmit}) => (
