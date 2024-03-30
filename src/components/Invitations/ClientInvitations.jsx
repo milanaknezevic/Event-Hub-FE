@@ -54,7 +54,7 @@ const ClientInvitations = () => {
                 <Layout>
                     <Header>
                         <div className={"row justify-content-center p-md-4"}>
-                            <div className={"col-11"}>
+                            <div className={"col-12"}>
                                 <h1>Invitations</h1>
                             </div>
                         </div>
@@ -64,7 +64,7 @@ const ClientInvitations = () => {
                         <Radio.Group className={"d-flex justify-content-center"} onChange={onChange}
                                      defaultValue={0}>
                             <Radio.Button value={0}>Received Invitations</Radio.Button>
-                            <Radio.Button value={1}>Sent invitations</Radio.Button>
+                            <Radio.Button value={1}>Sent Invitations</Radio.Button>
                         </Radio.Group>
 
                         <div className="row justify-content-center justify-content-md-start p-2">

@@ -97,7 +97,7 @@ const Invitations = () => {
                         <Radio.Group className={"d-flex justify-content-center"} onChange={onChange} defaultValue={0}>
                             <Radio.Button value={0}>Guests</Radio.Button>
                             <Radio.Button value={1}>Invited Guests</Radio.Button>
-                            <Radio.Button value={3}>Send invitations</Radio.Button>
+                            <Radio.Button value={3}>Send Invitations</Radio.Button>
                             <Radio.Button value={2}>Attendance Requests</Radio.Button>
                         </Radio.Group>
 

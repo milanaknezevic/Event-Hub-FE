@@ -36,7 +36,7 @@ const Comments = ({comment}) => {
                             <div className="d-flex flex-row user-info">
                                 <img
                                     className="rounded-circle shadow-1-strong me-3"
-                                    src={comment?.userComments?.avatar ? new URL(`../../assets/users/${loggedUser?.avatar}.png`, import.meta.url).href : defImg}
+                                    src={comment?.userComments?.avatar ? new URL(`../../assets/users/${comment?.userComments?.avatar}.png`, import.meta.url).href : defImg}
                                     alt="avatar"
                                     width="50"
                                     height="50"
