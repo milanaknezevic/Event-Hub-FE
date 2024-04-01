@@ -70,7 +70,7 @@ const App = () => {
                         path: "/events",
                         element: (
                             <ProtectedRoute path={"/events"}>
-                                <Events myEvents={false} />
+                                <Events myEvents={false}/>
                             </ProtectedRoute>
                         ),
                     },
@@ -78,7 +78,7 @@ const App = () => {
                         path: "/my_events",
                         element: (
                             <ProtectedRoute path={"/my_events"}>
-                                <Events myEvents={true} />
+                                <Events myEvents={true}/>
                             </ProtectedRoute>
                         ),
                     },
@@ -105,10 +105,6 @@ const App = () => {
                 errorElement: <Page404/>
             }
         ],)
-    // if (loading) {
-    //     return <Spinner/>
-    // }
-
     return <RouterProvider router={router}/>
 
 }

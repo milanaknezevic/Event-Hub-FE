@@ -119,14 +119,17 @@
 body .personal_info {
     pointer-events: none;
 }
+
 body .unread-icon,
 body .notification-icon {
     color: red;
 }
-body .blue-read-icon{
+
+body .blue-read-icon {
     color: green;
 }
-.ant-input-outlined.ant-input-disabled{
+
+.ant-input-outlined.ant-input-disabled {
     background-color: var(--gray-color);
     color: #626161;
 }

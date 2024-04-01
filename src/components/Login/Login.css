@@ -25,11 +25,13 @@
     border-radius: 5px;
     background-color: var(--gray-color)
 }
+.error-container .error-link,
 .register-container .login-link,
 .login-container .register-link {
     color: var(--blue-color);
 }
 
+.error-container .error-link:hover,
 .register-container .login-link:hover,
 .login-container .register-link:hover {
     color: black;

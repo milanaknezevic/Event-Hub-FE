@@ -8,7 +8,6 @@ import Notification from "./components/Notification/Notification.jsx";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
-//interceptor(store);
 root.render(
     <Provider store={store}>
         <Notification/>
