@@ -55,7 +55,7 @@ export const registrationSchema = yup.object().shape({
 export const updateUserSchema = yup.object().shape({
     name: yup.string().required('Name is required!'),
     lastname: yup.string().required('Lastname is required!'),
-    mail: yup.string().email('Enter a valid email address').required('Email is required!'),
+    email: yup.string().email('Enter a valid email address').required('Email is required!'),
     username: yup.string().required('Username is required!'),
     phoneNumber: yup.string().required('Phone number is required!'),
     role: yup.string().required('Role is required!'),

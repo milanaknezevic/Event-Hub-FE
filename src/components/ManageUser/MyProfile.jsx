@@ -85,7 +85,6 @@ const MyProfile = () => {
                     {isDisabled && (<div className={"col-12 d-flex justify-content-end"}>
                         <Tooltip placement={"top"} title={"Edit user"}>
                             <FaEdit
-                                // className={'accept-icon'}
                                 onClick={() => handleEdit()}
                             />
                         </Tooltip>
