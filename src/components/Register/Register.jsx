@@ -5,7 +5,7 @@ import CustomSelect from "../FormComponents/CustomSelect.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useRef, useState} from "react";
 import {getUserRoles} from "../../redux/user.jsx";
-import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErrors.jsx";
+import useFormattedBackendErrors from "../../customHooks/UseFormattedBackendErrors.jsx";
 import {uploadAvatar, userRegister} from "../../redux/auth.jsx";
 import {registrationSchema} from "../../schemas/index.jsx";
 import {auth, user} from "../../redux/selectors.jsx";

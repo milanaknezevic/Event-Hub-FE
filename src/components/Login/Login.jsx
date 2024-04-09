@@ -3,7 +3,7 @@ import {Form, Formik} from 'formik';
 import {NavLink, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {auth} from "../../redux/selectors.jsx";
-import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErrors.jsx";
+import useFormattedBackendErrors from "../../customHooks/UseFormattedBackendErrors.jsx";
 import {userLogin} from "../../redux/auth.jsx";
 import CustomInput from "../FormComponents/CustomInput.jsx";
 import {loginSchema} from "../../schemas/index.jsx";
@@ -36,14 +36,11 @@ const Login = () => {
     return (
         <div className="container-fluid flex-grow-1 d-flex align-items-center justify-content-center">
             <div className={"row justify-content-center w-100"}>
-
                 <div className={"col-10 col-md-5 col-lg-4 login-container"}>
                     <div className={"row"}>
                         <div className={"col-12 d-flex justify-content-center title my-2"}>
                             <h1>Login</h1>
                         </div>
-
-
                         <Formik
                             innerRef={formikRef}
                             initialValues={{
@@ -59,19 +56,15 @@ const Login = () => {
                                     <CustomInput label="Password" name="password" type="password"/>
 
                                     <div className={"col-12 p-2 d-flex justify-content-center pb-3"}>
-
                                         <CustomButton className={"login-btn btn col-12 col-md-6 mt-2"}
                                                       htmlType="submit"
                                                       type="submit"
                                                       text={"Login"}/>
-
-
                                     </div>
                                     <div className={"col-12 d-flex justify-content-center pb-3"}>
                                         <div>
                                             No account?
                                             <NavLink className={"register-link"} to="/register">
-                                                {" "}
                                                 Register here.
                                             </NavLink>
                                         </div>
@@ -81,7 +74,6 @@ const Login = () => {
                         </Formik>
                     </div>
                 </div>
-
             </div>
         </div>
     );

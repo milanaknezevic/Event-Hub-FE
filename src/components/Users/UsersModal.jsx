@@ -8,7 +8,7 @@ import {Form, Formik} from "formik";
 import CustomSelect from "../FormComponents/CustomSelect.jsx";
 import {useEffect, useRef, useState} from "react";
 import {uploadAvatar} from "../../redux/auth.jsx";
-import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErrors.jsx";
+import useFormattedBackendErrors from "../../customHooks/UseFormattedBackendErrors.jsx";
 import CustomUpload from "../FormComponents/CustomUpload.jsx";
 import {editUserSchema, registrationSchema} from "../../schemas/index.jsx";
 

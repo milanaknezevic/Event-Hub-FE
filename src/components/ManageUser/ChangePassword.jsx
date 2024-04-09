@@ -1,9 +1,8 @@
-import {useEffect, useRef} from 'react';
+import {useRef} from 'react';
 import {Form, Formik} from 'formik';
-import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {auth} from "../../redux/selectors.jsx";
-import useFormattedBackendErrors from "../../CustomHooks/UseFormattedBackendErrors.jsx";
+import useFormattedBackendErrors from "../../customHooks/UseFormattedBackendErrors.jsx";
 import CustomInput from "../FormComponents/CustomInput.jsx";
 import CustomButton from "../FormComponents/CustomButton.jsx";
 import {changePassword} from "../../redux/auth.jsx";
