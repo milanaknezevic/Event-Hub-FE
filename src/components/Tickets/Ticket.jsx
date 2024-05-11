@@ -34,16 +34,6 @@ const Ticket = () => {
         formikRef.current?.resetForm(formikRef.current?.initialValues)
     };
 
-
-    // const formik = useFormik({
-    //     initialValues: {
-    //         answer: '',
-    //         priority: form.ticketObj?.priority,
-    //         status: form.ticketObj?.status
-    //     },
-    //     validationSchema: form.ticketObj.status !== "IN_PROGRESS" ? "" : replyToTicketSchema,
-    //     onSubmit: onSubmit,
-    // });
     const handleCancel = () => {
         dispatch(setTicketModalState({modalOpen: false, mode: "", ticketObj: {}}));
         formikRef.current?.resetForm(formikRef.current?.initialValues)

@@ -181,10 +181,7 @@ const UsersModal = () => {
                                     label="Role"
                                     name="role"
                                     options={userAdminRoles}
-                                    // onChange={(fieldName, value) => formikRef.current?.setFieldValue(fieldName, value)}
-                                    // errorMessage={formikRef.current?.errors.role && formikRef.current?.touched.role ? formikRef.current?.errors.role : ""}
-                                    // value={formikRef.current?.values.role}
-                                />
+                              />
                             </div>
                             {form.mode !== 'create' && <div className={"col-12 col-md-6"}>
                                 <CustomSelect

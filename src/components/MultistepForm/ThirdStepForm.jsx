@@ -112,10 +112,6 @@ const ThirdStepForm = ({
                                             className={'accepted-icon'}
                                             onClick={() => handleSendInvitation(item.id)}
                                         />
-                                        // <FaCheck
-                                        //     className={'accepted-icon'}
-                                        //     onClick={() => handleSendInvitation(item.id)}
-                                        // />
                                     ) : (
                                         <FaCheck
                                             className={'accept-icon'}
@@ -127,7 +123,6 @@ const ThirdStepForm = ({
                             <Skeleton avatar title={false} loading={item.loading} active>
                                 <List.Item.Meta
                                     avatar={<Avatar
-                                        // src={item?.avatar}/>
                                         src={new URL(`../../assets/users/${item?.avatar}.png`, import.meta.url).href}/>}
 
                                     title={`${item?.name} ${item?.lastname}`}
@@ -141,11 +136,6 @@ const ThirdStepForm = ({
                 <CustomButton className={"event-btn btn col-12 col-md-4"} onCLick={handleSubmit}
                               text={"Submit"}
                               type="submit"/>
-
-                {/*<Button*/}
-                {/*    className="event-btn btn col-12 col-md-4 d-flex justify-content-center align-items-center"*/}
-                {/*    type="submit" onClick={handleSubmit}>Submit*/}
-                {/*</Button>*/}
             </div>
         </div>
     );

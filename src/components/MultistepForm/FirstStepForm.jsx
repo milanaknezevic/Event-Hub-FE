@@ -52,11 +52,6 @@ const FirstStepForm = ({handleSubmit, formikRef, values}) => {
                             name="description"
                             rows={2}
                         />
-                        {/*<CustomInput*/}
-                        {/*    label="Description"*/}
-                        {/*    name="description"*/}
-                        {/*    type="text"*/}
-                        {/*/>*/}
                     </div>
 
                     <div className={"col-12 col-md-6"}>
@@ -101,11 +96,6 @@ const FirstStepForm = ({handleSubmit, formikRef, values}) => {
                         <CustomButton className={"event-btn btn col-12 col-md-4"} onCLick={handleSubmit}
                                       text={"Continue"}
                                       type="submit"/>
-
-                        {/*<Button*/}
-                        {/*    className="event-btn btn col-12 col-md-4 d-flex justify-content-center align-items-center"*/}
-                        {/*    type="submit" onClick={handleSubmit}>Continue*/}
-                        {/*</Button>*/}
                     </div>
                 </Form>
             )}

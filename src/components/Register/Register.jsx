@@ -62,22 +62,6 @@ const Register = () => {
         setAvatarValue(newFileList[0]);
     };
 
-    // const formik = useFormik({
-    //     initialValues: {
-    //         name: "",
-    //         lastname: "",
-    //         email: "",
-    //         username: "",
-    //         password: "",
-    //         confirmPassword: "",
-    //         phoneNumber: "",
-    //         role: "",
-    //         avatar: ""
-    //     },
-    //     validationSchema: registrationSchema,
-    //     onSubmit: onSubmit,
-    // });
-
     const handlePreview = async (file) => {
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj);
@@ -182,10 +166,6 @@ const Register = () => {
                                     </Modal>
 
                                     <div className={"col-12 d-flex justify-content-center pb-3"}>
-                                        {/*<Button className="register-btn btn col-12 col-md-6" htmlType="submit"*/}
-                                        {/*        type="submit">Sign up*/}
-                                        {/*</Button>*/}
-
                                         <CustomButton className={"register-btn btn col-12 col-md-6"}
                                                       htmlType="submit"
                                                       type="submit"

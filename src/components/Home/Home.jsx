@@ -23,7 +23,6 @@ const Home = () => {
                         {!isAuthenticated &&
                             <div className={"row justify-content-center justify-content-md-end"}>
                                 <div className={"col-12 col-md-4"}>
-                                    {/*<CustomButton className={"tmp btn col-12"} onCLick={handleLogin} text={"Login"}/>*/}
                                     <Button
                                         className="login-btn btn col-12 d-flex justify-content-center align-items-center"
                                         type="submit" onClick={handleLogin}>Login

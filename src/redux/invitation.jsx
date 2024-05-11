@@ -28,8 +28,6 @@ export const organizerUnsendInvitation = createAsyncThunk(
     async ({eventId, userId, pagination}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.delete(`/api/invitations/${eventId}//${userId}/`);
-           // dispatch(getInvitationsByEventId({page: pagination.current, size: pagination.pageSize, id: eventId}))
-            //getAllGuestsForEvent zovem za amrko maric usera on je organizer
             dispatch(getAllGuestsForEvent({
                 page: pagination.current,
                 size: pagination.pageSize,
@@ -57,7 +55,6 @@ export const createInvitation = createAsyncThunk(
     async ({id, userId, pagination, loggedUser, filters}, {dispatch, rejectWithValue}) => {
         try {
             const response = await api.post(`/api/invitations/${id}/${userId}`);
-            //dispatch(getAllNotInvitedClients(id))
             if (loggedUser?.role === 0) {
                 dispatch(getAllNotInvitedClients({page: pagination.current, size: pagination.pageSize, id}))
             } else if ((loggedUser?.role === 2)) {

@@ -243,8 +243,6 @@ export const ticketSlice = createSlice({
             })
             .addCase(getTicketById.fulfilled, (state, action) => {
                 state.form.ticketObj = action.payload
-                // state.form.modalOpen = true
-                // // state.form.mode = "edit"
             })
             .addCase(assignToTicket.fulfilled, (state, action) => {
                 state.form.ticketObj.status = action.payload.status

@@ -52,7 +52,7 @@ const MyProfile = () => {
             await dispatch(uploadAvatar({formData, uid}));
         }
 
-        setIsDisabled(true) //da ;o otsaviti ili ne ovo???
+        setIsDisabled(true)
     };
 
     const handleEdit = async () => {

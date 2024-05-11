@@ -34,27 +34,6 @@ const Users = () => {
         dispatch(setUserModalState({modalOpen: true, mode: 'create'}));
     }
 
-    // function CheckUserStatus(checkStatus) {
-    //
-    //     switch (checkStatus) {
-    //         case "ACTIVE":
-    //             return <Tooltip placement={"top"} title={"Active"}>
-    //                 <FaCircle color="green" size="1em"/>
-    //             </Tooltip>;
-    //         case "REQUESTED":
-    //             return <Tooltip placement={"top"} title={"Requested"}>
-    //                 <FaCircle color="#000080" size="1em"/>
-    //             </Tooltip>;
-    //         case "BLOCKED":
-    //             return <Tooltip placement={"top"} title={"Blocked"}>
-    //                 <FaCircle color="red" size="1em"/>
-    //             </Tooltip>;
-    //         default:
-    //             return
-    //     }
-    // }
-
-
     const columns = [
         {
             title: 'Full name',
@@ -88,9 +67,6 @@ const Users = () => {
             title: 'Status',
             key: 'status',
             dataIndex: 'status',
-            // render: (cell) => {
-            //     return CheckUserStatus(cell)
-            // },
         },
         {
             title: 'Action',
@@ -135,10 +111,6 @@ const Users = () => {
                             />
                         </div>
                         <div className="col-12 col-md-2 d-flex justify-content-end pt-2 pt-md-0">
-                            {/*<Button onClick={handleAddUser}*/}
-                            {/*        className="login-btn btn col-12 d-flex justify-content-center align-items-center"*/}
-                            {/*        htmlType="submit" type="submit">Add user*/}
-                            {/*</Button>*/}
                             <CustomButton className={"login-btn btn col-12"} onCLick={handleAddUser} text={"Add user"}
                                           htmlType="submit" type="submit"/>
 

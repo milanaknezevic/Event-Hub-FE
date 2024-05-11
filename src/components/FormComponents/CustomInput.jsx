@@ -14,12 +14,6 @@ const CustomInput = ({ disabled=false,label, type, ...props }) => (
                 {({ field }) => (
                     <Input {...field} id={props.name}  disabled={disabled}/>
                 )}
-                {/*{...props}*/}
-                {/*className="form-control"*/}
-                {/*type={type}*/}
-                {/*id={props.name}*/}
-                {/*name={props.name}*/}
-                {/*disabled={disabled}*/}
             </Field>
         )}
         <ErrorMessage name={props.name} component="div" className="error" />

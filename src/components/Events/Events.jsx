@@ -36,8 +36,6 @@ const Events = ({myEvents}) => {
     const initialLocation = filters.selectedLocation ? [filters.selectedLocation] : [];
     const [selectedKeysLocation, setSelectedKeysLocation] = useState(initialLocation);
     const [selectedKeysStatus, setSelectedKeysStatus] = useState(initialLocation);
-    // const [selectedKeysEvents, setSelectedKeysEvents] = useState([]);
-    // const [selectedKeysLocation, setSelectedKeysLocation] = useState([]);
     const [eventId, setEventId] = useState(null)
 
     const navigate = useNavigate();

@@ -37,7 +37,6 @@ const AddEventModal = ({eventId}) => {
     const [removedInvitations, setRemovedInvitations] = useState([]);
     const handleNextPageFirst = (values) => {
         if (values) {
-            // formikRef.current = formikRefData;
             setValues(values)
         }
         setIsEmpty(false)
@@ -69,18 +68,6 @@ const AddEventModal = ({eventId}) => {
         formikRef.current?.resetForm(formikRef.current?.initialValues)
     };
 
-    // const formik1 = useFormik({
-    //     initialValues: {
-    //         name: '',
-    //         description: '',
-    //         startTime: '',
-    //         endTime: '',
-    //         eventType_id: '',
-    //         location_id: ''
-    //     },
-    //     validationSchema: addGeneralEvent,
-    //     onSubmit: () => handleNextPage(),
-    // });
     useEffect(() => {
         dispatch(getEventTypes({}))
         dispatch(getEventLocations({}))
@@ -92,7 +79,6 @@ const AddEventModal = ({eventId}) => {
                 location_id: form?.eventObj?.EventType?.id,
             };
             setValues(updatedValues)
-            // formikRef.current?.setValues(updatedValues)
             if (form?.eventObj?.eventImages) {
 
                 const imagesWithUid = form.eventObj.eventImages.map((image, index) => {
@@ -118,7 +104,6 @@ const AddEventModal = ({eventId}) => {
         }
     }, [form.mode, form.eventObj]);
     const onSubmit = async () => {
-        // let data = formikRef.current?.values;
         let data = values
         let formData;
         let eventImagesName = [];
@@ -192,7 +177,6 @@ const AddEventModal = ({eventId}) => {
                         disabled={isEmpty}
                         title='Images'></Steps.Step>
                     <Steps.Step
-                        // disabled={!formikRef?.current?.dirty || !formikRef?.current?.isValid}
                         disabled={isEmpty}
                         title='Invitations'></Steps.Step>
                 </Steps>

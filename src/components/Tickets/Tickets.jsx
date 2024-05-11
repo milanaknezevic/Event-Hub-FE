@@ -57,26 +57,6 @@ const Tickets = () => {
         }
     }
 
-    // function checkTicketPriority(priority) {
-    //     switch (priority) {
-    //         case "LOW":
-    //             return <Tooltip placement={"top"} title={"Low"}>
-    //                 <FaCircle color="green" size="1em"/>
-    //             </Tooltip>;
-    //         case "MEDIUM":
-    //             return <Tooltip placement={"top"} title={"Medium"}>
-    //                 <FaCircle color="#000080" size="1em"/>
-    //             </Tooltip>;
-    //         case "HIGH":
-    //             return <Tooltip placement={"top"} title={"High"}>
-    //                 <FaCircle color="red" size="1em"/>
-    //             </Tooltip>;
-    //         default:
-    //             return
-    //     }
-    // }
-
-
     const columns = [
         {
             title: 'Creation date',
@@ -90,9 +70,6 @@ const Tickets = () => {
             title: 'Priority',
             dataIndex: 'priority',
             key: 'priority',
-            // render: (cell) => {
-            //     return checkTicketPriority(cell)
-            // },
             filters: ticketPriority.map(option => ({text: option.name, value: option.id})),
             filterMultiple: false,
         },
